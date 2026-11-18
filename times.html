@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus times - Rivals Arena</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="page-profile page-teams" data-auth-page="protected">
+    <header>
+        <div class="header-top">
+            <a class="logo" href="homepage.html" aria-label="Início"><img src="imagens/logo-menu.png" alt="Rivals Arena"></a>
+            <button class="menu-icon menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false"><span></span><span></span><span></span></button>
+        </div>
+        <nav class="mobile-menu" aria-label="Menu principal">
+            <a href="homepage.html">Início</a><a href="perfil.html">Perfil</a><a href="comunidade.html">Comunidade</a>
+            <a href="campeonatos.html">Campeonatos</a><a href="partidas.html">Partidas</a><a href="times.html" aria-current="page">Meus times</a>
+        </nav>
+    </header>
+    <main class="teams-main">
+        <h1>Meus times</h1>
+        <p id="teams-message" role="status" aria-live="polite">Carregando...</p>
+        <form id="create-team-form" class="teams-card teams-form">
+            <label>Nome do novo time<input name="nome" required minlength="2" maxlength="100" autocomplete="off"></label>
+            <button type="submit">Criar time</button>
+        </form>
+        <section aria-labelledby="invites-title"><h2 id="invites-title">Convites recebidos</h2><div id="team-invites" class="teams-grid"></div></section>
+        <section aria-labelledby="roster-title"><h2 id="roster-title">Times e membros</h2><div id="team-rosters" class="teams-grid"></div></section>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
+    <script src="supabase-config.js"></script><script src="auth.js"></script><script src="menu.js"></script><script src="membros.js"></script>
+</body>
+</html>

@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#160d1c">
+    <title>Campeonatos - Rivals Arena</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            color-scheme: dark;
+            --pink: #dc3d78;
+            --pink-light: #ef6193;
+            --purple: #421751;
+            --ink: #050505;
+            --white: #f7f4f6;
+            --muted: #b9adb9;
+        }
+
+        * { box-sizing: border-box; }
+        html { min-width: 320px; background: var(--ink); }
+        body { margin: 0; color: var(--white); background: var(--ink); font-family: Inter, Arial, sans-serif; }
+        button, input { font: inherit; }
+        button { color: inherit; }
+        .page { min-height: 100vh; overflow: hidden; }
+
+        .topbar {
+            height: 60px;
+            display: grid;
+            grid-template-columns: 60px minmax(240px, 520px) 1fr 38px;
+            align-items: center;
+            gap: 28px;
+            padding: 0 38px;
+            background: linear-gradient(105deg, #e14076 0%, #8d2874 48%, #351747 100%);
+        }
+        .brand { display: inline-flex; width: 52px; height: 30px; align-items: center; justify-content: center; }
+        .brand img { display: block; width: 52px; height: 30px; object-fit: contain; }
+        .search { position: relative; width: 100%; }
+        .search input {
+            width: 100%; height: 36px; padding: 0 44px 0 18px;
+            color: #29232b; background: #f4f1f3; border: 0; border-radius: 22px;
+            outline: 0; font-size: 14px;
+        }
+        .search input::placeholder { color: #777078; }
+        .search button {
+            position: absolute; top: 0; right: 2px; width: 36px; height: 36px;
+            border: 0; background: transparent; color: #3b263a; cursor: pointer;
+        }
+        .search svg { width: 20px; height: 20px; fill: currentColor; vertical-align: middle; }
+        .menu-icon { justify-self: end; width: 38px; height: 38px; align-items: center; justify-content: center; }
+        .menu-icon span { width: 29px; height: 3px; }
+
+        .navigation { background: linear-gradient(100deg, #41184f, #40124b 60%, #2e123e); }
+        .tabs { min-height: 46px; display: flex; align-items: center; gap: 16px; padding: 0 38px; }
+        .tab {
+            min-height: 36px; display: inline-flex; align-items: center; justify-content: center;
+            padding: 0 26px; border-radius: 8px; color: #fff; text-decoration: none;
+            font-size: 16px; font-weight: 500; white-space: nowrap;
+        }
+        .tab.active, .tab:hover { background: rgba(226, 58, 117, .28); }
+        .tab.create { margin-left: 4px; }
+        .filters {
+            min-height: 50px; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+            padding: 0 38px 8px; overflow-x: auto; scrollbar-width: none;
+        }
+        .filters::-webkit-scrollbar { display: none; }
+        .chip {
+            flex: 0 0 auto; width: auto; min-width: 0; height: 30px; padding: 0 18px;
+            border: 0; border-radius: 9px; background: var(--pink); color: white;
+            font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap;
+        }
+        .chip.active, .chip:hover { background: var(--pink-light); }
+        .chip:nth-child(1) { width: 12.0%; }
+        .chip:nth-child(2) { width: 12.5%; }
+        .chip:nth-child(3) { width: 14.0%; }
+        .chip:nth-child(4) { width: 10.0%; }
+        .chip:nth-child(5) { width: 15.0%; }
+        .chip:nth-child(6) { width: 11.0%; }
+        .chip:nth-child(7) { width: 12.0%; }
+
+        main { min-height: 2200px; padding: 24px 52px 100px; background: #050505; }
+        .section { min-height: 640px; }
+        .section-heading { margin: 0; color: #f3eff2; font-size: 36px; line-height: 1.3; font-weight: 400; }
+        .section-heading .accent { color: var(--pink); font-weight: 700; }
+        .featured-section { min-height: 810px; }
+        .public-section { min-height: 640px; }
+        .create-section { min-height: 360px; }
+
+        .team-form-wrap {
+            max-width: 720px;
+            margin-top: 22px;
+            padding: 24px 22px;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 18px;
+            background: linear-gradient(180deg, rgba(94,51,84,0.3), rgba(17,12,20,0.92));
+            box-shadow: 0 18px 36px rgba(0,0,0,0.2);
+        }
+
+        .team-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            color: var(--white);
+            font-size: 15px;
+        }
+
+        .field input {
+            width: 100%;
+            height: 46px;
+            padding: 0 14px;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 12px;
+            background: rgba(14,10,17,0.9);
+            color: var(--white);
+            outline: none;
+        }
+
+        .field input:focus {
+            border-color: rgba(220,61,120,0.7);
+            box-shadow: 0 0 0 3px rgba(220,61,120,0.18);
+        }
+
+        .team-form button {
+            align-self: end;
+            height: 46px;
+            padding: 0 22px;
+            border: 0;
+            border-radius: 12px;
+            background: linear-gradient(90deg, #dc3d78, #ef6193);
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .team-form button:hover {
+            filter: brightness(1.05);
+        }
+
+        .team-form button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .form-message {
+            min-height: 24px;
+            margin-top: 16px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .form-message.error {
+            color: #ffb0c7;
+        }
+
+        .form-message.success {
+            color: #9ff0bb;
+        }
+
+        .championship-wrap {
+            margin-top: 22px;
+            display: grid;
+            grid-template-columns: minmax(0, 1.3fr) minmax(260px, 0.7fr);
+            gap: 20px;
+        }
+
+        .championship-form,
+        .championship-list {
+            padding: 22px;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 18px;
+            background: linear-gradient(180deg, rgba(94,51,84,0.3), rgba(17,12,20,0.92));
+            box-shadow: 0 18px 36px rgba(0,0,0,0.18);
+        }
+
+        .championship-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+        }
+
+        .championship-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .list-item {
+            padding: 14px 16px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .list-item h3 {
+            margin: 0 0 6px 0;
+            font-size: 20px;
+        }
+
+        .list-item p {
+            margin: 4px 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .list-item .status {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: rgba(220, 61, 120, 0.2);
+            color: #ffdbe8;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .list-item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .mini-button {
+            border: 0;
+            border-radius: 10px;
+            padding: 8px 10px;
+            background: rgba(255,255,255,0.08);
+            color: var(--white);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .mini-button.danger {
+            background: rgba(220, 61, 120, 0.18);
+            color: #ffdbe8;
+        }
+
+        @media (max-width: 760px) {
+            .topbar { height: 54px; grid-template-columns: 52px minmax(0, 1fr) 36px; gap: 10px; padding: 0 14px; }
+            .brand { width: 52px; }
+            .brand img { width: 52px; height: 30px; }
+            .search input { width: 100%; height: 36px; padding: 0 38px 0 12px; font-size: 12px; }
+            .search button { width: 36px; height: 36px; }
+            .menu-icon { width: 32px; }
+            .tabs { min-height: 44px; gap: 7px; padding: 0 12px; overflow-x: auto; }
+            .tab { min-height: 40px; padding: 0 14px; font-size: 13px; }
+            .filters { min-height: 48px; gap: 9px; padding: 0 12px 8px; }
+            .chip { min-width: max-content; width: auto !important; height: 30px; padding: 0 14px; font-size: 12px; }
+            main { min-height: 1400px; padding: 22px 18px 70px; }
+            .section-heading { font-size: 25px; }
+            .section, .featured-section { min-height: 470px; }
+            .public-section { min-height: 390px; }
+            .create-section { min-height: 220px; }
+        }
+    </style>
+</head>
+<body data-auth-page="protected">
+    <div class="page">
+        <header>
+            <div class="topbar">
+                <a class="brand" href="homepage.html" aria-label="Rivals Arena - início">
+                    <img src="imagens/logo-menu.png" alt="Rivals Arena">
+                </a>
+                <form class="search" role="search">
+                    <input type="search" aria-label="Pesquisar campeonatos" placeholder="Pesquisar campeonatos">
+                    <button type="submit" aria-label="Pesquisar">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5a6.5 6.5 0 1 0-6.5 6.5 6.47 6.47 0 0 0 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zM9.5 14C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                    </button>
+                </form>
+                <button class="menu-icon menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false"><span></span><span></span><span></span></button>
+            </div>
+            <nav class="mobile-menu" aria-label="Menu principal">
+                <a href="homepage.html">Início</a>
+                <a href="perfil.html">Perfil</a>
+                <a href="comunidade.html">Comunidade</a>
+                <a href="campeonatos.html" aria-current="page">Campeonatos</a>
+                <a href="partidas.html">Partidas</a>
+            </nav>
+            <nav class="navigation" aria-label="Navegação de campeonatos">
+                <div class="tabs">
+                    <a class="tab active" href="#meus-campeonatos">Meus Campeonatos</a>
+                    <a class="tab" href="#ranking">Hanking</a>
+                    <a class="tab create" href="#criar-equipe">Criar campeonato</a>
+                </div>
+                <div class="filters" aria-label="Filtrar por categoria">
+                    <button class="chip active" type="button">Todos</button>
+                    <button class="chip" type="button">Brasileiros</button>
+                    <button class="chip" type="button">Simuladores</button>
+                    <button class="chip" type="button">RPG</button>
+                    <button class="chip" type="button">Battle Royale</button>
+                    <button class="chip" type="button">FPS</button>
+                    <button class="chip" type="button">Aventura</button>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <section class="section featured-section" id="meus-campeonatos" aria-labelledby="featured-title">
+                <h1 class="section-heading" id="featured-title"><span class="accent">Equipes</span> em destaque</h1>
+            </section>
+            <section class="section public-section" id="ranking" aria-labelledby="public-title">
+                <h2 class="section-heading" id="public-title"><span class="accent">Entrar</span> em equipes públicas</h2>
+            </section>
+            <section class="section create-section" id="criar-equipe" aria-labelledby="create-title">
+                <h2 class="section-heading" id="create-title"><span class="accent">Criar</span> equipe</h2>
+
+                <div class="team-form-wrap">
+                    <form class="team-form" id="team-form">
+                        <label class="field">
+                            Nome do time
+                            <input type="text" name="nome" placeholder="Ex.: Titans Arena" required>
+                        </label>
+
+                        <label class="field">
+                            Logo do time (opcional)
+                            <input type="url" name="logo_url" placeholder="https://.../logo.png">
+                        </label>
+
+                        <button type="submit">Salvar time</button>
+                    </form>
+                    <p class="form-message" id="team-message" role="status" aria-live="polite"></p>
+                </div>
+
+                <div class="championship-wrap">
+                    <form class="championship-form" id="championship-form">
+                        <h3 id="championship-form-title" style="grid-column:1/-1;">Criar campeonato</h3>
+                        <label class="field">
+                            Nome do campeonato
+                            <input type="text" name="nome" required>
+                        </label>
+
+                        <label class="field">
+                            Jogo
+                            <input type="text" name="jogo" required>
+                        </label>
+
+                        <label class="field" style="grid-column: 1 / -1;">
+                            Descrição
+                            <input type="text" name="descricao" placeholder="Opcional">
+                        </label>
+
+                        <label class="field">
+                            Formato
+                            <select name="formato" style="width:100%; height:46px; border-radius:12px; background:rgba(14,10,17,0.9); border:1px solid rgba(255,255,255,0.12); color:#fff; padding:0 12px;">
+                                <option value="eliminatoria">Eliminatória</option>
+                                <option value="pontos_corridos">Pontos corridos</option>
+                            </select>
+                        </label>
+
+                        <label class="field">
+                            Máximo de times
+                            <input type="number" name="max_times" min="2" max="1024" value="8" required>
+                        </label>
+
+                        <label class="field">
+                            Taxa de inscrição
+                            <input type="number" name="taxa_inscricao" min="0" step="0.01" value="0">
+                        </label>
+
+                        <label class="field">
+                            Prêmio
+                            <input type="number" name="premio" min="0" step="0.01" value="0">
+                        </label>
+
+                        <label class="field">
+                            Data de início
+                            <input type="date" name="data_inicio" required>
+                        </label>
+
+                        <label class="field">
+                            Data de fim
+                            <input type="date" name="data_fim" required>
+                        </label>
+
+                        <button type="submit" style="grid-column: 1 / -1; justify-self: start;">Salvar campeonato</button>
+                        <button id="cancel-championship-edit" type="button" hidden>Cancelar edição</button>
+                        <p style="grid-column:1/-1;">Eliminatória: 2, 4, 8, 16… times aprovados, sem folgas. Pontos corridos aceita quantidade ímpar.</p>
+                    </form>
+
+                    <aside class="championship-list" id="championship-list">
+                        <h3 style="margin:0; font-size: 22px;">Meus campeonatos</h3>
+                        <p class="form-message" id="championship-message" role="status" aria-live="polite"></p>
+                    </aside>
+                </div>
+
+                <div class="championship-wrap" style="margin-top: 18px;">
+                    <aside class="championship-list" id="team-list">
+                        <h3 style="margin:0; font-size: 22px;">Meus times</h3>
+                        <p class="form-message" id="team-list-message" role="status" aria-live="polite"></p>
+                    </aside>
+
+                    <form class="championship-form" id="inscricao-form">
+                        <label class="field">
+                            Meu time
+                            <select name="id_time" required style="width:100%; height:46px; border-radius:12px; background:rgba(14,10,17,0.9); border:1px solid rgba(255,255,255,0.12); color:#fff; padding:0 12px;">
+                                <option value="">Carregando times...</option>
+                            </select>
+                        </label>
+
+                        <label class="field">
+                            Campeonato
+                            <select name="id_campeonato" required style="width:100%; height:46px; border-radius:12px; background:rgba(14,10,17,0.9); border:1px solid rgba(255,255,255,0.12); color:#fff; padding:0 12px;">
+                                <option value="">Carregando campeonatos...</option>
+                            </select>
+                        </label>
+
+                        <button type="submit" style="grid-column: 1 / -1; justify-self: start;">Inscrever time</button>
+                    </form>
+
+                    <aside class="championship-list" id="inscricao-list">
+                        <h3 style="margin:0; font-size: 22px;">Inscrições dos meus times e campeonatos</h3>
+                        <p class="form-message" id="inscricao-message" role="status" aria-live="polite"></p>
+                    </aside>
+                </div>
+
+                <div class="championship-wrap" style="margin-top: 18px;">
+                    <aside class="championship-list" id="ranking-list">
+                        <h3 style="margin:0; font-size: 22px;">Classificação</h3>
+                        <p class="form-message" id="ranking-message" role="status" aria-live="polite"></p>
+                    </aside>
+                </div>
+                <div class="championship-wrap" style="margin-top: 18px;">
+                    <section class="championship-list" id="matches-list" aria-labelledby="matches-title">
+                        <h3 id="matches-title">Confrontos e resultados</h3>
+                        <p class="form-message" id="matches-message" role="status" aria-live="polite">Selecione um campeonato em Meus campeonatos.</p>
+                        <div id="matches-content"></div>
+                    </section>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script>
+        document.querySelector('.search').addEventListener('submit', (event) => event.preventDefault());
+        document.querySelectorAll('.chip').forEach((chip) => {
+            chip.addEventListener('click', () => {
+                document.querySelector('.chip.active')?.classList.remove('active');
+                chip.classList.add('active');
+            });
+        });
+        document.querySelectorAll('.tabs .tab').forEach((tab) => {
+            tab.addEventListener('click', () => {
+                document.querySelector('.tabs .tab.active')?.classList.remove('active');
+                tab.classList.add('active');
+            });
+        });
+    </script>
+    <script src="menu.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
+    <script src="supabase-config.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const form = document.getElementById('team-form');
+            const message = document.getElementById('team-message');
+            if (!form || !message) return;
+            const submitButtons = document.querySelectorAll('main form button[type="submit"]');
+            submitButtons.forEach(button => button.disabled = true);
+
+            const setMessage = (text, type = '') => {
+                message.textContent = text;
+                message.className = 'form-message' + (type ? ` ${type}` : '');
+            };
+
+            const client = window.rivalsAuth?.client;
+
+            if (!client) {
+                setMessage('Não foi possível conectar. Recarregue a página.', 'error');
+                form.querySelector('button[type="submit"]').disabled = true;
+                return;
+            }
+
+            let user, userError;
+            try { const result = await client.auth.getUser(); user = result.data.user; userError = result.error; }
+            catch { setMessage('Não foi possível verificar sua sessão. Recarregue a página.', 'error'); return; }
+            if (userError || !user) {
+                setMessage('Faça login para criar seu time.', 'error');
+                form.querySelector('button[type="submit"]').disabled = true;
+                return;
+            }
+
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const nome = form.nome.value.trim();
+                const logoUrl = form.logo_url.value.trim();
+
+                if (!nome) {
+                    setMessage('Informe o nome do time.', 'error');
+                    return;
+                }
+
+                const submitButton = form.querySelector('button[type="submit"]');
+                submitButton.disabled = true;
+                submitButton.textContent = 'Salvando...';
+
+                try {
+                    const { data, error } = await apiResult('/api/times', 'POST', {nome, logo_url: logoUrl, status:'ativo'});
+
+                    if (error) throw error;
+
+                    setMessage(`Time "${data[0]?.nome || nome}" criado com sucesso!`, 'success');
+                    form.reset();
+                    await renderUserTeams();
+                } catch (error) {
+                    setMessage(error.message || 'Não foi possível criar o time.', 'error');
+                } finally {
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Salvar time';
+                }
+            });
+
+            const championshipForm = document.getElementById('championship-form');
+            const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, character => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            })[character]);
+            const championshipList = document.getElementById('championship-list');
+            const championshipMessage = document.getElementById('championship-message');
+            const teamList = document.getElementById('team-list');
+            const teamListMessage = document.getElementById('team-list-message');
+            const inscricaoForm = document.getElementById('inscricao-form');
+            const inscricaoList = document.getElementById('inscricao-list');
+            const inscricaoMessage = document.getElementById('inscricao-message');
+            const rankingList = document.getElementById('ranking-list');
+            const rankingMessage = document.getElementById('ranking-message');
+
+            const buildRoundRobinMatches = (teamIds) => {
+                const list = [...teamIds];
+                if (list.length % 2 !== 0) {
+                    list.push(null);
+                }
+
+                const rounds = [];
+                const totalRounds = list.length - 1;
+
+                for (let round = 0; round < totalRounds; round += 1) {
+                    const pairings = [];
+                    for (let index = 0; index < list.length / 2; index += 1) {
+                        const teamA = list[index];
+                        const teamB = list[list.length - 1 - index];
+
+                        if (teamA !== null && teamB !== null && teamA !== teamB) {
+                            pairings.push([teamA, teamB]);
+                        }
+                    }
+                    rounds.push(pairings);
+
+                    // Método circular: o primeiro time permanece fixo.
+                    list.splice(1, 0, list.pop());
+                }
+
+                return rounds;
+            };
+
+            const generateMatchesForChampionship = async (idCampeonato) => {
+                await inscriptionRequest(`/api/campeonatos/${idCampeonato}/confrontos`, 'POST');
+            };
+
+            const renderChampionships = async () => {
+                if (!championshipList || !championshipMessage) return;
+
+                const { data, error } = await apiResult('/api/campeonatos?minhas=1');
+
+                if (error) {
+                    championshipMessage.textContent = error.message;
+                    championshipMessage.className = 'form-message error';
+                    return;
+                }
+
+                championshipList.querySelectorAll('.list-item').forEach((item) => item.remove());
+
+                if (!data || data.length === 0) {
+                    championshipMessage.textContent = 'Você ainda não criou nenhum campeonato.';
+                    championshipMessage.className = 'form-message';
+                    return;
+                }
+
+                championshipMessage.textContent = '';
+                championshipMessage.className = 'form-message';
+
+                data.forEach((item) => {
+                    const card = document.createElement('div');
+                    card.className = 'list-item';
+                    const isCanceled = item.status === 'cancelado';
+                    const canGenerateMatches = ['rascunho', 'aberto'].includes(item.status);
+                    const showRankingAction = ['em_andamento', 'encerrado'].includes(item.status);
+
+                    card.innerHTML = `
+                        <h3>${escapeHtml(item.nome)}</h3>
+                        <p>${escapeHtml(item.jogo)}</p>
+                        <p>${escapeHtml(item.formato)}</p>
+                        <p>De ${item.data_inicio} até ${item.data_fim}</p>
+                        <p>${item.max_times} times · ${item.status}</p>
+                        <div class="list-item-row">
+                            <span class="status">${item.status}</span>
+                            ${!isCanceled && item.status !== 'encerrado' ? '<button type="button" class="mini-button danger" data-cancel-championship="' + item.id_campeonato + '">Cancelar</button>' : ''}
+                            ${canGenerateMatches ? '<button type="button" class="mini-button" data-edit-championship="' + item.id_campeonato + '">Editar</button>' : ''}
+                            ${canGenerateMatches ? '<button type="button" class="mini-button" data-generate-matches="' + item.id_campeonato + '">Gerar partidas</button>' : ''}
+                            ${showRankingAction ? '<button type="button" class="mini-button" data-view-ranking="' + item.id_campeonato + '">Ver classificação</button>' : ''}
+                            ${showRankingAction ? '<button type="button" class="mini-button" data-view-matches="' + item.id_campeonato + '">Confrontos e resultados</button>' : ''}
+                        </div>
+                    `;
+                    championshipList.appendChild(card);
+                });
+
+                championshipList.querySelectorAll('[data-edit-championship]').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const item = data.find(championship => String(championship.id_campeonato) === button.dataset.editChampionship);
+                        if (!item) return;
+                        championshipForm.dataset.editing = item.id_campeonato;
+                        for (const field of ['nome','jogo','descricao','formato','max_times','taxa_inscricao','premio','data_inicio','data_fim']) {
+                            championshipForm.elements[field].value = item[field] ?? '';
+                        }
+                        document.getElementById('championship-form-title').textContent = 'Editar campeonato';
+                        document.getElementById('cancel-championship-edit').hidden = false;
+                        championshipForm.querySelector('button[type="submit"]').textContent = 'Salvar alterações';
+                        championshipForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        championshipForm.elements.nome.focus({ preventScroll: true });
+                    });
+                });
+
+                championshipList.querySelectorAll('[data-cancel-championship]').forEach((button) => {
+                    button.addEventListener('click', async () => {
+                        const idCampeonato = Number(button.dataset.cancelChampionship);
+                        if (!idCampeonato) return;
+                        if (!window.confirm('Cancelar este campeonato? Ele não poderá ser reaberto.')) return;
+                        button.disabled = true;
+                        button.textContent = 'Cancelando...';
+
+                        try {
+                            const { error } = await apiResult('/api/campeonatos/' + idCampeonato, 'PATCH', {status:'cancelado'});
+                            if (error) throw error;
+                            await renderChampionships();
+                            await renderRanking();
+                        } catch (error) {
+                            championshipMessage.textContent = error.message || 'Não foi possível cancelar o campeonato.';
+                            championshipMessage.className = 'form-message error';
+                            button.disabled = false;
+                            button.textContent = 'Cancelar';
+                        }
+                    });
+                });
+
+                championshipList.querySelectorAll('[data-generate-matches]').forEach((button) => {
+                    button.addEventListener('click', async () => {
+                        const idCampeonato = Number(button.dataset.generateMatches);
+                        if (!idCampeonato) return;
+                        button.disabled = true;
+                        button.textContent = 'Gerando...';
+
+                        try {
+                            await generateMatchesForChampionship(idCampeonato);
+                            championshipMessage.textContent = 'Partidas geradas com sucesso.';
+                            championshipMessage.className = 'form-message success';
+                            await renderChampionships();
+                            await renderRanking();
+                        } catch (error) {
+                            championshipMessage.textContent = error.message || 'Não foi possível gerar as partidas.';
+                            championshipMessage.className = 'form-message error';
+                            button.disabled = false;
+                            button.textContent = 'Gerar partidas';
+                        }
+                    });
+                });
+
+                championshipList.querySelectorAll('[data-view-ranking]').forEach((button) => {
+                    button.addEventListener('click', async () => {
+                        const idCampeonato = Number(button.dataset.viewRanking);
+                        if (!idCampeonato) return;
+                        await renderRanking(idCampeonato);
+                    });
+                });
+                championshipList.querySelectorAll('[data-view-matches]').forEach(button => {
+                    button.addEventListener('click', () => renderMatches(Number(button.dataset.viewMatches)));
+                });
+            };
+
+            const renderRanking = async (idCampeonatoSelecionado = null) => {
+                if (!rankingList || !rankingMessage) return;
+
+                const { data: campeonatos, error: campeonatoError } = await apiResult('/api/campeonatos?minhas=1');
+
+                if (campeonatoError) {
+                    rankingMessage.textContent = campeonatoError.message;
+                    rankingMessage.className = 'form-message error';
+                    return;
+                }
+
+                const ids = (campeonatos || []).map((item) => Number(item.id_campeonato));
+                rankingList.querySelectorAll('.list-item').forEach((item) => item.remove());
+
+                if (!ids.length) {
+                    rankingMessage.textContent = 'Você ainda não criou nenhum campeonato para visualizar a classificação.';
+                    rankingMessage.className = 'form-message';
+                    return;
+                }
+
+                const { data, error } = await apiResult('/api/classificacao?minhas=1');
+
+                if (error) {
+                    rankingMessage.textContent = error.message;
+                    rankingMessage.className = 'form-message error';
+                    return;
+                }
+
+                if (!data || data.length === 0) {
+                    rankingMessage.textContent = 'A classificação ainda não foi gerada. Gere as partidas do campeonato para começar a tabela.';
+                    rankingMessage.className = 'form-message';
+                    return;
+                }
+
+                const rankingAgrupado = new Map();
+                data.forEach((item) => {
+                    const campeonatoId = Number(item.id_campeonato);
+                    if (!rankingAgrupado.has(campeonatoId)) {
+                        rankingAgrupado.set(campeonatoId, []);
+                    }
+                    rankingAgrupado.get(campeonatoId).push(item);
+                });
+
+                rankingMessage.textContent = '';
+                rankingMessage.className = 'form-message';
+
+                const campeonatosPorId = new Map((campeonatos || []).map((item) => [Number(item.id_campeonato), item.nome]));
+
+                for (const [campeonatoId, times] of rankingAgrupado.entries()) {
+                    if (idCampeonatoSelecionado && campeonatoId !== Number(idCampeonatoSelecionado)) {
+                        continue;
+                    }
+
+                    const campeonatoNome = campeonatosPorId.get(campeonatoId) || 'Campeonato';
+                    const sortedTimes = [...times].sort((a, b) => {
+                        if ((b.pontos || 0) !== (a.pontos || 0)) return (b.pontos || 0) - (a.pontos || 0);
+                        if ((b.saldo_gols || 0) !== (a.saldo_gols || 0)) return (b.saldo_gols || 0) - (a.saldo_gols || 0);
+                        return (b.vitorias || 0) - (a.vitorias || 0);
+                    });
+
+                    const card = document.createElement('div');
+                    card.className = 'list-item';
+                    const listItems = sortedTimes.map((time, index) => {
+                        const nomeTime = time.times?.nome || 'Time sem nome';
+                        return `<li><strong>#${index + 1}</strong> ${escapeHtml(nomeTime)} · ${time.pontos || 0} pts · ${time.jogos || 0} j</li>`;
+                    }).join('');
+
+                    card.innerHTML = `
+                        <h3>${escapeHtml(campeonatoNome)}</h3>
+                        <ol style="margin: 10px 0 0 18px; padding: 0; color: #fff; line-height: 1.8;">${listItems}</ol>
+                    `;
+                    rankingList.appendChild(card);
+                }
+
+                if (idCampeonatoSelecionado && rankingList.querySelectorAll('.list-item').length === 0) {
+                    rankingMessage.textContent = 'Ainda não há classificação para este campeonato.';
+                    rankingMessage.className = 'form-message';
+                }
+            };
+
+            const renderUserTeams = async () => {
+                if (!inscricaoForm) return;
+                const selectTime = inscricaoForm.querySelector('select[name="id_time"]');
+                if (!selectTime) return;
+
+                const { data, error } = await apiResult('/api/times?capitao=1');
+                if (error) {
+                    selectTime.innerHTML = '<option value="">Não foi possível carregar os times</option>';
+                    return;
+                }
+
+                selectTime.innerHTML = '<option value="">Selecione um time</option>';
+                if (!data || data.length === 0) {
+                    selectTime.innerHTML = '<option value="">Você ainda não criou um time</option>';
+                } else {
+                    data
+                        .filter((time) => time.status !== 'inativo')
+                        .forEach((time) => {
+                            const option = document.createElement('option');
+                            option.value = time.id_time;
+                            option.textContent = time.nome;
+                            selectTime.appendChild(option);
+                        });
+                }
+
+                if (teamList) {
+                    teamList.querySelectorAll('.list-item').forEach((item) => item.remove());
+                    if (!data || data.length === 0) {
+                        teamListMessage.textContent = 'Você ainda não criou nenhum time.';
+                        teamListMessage.className = 'form-message';
+                        return;
+                    }
+
+                    teamListMessage.textContent = '';
+                    teamListMessage.className = 'form-message';
+
+                    data.forEach((time) => {
+                        const card = document.createElement('div');
+                        card.className = 'list-item';
+                        const isInactive = time.status === 'inativo';
+                        card.innerHTML = `
+                            <h3>${escapeHtml(time.nome)}</h3>
+                            <div class="list-item-row">
+                                <span class="status">${time.status || 'ativo'}</span>
+                                ${!isInactive ? '<button type="button" class="mini-button danger" data-deactivate-team="' + time.id_time + '">Desativar</button>' : '<span style="font-size:12px;color:#ffdbe8;">Inativo</span>'}
+                            </div>
+                        `;
+                        teamList.appendChild(card);
+                    });
+
+                    teamList.querySelectorAll('[data-deactivate-team]').forEach((button) => {
+                        button.addEventListener('click', async () => {
+                            const idTime = Number(button.dataset.deactivateTeam);
+                            if (!idTime) return;
+                            button.disabled = true;
+                            button.textContent = 'Desativando...';
+
+                            try {
+                                const { error } = await apiResult('/api/times/' + idTime, 'PATCH', {status:'inativo'});
+                                if (error) throw error;
+                                await renderUserTeams();
+                            } catch (error) {
+                                if (teamListMessage) {
+                                    teamListMessage.textContent = error.message || 'Não foi possível desativar o time.';
+                                    teamListMessage.className = 'form-message error';
+                                }
+                                button.disabled = false;
+                                button.textContent = 'Desativar';
+                            }
+                        });
+                    });
+                }
+            };
+
+            const renderAvailableChampionships = async () => {
+                if (!inscricaoForm) return;
+                const selectChampionship = inscricaoForm.querySelector('select[name="id_campeonato"]');
+                if (!selectChampionship) return;
+
+                const { data, error } = await apiResult('/api/campeonatos?disponiveis=1');
+
+                if (error) {
+                    selectChampionship.innerHTML = '<option value="">Não foi possível carregar</option>';
+                    return;
+                }
+
+                selectChampionship.innerHTML = '<option value="">Selecione um campeonato</option>';
+                if (!data || data.length === 0) {
+                    selectChampionship.innerHTML = '<option value="">Nenhum campeonato disponível</option>';
+                    return;
+                }
+
+                data.forEach((campeonato) => {
+                    const option = document.createElement('option');
+                    option.value = campeonato.id_campeonato;
+                    option.textContent = `${campeonato.nome} · ${campeonato.jogo}`;
+                    selectChampionship.appendChild(option);
+                });
+            };
+
+            const inscriptionRequest = (url, method = 'GET', body) => window.rivalsAuth.request(url, {method, body});
+            const apiResult = async (url, method = 'GET', body) => {
+                try {
+                    if (method !== 'GET') return {data:await inscriptionRequest(url,method,body),error:null};
+                    const rows=[];
+                    for(let page=1;page<=1000;page++){
+                        const target=new URL(url,location.origin);target.searchParams.set('page',page);
+                        const batch=await inscriptionRequest(target.pathname+target.search);
+                        rows.push(...batch);if(batch.length<100)return {data:rows,error:null};
+                    }
+                    throw Error('Há registros demais para carregar nesta tela.');
+                } catch(error) { return {data:null,error}; }
+            };
+
+            const renderMatches = async id => {
+                const content = document.getElementById('matches-content');
+                const message = document.getElementById('matches-message');
+                message.textContent = 'Carregando confrontos...';
+                content.replaceChildren();
+                try {
+                    const {championship, matches, teams, classification} = await inscriptionRequest('/api/campeonatos/' + id + '/painel');
+                    const names = new Map((teams || []).map(team => [team.id_time, team.nome]));
+                    message.textContent = `${championship.nome} · ${championship.status}`;
+                    if (!matches?.length) message.textContent += ' · Nenhum confronto gerado.';
+                    const finalRound = Math.max(0, ...(matches || []).map(match => match.rodada));
+                    if (championship.status === 'encerrado') {
+                        let winners = [];
+                        if (championship.formato === 'eliminatoria') {
+                            const final = matches.find(match => match.rodada === finalRound && match.status === 'finalizada');
+                            if (final?.vencedor) winners = [names.get(final.vencedor) || 'Time vencedor'];
+                        } else if (championship.formato === 'pontos_corridos') {
+                            const leader = classification?.[0];
+                            if (leader) winners = classification.filter(team => team.pontos === leader.pontos && team.saldo_gols === leader.saldo_gols && team.vitorias === leader.vitorias)
+                                .map(team => names.get(team.id_time) || 'Time vencedor');
+                        }
+                        if (winners.length) {
+                            const banner = document.createElement('div');
+                            banner.className = 'champion-banner';
+                            const title = document.createElement('h4');
+                            title.textContent = winners.length === 1 ? 'Campeão' : 'Liderança empatada nos critérios de classificação';
+                            const winner = document.createElement('p'); winner.textContent = winners.join(' · ');
+                            banner.append(title, winner); content.appendChild(banner);
+                        }
+                    }
+                    const board = document.createElement('div'); board.className = 'bracket-board';
+                    board.tabIndex = 0; board.setAttribute('role', 'region'); board.setAttribute('aria-label', 'Confrontos organizados por rodada; role horizontalmente para ver todas');
+                    const columns = new Map();
+                    const firstRoundCount = (matches || []).filter(match => match.rodada === 1).length;
+                    const predicted = championship.formato === 'eliminatoria' && firstRoundCount ? Math.ceil(Math.log2(firstRoundCount * 2)) : finalRound;
+                    for (let round = 1; round <= Math.max(finalRound, predicted); round++) {
+                        const column = document.createElement('section'); column.className = 'bracket-round';
+                        const title = document.createElement('h4');
+                        title.textContent = championship.formato === 'eliminatoria'
+                            ? (round === predicted ? 'Final' : round === predicted - 1 ? 'Semifinais' : `Rodada ${round}`)
+                            : `Rodada ${round}`;
+                        column.appendChild(title); columns.set(round, column); board.appendChild(column);
+                    }
+                    content.appendChild(board);
+                    for (const match of matches || []) {
+                        const card = document.createElement('article');
+                        card.className = 'list-item';
+                        const title = document.createElement('h4');
+                        title.textContent = `Rodada ${match.rodada} · Partida ${match.numero_partida}`;
+                        const description = document.createElement('p');
+                        description.textContent = `${names.get(match.id_time_a) || 'Aguardando vencedor'} × ${names.get(match.id_time_b) || 'Aguardando vencedor'}`;
+                        const state = document.createElement('p');
+                        state.textContent = match.status === 'finalizada'
+                            ? `${match.placar_a} × ${match.placar_b} · ${match.vencedor ? 'Vencedor: ' + names.get(match.vencedor) : 'Empate'}`
+                            : match.status;
+                        card.append(title, description, state);
+                        if (championship.id_criador === user.id && championship.status === 'em_andamento' &&
+                            !match.resultado_processado && match.status !== 'cancelada' && match.id_time_a && match.id_time_b) {
+                            const form = document.createElement('form');
+                            form.className = 'match-result-form';
+                            for (const [field, team] of [['placar_a', match.id_time_a], ['placar_b', match.id_time_b]]) {
+                                const label = document.createElement('label');
+                                label.textContent = `Placar de ${names.get(team)}`;
+                                const input = document.createElement('input');
+                                input.name = field; input.type = 'number'; input.min = '0'; input.max = '1000000';
+                                input.step = '1'; input.required = true;
+                                label.appendChild(input); form.appendChild(label);
+                            }
+                            const submit = document.createElement('button');
+                            submit.type = 'submit'; submit.className = 'mini-button'; submit.textContent = 'Confirmar resultado';
+                            const hint = document.createElement('small');
+                            hint.textContent = 'O resultado confirmado não pode ser alterado.';
+                            form.append(submit, hint);
+                            form.addEventListener('submit', async event => {
+                                event.preventDefault();
+                                if (!form.reportValidity()) return;
+                                const placar_a = Number(form.elements.placar_a.value);
+                                const placar_b = Number(form.elements.placar_b.value);
+                                if (championship.formato === 'eliminatoria' && placar_a === placar_b) {
+                                    message.textContent = 'Na eliminatória, informe o placar após o desempate.'; return;
+                                }
+                                if (!window.confirm('Confirmar o resultado? Ele será definitivo e atualizará a pontuação.')) return;
+                                submit.disabled = true;
+                                try {
+                                    await inscriptionRequest(`/api/partidas/${match.id_partida}/resultado`, 'POST', { placar_a, placar_b });
+                                    await renderChampionships();
+                                    await renderRanking(id);
+                                    await renderMatches(id);
+                                } catch (error) { message.textContent = error.message; submit.disabled = false; }
+                            });
+                            card.appendChild(form);
+                        }
+                        columns.get(match.rodada).appendChild(card);
+                    }
+                    if (championship.formato === 'eliminatoria') {
+                        for (const [round, column] of columns) {
+                            const expected = firstRoundCount / (2 ** (round - 1));
+                            const actual = (matches || []).filter(match => match.rodada === round).length;
+                            for (let slot = actual; slot < expected; slot++) {
+                                const pending = document.createElement('p'); pending.className = 'bracket-pending';
+                                pending.textContent = 'Aguardando vencedores da rodada anterior'; column.appendChild(pending);
+                            }
+                        }
+                    }
+                    document.getElementById('matches-list').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                } catch (error) { message.textContent = error.message || 'Não foi possível carregar os confrontos.'; }
+            };
+
+            const renderInscriptions = async () => {
+                if (!inscricaoList || !inscricaoMessage) return;
+
+                const { data, error } = await apiResult('/api/inscricoes');
+
+                if (error) {
+                    inscricaoMessage.textContent = error.message;
+                    inscricaoMessage.className = 'form-message error';
+                    return;
+                }
+
+                inscricaoList.querySelectorAll('.list-item').forEach((item) => item.remove());
+
+                const visible = (data || []).filter(item => item.times?.id_capitao === user.id || item.campeonatos?.id_criador === user.id);
+                if (visible.length === 0) {
+                    inscricaoMessage.textContent = 'Nenhuma inscrição dos seus times ou campeonatos.';
+                    inscricaoMessage.className = 'form-message';
+                    return;
+                }
+
+                inscricaoMessage.textContent = '';
+                inscricaoMessage.className = 'form-message';
+
+                visible.forEach((item) => {
+                    const card = document.createElement('div');
+                    card.className = 'list-item';
+                    const timeNome = item.times?.nome || 'Time';
+                    const campeonatoNome = item.campeonatos?.nome || 'Campeonato';
+                    for (const [tag, text] of [['h3', timeNome], ['p', campeonatoNome], ['p', item.campeonatos?.jogo || ''], ['span', item.status]]) {
+                        const element = document.createElement(tag);
+                        element.textContent = text;
+                        if (tag === 'span') element.className = 'status';
+                        card.appendChild(element);
+                    }
+                    if (item.status === 'pendente' && item.campeonatos?.id_criador === user.id) {
+                        for (const [status, label] of [['aprovada', 'Aprovar'], ['recusada', 'Recusar']]) {
+                            const button = document.createElement('button');
+                            button.type = 'button';
+                            button.textContent = label;
+                            button.addEventListener('click', async () => {
+                                card.querySelectorAll('button').forEach(b => b.disabled = true);
+                                try {
+                                    await inscriptionRequest(`/api/inscricoes/${item.id_inscricao}`, 'PATCH', { status });
+                                    await renderInscriptions();
+                                } catch (error) {
+                                    inscricaoMessage.textContent = error.message;
+                                    inscricaoMessage.className = 'form-message error';
+                                    card.querySelectorAll('button').forEach(b => b.disabled = false);
+                                }
+                            });
+                            card.appendChild(button);
+                        }
+                    }
+                    if (['pendente','aprovada'].includes(item.status) && item.times?.id_capitao === user.id &&
+                        ['rascunho','aberto'].includes(item.campeonatos?.status)) {
+                        const cancel = document.createElement('button');
+                        cancel.type = 'button'; cancel.textContent = 'Cancelar inscrição';
+                        cancel.addEventListener('click', async () => {
+                            if (!window.confirm('Cancelar a inscrição deste time?')) return;
+                            cancel.disabled = true;
+                            try {
+                                await inscriptionRequest(`/api/inscricoes/${item.id_inscricao}`, 'PATCH', { status: 'cancelada' });
+                                await renderInscriptions();
+                            } catch (error) { inscricaoMessage.textContent = error.message; cancel.disabled = false; }
+                        });
+                        card.appendChild(cancel);
+                    }
+                    inscricaoList.appendChild(card);
+                });
+            };
+
+            const resetChampionshipEditor = () => {
+                championshipForm.reset();
+                delete championshipForm.dataset.editing;
+                document.getElementById('championship-form-title').textContent = 'Criar campeonato';
+                document.getElementById('cancel-championship-edit').hidden = true;
+                championshipForm.querySelector('button[type="submit"]').textContent = 'Salvar campeonato';
+            };
+            document.getElementById('cancel-championship-edit').addEventListener('click', resetChampionshipEditor);
+            if (championshipForm) {
+                championshipForm.addEventListener('submit', async (event) => {
+                    event.preventDefault();
+                    const nome = championshipForm.nome.value.trim();
+                    const jogo = championshipForm.jogo.value.trim();
+                    const descricao = championshipForm.descricao.value.trim();
+                    const formato = championshipForm.formato.value;
+                    const maxTimes = Number(championshipForm.max_times.value);
+                    const taxaInscricao = Number(championshipForm.taxa_inscricao.value || 0);
+                    const premio = Number(championshipForm.premio.value || 0);
+                    const dataInicio = championshipForm.data_inicio.value;
+                    const dataFim = championshipForm.data_fim.value;
+
+                    if (!nome || !jogo || !dataInicio || !dataFim) {
+                        championshipMessage.textContent = 'Preencha nome, jogo e datas do campeonato.';
+                        championshipMessage.className = 'form-message error';
+                        return;
+                    }
+
+                    const insertPayload = {
+                        nome,
+                        jogo,
+                        descricao,
+                        formato,
+                        max_times: maxTimes,
+                        taxa_inscricao: taxaInscricao,
+                        premio,
+                        data_inicio: dataInicio,
+                        data_fim: dataFim
+                    };
+
+                    const submitButton = championshipForm.querySelector('button[type="submit"]');
+                    submitButton.disabled = true;
+                    submitButton.textContent = 'Salvando...';
+
+                    try {
+                        const editingId = championshipForm.dataset.editing;
+                        await inscriptionRequest(editingId ? `/api/campeonatos/${editingId}` : '/api/campeonatos', editingId ? 'PATCH' : 'POST', insertPayload);
+
+                        resetChampionshipEditor();
+                        await renderChampionships();
+                        await renderAvailableChampionships();
+                        championshipMessage.textContent = editingId ? 'Alterações salvas.' : 'Campeonato criado com sucesso.';
+                        championshipMessage.className = 'form-message success';
+                    } catch (error) {
+                        championshipMessage.textContent = error.message || 'Não foi possível criar o campeonato.';
+                        championshipMessage.className = 'form-message error';
+                    } finally {
+                        submitButton.disabled = false;
+                        submitButton.textContent = championshipForm.dataset.editing ? 'Salvar alterações' : 'Salvar campeonato';
+                    }
+                });
+            }
+
+            if (inscricaoForm) {
+                inscricaoForm.addEventListener('submit', async (event) => {
+                    event.preventDefault();
+                    const idTime = inscricaoForm.id_time.value;
+                    const idCampeonato = inscricaoForm.id_campeonato.value;
+
+                    if (!idTime || !idCampeonato) {
+                        inscricaoMessage.textContent = 'Selecione seu time e o campeonato.';
+                        inscricaoMessage.className = 'form-message error';
+                        return;
+                    }
+
+                    const submitButton = inscricaoForm.querySelector('button[type="submit"]');
+                    submitButton.disabled = true;
+                    submitButton.textContent = 'Inscrevendo...';
+
+                    try {
+                        await inscriptionRequest('/api/inscricoes', 'POST', {
+                                id_time: Number(idTime),
+                                id_campeonato: Number(idCampeonato)
+                        });
+
+                        inscricaoMessage.textContent = 'Solicitação enviada. Aguarde a aprovação do organizador.';
+                        inscricaoMessage.className = 'form-message success';
+                        inscricaoForm.reset();
+                        await renderInscriptions();
+                    } catch (error) {
+                        inscricaoMessage.textContent = error.message || 'Não foi possível inscrever o time.';
+                        inscricaoMessage.className = 'form-message error';
+                    } finally {
+                        submitButton.disabled = false;
+                        submitButton.textContent = 'Inscrever time';
+                    }
+                });
+            }
+
+            submitButtons.forEach(button => button.disabled = false);
+            await renderChampionships();
+            await renderUserTeams();
+            await renderAvailableChampionships();
+            await renderInscriptions();
+            await renderRanking();
+            const selectedId = Number(new URLSearchParams(location.search).get('campeonato'));
+            if (Number.isSafeInteger(selectedId) && selectedId > 0) await renderMatches(selectedId);
+        });
+    </script>
+</body>
+</html>

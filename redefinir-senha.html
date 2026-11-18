@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="referrer" content="no-referrer"><title>Nova senha - Rivals Arena</title><link rel="stylesheet" href="style.css"></head>
+<body class="page-login">
+ <main class="login-container"><h1>NOVA SENHA</h1>
+ <p class="auth-message" data-auth-message role="status" aria-live="polite">Verificando o link...</p>
+ <form data-password-form hidden>
+ <div class="input-group"><label for="senha">Nova senha</label><input id="senha" name="senha" type="password" minlength="8" maxlength="128" autocomplete="new-password" required></div>
+ <div class="input-group"><label for="confirmarSenha">Confirmar nova senha</label><input id="confirmarSenha" name="confirmarSenha" type="password" minlength="8" maxlength="128" autocomplete="new-password" required></div>
+ <button class="btn-entrar" type="submit">Salvar nova senha</button></form>
+ <p class="auth-link"><a href="recuperar-senha.html">Solicitar outro link</a></p><p class="auth-link"><a href="login.html">Voltar ao login</a></p></main>
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script><script src="supabase-config.js"></script><script src="auth.js"></script>
+</body></html>

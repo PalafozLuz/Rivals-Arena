@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil - Rivals Arena</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="page-profile" data-auth-page="protected">
+
+    <header>
+        <div class="header-top">
+            <a class="logo" href="homepage.html" aria-label="Rivals Arena - início">
+                <img src="imagens/logo-menu.png" alt="Rivals Arena">
+            </a>
+            <button class="menu-icon menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        <nav class="mobile-menu" aria-label="Menu principal">
+            <a href="homepage.html">Início</a>
+            <a href="perfil.html">Perfil</a>
+            <a href="comunidade.html">Comunidade</a>
+            <a href="campeonatos.html">Campeonatos</a>
+            <a href="partidas.html">Partidas</a>
+        </nav>
+    </header>
+
+    <main class="profile-main">
+        <section class="profile-header">
+            <div class="user-info">
+                <div class="avatar-container">
+                    <img src="imagens/logo-menu.png" alt="Avatar do jogador" class="avatar" data-profile-avatar>
+                    <div class="status-dot"></div>
+                </div>
+                <div class="user-details">
+                    <h1 data-profile-name>Carregando...</h1>
+                    <p data-profile-username></p>
+                </div>
+            </div>
+            <button class="btn-edit" type="button" data-edit-profile>Editar perfil</button>
+            <button class="btn-edit" type="button" data-logout>Sair</button>
+        </section>
+
+        <p class="auth-message" data-auth-message hidden role="status"></p>
+        <section class="profile-stats">
+            <div class="stat">
+                <span class="stat-number" data-profile-wins>—</span>
+                <span class="stat-label">Vitórias</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number" data-profile-ranking>—</span>
+                <span class="stat-label">Pontos de ranking</span>
+            </div>
+        </section>
+
+        <section class="profile-bio">
+            <h2>Bio</h2>
+            <p data-profile-bio>Carregando...</p>
+        </section>
+        <section class="arena-section" aria-labelledby="history-title">
+            <h2 id="history-title">Histórico de partidas e pontos</h2>
+            <p id="history-message" role="status" aria-live="polite">Carregando histórico...</p>
+            <div id="history-results" class="arena-grid"></div>
+            <h2>Histórico de times</h2><div id="history-teams" class="arena-grid"></div>
+            <div class="arena-actions"><button id="history-prev" disabled>Anterior</button><span id="history-page">Página 1</span><button id="history-next" disabled>Próxima</button></div>
+        </section>
+    </main>
+
+        <form class="profile-edit-form" data-profile-form hidden>
+            <h2>Editar dados</h2>
+            <div class="input-group"><label for="profile-nome">Nome</label><input id="profile-nome" name="nome" required></div>
+            <div class="input-group"><label for="profile-username">Nome de usuário</label><input id="profile-username" name="username" pattern="[A-Za-z0-9_]{3,50}" required></div>
+            <div class="input-group"><label for="profile-bio">Bio</label><input id="profile-bio" name="bio" maxlength="1000"></div>
+            <div class="input-group"><label for="profile-avatar">Link da foto</label><input id="profile-avatar" name="avatar_url" type="url" pattern="https?://.*"></div>
+            <button type="submit" class="btn-entrar">Salvar alterações</button>
+        </form>
+    <script src="menu.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
+    <script src="supabase-config.js"></script>
+    <script src="auth.js"></script>
+    <script src="arena-dados.js"></script>
+    <script>document.querySelector('[data-edit-profile]')?.addEventListener('click', () => { const form = document.querySelector('[data-profile-form]'); form.hidden = !form.hidden; });</script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+// Teste opt-in: cria uma conta QA real; imprime somente o UUID para limpeza administrativa.
+// Credenciais existem apenas na memória. Execute apenas com autorização para testar o serviço.
+const fs=require('node:fs'),vm=require('node:vm'),crypto=require('node:crypto');
+const {chromium}=require('@playwright/test');
+const app=require('./server');
+(async()=>{
+ const context={window:{}};vm.runInNewContext(fs.readFileSync('supabase-config.js','utf8'),context);
+ const config=context.window.RIVALS_SUPABASE_CONFIG;
+ const suffix=crypto.randomUUID().replace(/-/g,'');
+ const email=`qa-rivals-${suffix}@example.com`,password=`Qa!${crypto.randomBytes(24).toString('hex')}`;
+ const newPassword=`Qa!${crypto.randomBytes(24).toString('hex')}`;
+ const headers={apikey:config.anonKey,'Content-Type':'application/json'};
+ let browser,server,session,success=false,userId;
+ try{
+  const response=await fetch(config.url+'/auth/v1/signup',{method:'POST',headers,body:JSON.stringify({email,password,data:{nome:'Jogador QA temporário',username:'qa_'+suffix}}),signal:AbortSignal.timeout(15000)});
+  const data=await response.json();
+  if(!response.ok)throw Error('Não foi possível criar a conta QA: '+(data.code||response.status));
+  session=data;userId=data.user?.id;
+  if(userId)console.log(JSON.stringify({qa_user_id:userId}));
+  if(!data.access_token)throw Error('Cadastro exige confirmação; teste interrompido.');
+  server=app.listen(0,'127.0.0.1');await new Promise(resolve=>server.once('listening',resolve));
+  const base=`http://127.0.0.1:${server.address().port}`;
+  browser=await chromium.launch({headless:true});
+  const page=await browser.newPage();
+  page.on('pageerror',error=>console.log(JSON.stringify({erro_tela:error.message.replaceAll(password,'[redacted]').replaceAll(newPassword,'[redacted]')})));
+  page.on('response',async response=>{
+    if(response.url().startsWith(base+'/api/') && response.status()>=400)console.log(JSON.stringify({api_path:new URL(response.url()).pathname,status:response.status(),erro_api:await response.text()}));
+  });
+  page.setDefaultTimeout(20000);
+  await page.goto(base+'/login.html');
+  await page.getByLabel('E-mail').fill(email);
+  await page.getByLabel('Senha',{exact:true}).fill(password);
+  await page.getByRole('button',{name:'Entrar',exact:true}).click();
+  await page.waitForURL('**/homepage.html');
+  await page.locator('#home-message').filter({hasText:'Arena atualizada.'}).waitFor();
+  await page.goto(base+'/partidas.html');
+  await page.locator('#matches-message').filter({hasText:/\d+ partida\(s\) nesta página/}).waitFor();
+  // Verifica a sintaxe combinada e todos os relacionamentos na Data API real.
+  const {MATCH_SELECT}=require('./dados-publicos');
+  const query=new URLSearchParams({select:MATCH_SELECT,and:'(or(id_time_a.in.(1),id_time_b.in.(1)),or(id_campeonato.in.(1)))',limit:'1'});
+  const joined=await fetch(config.url+'/rest/v1/partidas?'+query,{headers:{...headers,Authorization:'Bearer '+session.access_token}});
+  if(!joined.ok)throw Error('Consulta real de confrontos rejeitada: '+await joined.text());
+  await page.goto(base+'/perfil.html');
+  await page.locator('[data-profile-name]').filter({hasText:'Jogador QA temporário'}).waitFor();
+  await page.locator('#history-message').filter({hasText:'Histórico de pontuação e participação em times.'}).waitFor();
+  await page.getByRole('button',{name:'Editar perfil'}).click();
+  await page.getByLabel('Bio',{exact:true}).fill('Bio QA real temporária');
+  await page.getByRole('button',{name:'Salvar alterações'}).click();
+  await page.locator('[data-auth-message]').filter({hasText:'Perfil atualizado.'}).waitFor();
+  await page.reload();
+  await page.locator('[data-profile-bio]').filter({hasText:'Bio QA real temporária'}).waitFor();
+  await page.goto(base+'/campeonatos.html');
+  await page.locator('#team-form [name="nome"]').fill('Time QA '+suffix);
+  await page.locator('#team-form button[type="submit"]').click();
+  await page.locator('#team-message').filter({hasText:'criado com sucesso'}).waitFor();
+  const cupForm=page.locator('#championship-form');
+  await cupForm.locator('[name="nome"]').fill('Copa QA '+suffix);
+  await cupForm.locator('[name="jogo"]').fill('Valorant');
+  await cupForm.locator('[name="max_times"]').fill('2');
+  await cupForm.locator('[name="data_inicio"]').fill('2099-01-01');
+  await cupForm.locator('[name="data_fim"]').fill('2099-12-31');
+  await cupForm.locator('button[type="submit"]').click();
+  await page.locator('#championship-message').filter({hasText:'Campeonato criado com sucesso.'}).waitFor();
+  const cupCard=page.locator('#championship-list .list-item').filter({hasText:'Copa QA '+suffix});
+  await cupCard.locator('[data-edit-championship]').click();
+  await cupForm.locator('[name="descricao"]').fill('Descrição QA editada pela API');
+  await cupForm.locator('button[type="submit"]').click();
+  await page.locator('#championship-message').filter({hasText:'Alterações salvas.'}).waitFor();
+  const cupId=await cupCard.locator('[data-cancel-championship]').getAttribute('data-cancel-championship');
+  const panel=await page.evaluate(id=>window.rivalsAuth.request('/api/campeonatos/'+id+'/painel'),cupId);
+  if(panel.championship.descricao!=='Descrição QA editada pela API')throw Error('Edição não persistiu no painel real.');
+  page.once('dialog',dialog=>dialog.accept());await cupCard.locator('[data-cancel-championship]').click();
+  await cupCard.locator('.status').filter({hasText:'cancelado'}).waitFor();
+  console.log(JSON.stringify({time_criado_api:true,campeonato_criado_editado_cancelado_api:true,painel_real:true}));
+  await page.goto(base+'/comunidade.html');
+  await page.getByRole('link',{name:'Criar comunidade',exact:true}).click();
+  await page.locator('#community-form [name="nome"]').fill('Comunidade QA '+suffix);
+  await page.locator('#community-form [name="jogo"]').fill('Valorant');
+  await page.locator('#community-form [name="categoria"]').selectOption('FPS');
+  await page.getByRole('button',{name:'Salvar comunidade',exact:true}).click();
+  await page.locator('#community-detail-title').filter({hasText:'Comunidade QA '+suffix}).waitFor();
+  await page.getByLabel('Nova publicação',{exact:true}).fill('Publicação QA real temporária');
+  await page.getByRole('button',{name:'Publicar',exact:true}).click();
+  await page.locator('.social-post-text').filter({hasText:'Publicação QA real temporária'}).waitFor();
+  await page.getByRole('button',{name:'Curtir · 0',exact:true}).click();
+  await page.getByRole('button',{name:'Descurtir · 1',exact:true}).waitFor();
+  await page.getByRole('button',{name:'Editar publicação',exact:true}).click();
+  await page.getByLabel('Editar publicação',{exact:true}).fill('Publicação QA real editada');
+  await page.getByRole('button',{name:'Salvar publicação',exact:true}).click();
+  await page.locator('.social-post-text').filter({hasText:'Publicação QA real editada'}).waitFor();
+  await page.reload();
+  await page.locator('.social-post-text').filter({hasText:'Publicação QA real editada'}).waitFor();
+  console.log(JSON.stringify({comunidade_real:true,publicacao_real:true,reacao_real:true,edicao_e_persistencia:true}));
+  await page.goto(base+'/homepage.html');
+  await page.locator('#home-communities').filter({hasText:'Comunidade QA '+suffix}).waitFor();
+  await page.locator('#home-communities article').filter({hasText:'Comunidade QA '+suffix}).getByRole('link',{name:'Ver comunidade',exact:true}).click();
+  await page.locator('#community-detail-title').filter({hasText:'Comunidade QA '+suffix}).waitFor();
+  console.log(JSON.stringify({home_real:true,partidas_reais:true,historico_real:true,links_comunidade:true,relacionamentos_e_filtros_rest:true}));
+  // Troca a senha da própria conta QA sem enviar e-mail para ninguém.
+  await page.goto(base+'/redefinir-senha.html');
+  await page.getByLabel('Nova senha',{exact:true}).fill(newPassword);
+  await page.getByLabel('Confirmar nova senha').fill(newPassword);
+  await page.getByRole('button',{name:'Salvar nova senha'}).click();
+  await page.locator('[data-auth-message]').filter({hasText:'Senha atualizada. Entre com sua nova senha.'}).waitFor();
+  await page.waitForFunction(()=>!document.querySelector('[data-password-form]') || document.querySelector('[data-password-form]').hidden);
+  await page.goto(base+'/login.html');
+  await page.getByLabel('E-mail').fill(email);await page.getByLabel('Senha',{exact:true}).fill(newPassword);
+  await page.getByRole('button',{name:'Entrar',exact:true}).click();await page.waitForURL('**/homepage.html');
+  console.log(JSON.stringify({troca_senha_real:true,login_com_nova_senha:true}));
+  await page.goto(base+'/perfil.html');
+  await page.getByRole('button',{name:'Sair',exact:true}).click();
+  await page.waitForURL('**/login.html');
+  await page.goto(base+'/perfil.html');await page.waitForURL('**/login.html**');
+  success=true;
+  console.log(JSON.stringify({login_real:true,perfil_api:true,persistencia:true,logout:true,pagina_protegida:true}));
+ }catch(error){console.log(JSON.stringify({erro:String(error.message).replaceAll(password,'[redacted]').replaceAll(newPassword,'[redacted]').replaceAll(email,'[qa-email]')}));}
+ finally{
+  if(browser)await browser.close();
+  if(server)await new Promise(resolve=>server.close(resolve));
+  if(session?.access_token){try{const result=await fetch(config.url+'/auth/v1/logout?scope=global',{method:'POST',headers:{...headers,Authorization:`Bearer ${session.access_token}`},signal:AbortSignal.timeout(10000)});console.log(JSON.stringify({revogacao_sessoes_http:result.status}));}catch{console.log('Falha ao revogar sessões QA.');}}
+  if(!success)process.exitCode=1;
+ }
+})();

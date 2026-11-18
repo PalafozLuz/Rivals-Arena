@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#000000">
+    <title>Início - Rivals Arena</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="page-home" data-auth-page="protected">
+    <header class="navbar">
+        <a class="logo" href="homepage.html" aria-label="Rivals Arena - início">
+            <img src="imagens/logo-menu.png" alt="Rivals Arena">
+        </a>
+        <form class="home-search" role="search" aria-label="Pesquisar na arena">
+            <label class="sr-only" for="home-search-input">Pesquisar comunidades, times ou campeonatos</label>
+            <input id="home-search-input" type="search" placeholder="Pesquisar comunidades, times ou campeonatos">
+            <button type="submit" aria-label="Pesquisar">⌕</button>
+        </form>
+        <button class="menu-icon menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <nav class="mobile-menu" aria-label="Menu principal">
+            <a href="homepage.html">Início</a>
+            <a href="perfil.html">Perfil</a>
+            <a href="comunidade.html">Comunidade</a>
+            <a href="campeonatos.html">Campeonatos</a>
+            <a href="partidas.html">Partidas</a>
+        </nav>
+    </header>
+
+    <section class="main-banner" aria-label="Banner principal">
+        <img src="BANNER1.png" alt="Banner principal da Rivals Arena">
+    </section>
+
+    <main class="content">
+        <p id="home-message" role="status" aria-live="polite">Carregando a arena...</p>
+        <section class="category-section"><h2>Comunidades recentes</h2><div id="home-communities" class="arena-grid"></div></section>
+        <section class="category-section"><div class="team-callout"><div><h2>Seu time começa aqui</h2><p>Monte sua equipe e prepare o próximo campeonato.</p></div><a class="btn-primary" href="times.html">Meus times</a></div></section>
+        <section class="category-section"><h2 class="heading-peach">Campeonatos da arena</h2><div id="home-championships" class="arena-grid"></div></section>
+        <section class="category-section"><h2>Jogos com campeonatos</h2><div id="home-games" class="arena-grid"></div></section>
+        <section class="category-section"><h2 class="heading-peach">Clipe em destaque</h2>
+            <div class="main-stream-card"><div class="main-stream-player">
+                <div class="twitch-fallback"><p class="twitch-fallback-message">Conteúdo externo da Twitch.</p><a href="https://clips.twitch.tv/SecretiveGloriousLemurDogFace-cZHdCnkpaEr0_dyA" target="_blank" rel="noopener noreferrer">Assistir ao clipe na Twitch</a></div>
+                <iframe class="twitch-clip" title="Clipe da Twitch" allow="autoplay; fullscreen" loading="lazy" referrerpolicy="origin"></iframe>
+                <strong>CLIPE DA COMUNIDADE</strong>
+            </div><aside class="main-stream-details"><div><h3>Conteúdo da Twitch</h3><p>Clipe selecionado para a comunidade. A disponibilidade depende da Twitch.</p></div></aside></div>
+        </section>
+        <section class="category-section"><h2>Confrontos cadastrados</h2><div id="home-matches" class="arena-grid"></div><a href="partidas.html" class="arena-link">Ver todas as partidas</a></section>
+    </main>
+
+    <footer class="footer"><h3>Explore a arena</h3><nav class="arena-actions"><a href="comunidade.html">Comunidades</a><a href="times.html">Times</a><a href="campeonatos.html">Campeonatos</a><a href="partidas.html">Partidas</a></nav></footer>
+
+    <script>
+        document.querySelector('.home-search')?.addEventListener('submit', (event) => {
+            event.preventDefault();
+        });
+
+        const twitchClip = document.querySelector('.twitch-clip');
+        const twitchFallback = document.querySelector('.twitch-fallback');
+        const twitchFallbackMessage = document.querySelector('.twitch-fallback-message');
+        const twitchPlayer = document.querySelector('.main-stream-player');
+        const parentDomain = window.location.hostname;
+
+        const startTwitchClip = () => {
+            const playerSize = twitchPlayer.getBoundingClientRect();
+            if (playerSize.width < 400 || playerSize.height < 300) {
+                twitchFallbackMessage.textContent = 'A Twitch exige um player de pelo menos 400 × 300 px. Abra o clipe na Twitch para assistir.';
+                return;
+            }
+
+            const params = new URLSearchParams({
+                clip: 'SecretiveGloriousLemurDogFace-cZHdCnkpaEr0_dyA',
+                parent: parentDomain,
+                autoplay: 'true',
+                muted: 'true'
+            });
+
+            twitchClip.src = `https://clips.twitch.tv/embed?${params}`;
+            twitchFallback.hidden = true;
+        };
+
+        if (!parentDomain) {
+            twitchFallbackMessage.textContent = 'Abra esta página por um servidor local ou pelo site publicado para assistir ao clipe.';
+        } else if ('IntersectionObserver' in window) {
+            const clipObserver = new IntersectionObserver((entries) => {
+                if (entries.some((entry) => entry.isIntersecting)) {
+                    startTwitchClip();
+                    if (twitchClip.src) {
+                        clipObserver.disconnect();
+                    }
+                }
+            }, { threshold: 0.5 });
+
+            clipObserver.observe(twitchPlayer);
+        } else {
+            startTwitchClip();
+        }
+
+    </script>
+    <script src="menu.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
+    <script src="supabase-config.js"></script>
+    <script src="auth.js"></script>
+    <script src="arena-dados.js"></script>
+</body>
+</html>

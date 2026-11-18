@@ -1,0 +1,43 @@
+const {test}=require('node:test');
+const assert=require('node:assert/strict');
+const {PGlite}=require('@electric-sql/pglite');
+const fs=require('node:fs'),path=require('node:path');
+test('comunidades: dono automático, entrada/saída, conteúdo e reações com autorização',async()=>{
+ const db=new PGlite();
+ try{
+  await db.exec(`CREATE ROLE anon; CREATE ROLE authenticated; CREATE SCHEMA auth;
+   CREATE TABLE auth.users(id UUID PRIMARY KEY,raw_user_meta_data JSONB DEFAULT '{}');
+   CREATE FUNCTION auth.uid() RETURNS UUID LANGUAGE SQL AS 'SELECT nullif(current_setting(''request.jwt.claim.sub'',true),'''')::UUID';
+   GRANT USAGE ON SCHEMA auth,public TO authenticated,anon;`);
+  for(const file of ['schema.sql','supabase/migrations/20261117215510_comunidades_integradas.sql'])await db.exec(fs.readFileSync(path.join(__dirname,file),'utf8'));
+  await db.exec(fs.readFileSync(path.join(__dirname,'supabase/migrations/20261117215510_comunidades_integradas.sql'),'utf8'));
+  const user=n=>`00000000-0000-0000-0000-${String(n).padStart(12,'0')}`;
+  for(let n=1;n<=3;n++)await db.query('INSERT INTO auth.users(id) VALUES($1)',[user(n)]);
+  const login=async n=>{await db.exec('RESET ROLE');await db.query("SELECT set_config('request.jwt.claim.sub',$1,false)",[user(n)]);await db.exec('SET ROLE authenticated');};
+  await login(1);
+  const id=(await db.query("INSERT INTO public.comunidades(nome,slug,id_criador,categoria) VALUES('Comunidade QA','comunidade-qa',$1,'FPS') RETURNING id_comunidade",[user(1)])).rows[0].id_comunidade;
+  assert.equal((await db.query('SELECT papel FROM public.membros_comunidade WHERE id_comunidade=$1',[id])).rows[0].papel,'dono');
+  await db.query('DELETE FROM public.membros_comunidade WHERE id_comunidade=$1',[id]);
+  assert.equal((await db.query('SELECT count(*)::int AS n FROM public.membros_comunidade WHERE id_comunidade=$1',[id])).rows[0].n,1);
+  await login(2);
+  await assert.rejects(db.query("INSERT INTO public.membros_comunidade(id_comunidade,id_jogador,papel) VALUES($1,$2,'dono')",[id,user(2)]),/permission denied/);
+  await assert.rejects(db.query("INSERT INTO public.publicacoes(id_comunidade,id_autor,conteudo) VALUES($1,$2,'Sem participação')",[id,user(2)]),/row-level security/);
+  await db.query('INSERT INTO public.membros_comunidade(id_comunidade,id_jogador) VALUES($1,$2)',[id,user(2)]);
+  const post=(await db.query('INSERT INTO public.publicacoes(id_comunidade,id_autor,conteudo) VALUES($1,$2,$3) RETURNING id_publicacao',[id,user(2),'<b>Texto literal</b>'])).rows[0].id_publicacao;
+  await db.query("UPDATE public.comunidades SET nome='Tentativa de terceiro' WHERE id_comunidade=$1",[id]);
+  assert.equal((await db.query('SELECT nome FROM public.comunidades WHERE id_comunidade=$1',[id])).rows[0].nome,'Comunidade QA');
+  await login(3);
+  await assert.rejects(db.query('INSERT INTO public.reacoes_publicacao(id_publicacao,id_jogador) VALUES($1,$2)',[post,user(3)]),/row-level security/);
+  await db.query("UPDATE public.publicacoes SET conteudo='Ataque' WHERE id_publicacao=$1",[post]);
+  await db.query('DELETE FROM public.publicacoes WHERE id_publicacao=$1',[post]);
+  assert.equal((await db.query('SELECT conteudo FROM public.publicacoes WHERE id_publicacao=$1',[post])).rows[0].conteudo,'<b>Texto literal</b>');
+  await login(1);
+  await db.query('INSERT INTO public.reacoes_publicacao(id_publicacao,id_jogador) VALUES($1,$2)',[post,user(1)]);
+  await login(2);
+  await db.query("UPDATE public.publicacoes SET conteudo='Editado' WHERE id_publicacao=$1",[post]);
+  await db.query('DELETE FROM public.membros_comunidade WHERE id_comunidade=$1 AND id_jogador=$2',[id,user(2)]);
+  await assert.rejects(db.query("INSERT INTO public.publicacoes(id_comunidade,id_autor,conteudo) VALUES($1,$2,'Após sair')",[id,user(2)]),/row-level security/);
+  await db.query('DELETE FROM public.publicacoes WHERE id_publicacao=$1',[post]);
+  assert.equal((await db.query('SELECT count(*)::int AS n FROM public.reacoes_publicacao WHERE id_publicacao=$1',[post])).rows[0].n,0);
+ }finally{await db.close();}
+});

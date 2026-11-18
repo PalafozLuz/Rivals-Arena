@@ -1,0 +1,52 @@
+const {test}=require('node:test');
+const assert=require('node:assert/strict');
+const express=require('express');
+const {createApi}=require('./api');
+async function fixture(run){
+ const calls=[];
+ const app=express();
+ app.use('/api',createApi({configProvider:()=>({url:'https://example.test',key:'public-test'}),fetchImpl:async(url,options)=>{
+  if(url.endsWith('/auth/v1/user'))return Response.json({id:'jogador-atual'});
+  const u=new URL(url);calls.push({u,options});
+  if(u.pathname.endsWith('/contratos'))return Response.json([{id_time:7}]);
+  if(u.pathname.endsWith('/times'))return Response.json([{id_time:7}]);
+  if(u.pathname.endsWith('/campeonatos'))return Response.json([{id_campeonato:3,jogo:'Valorant'}]);
+  if(u.pathname.endsWith('/partidas'))return Response.json(Array.from({length:25},(_,i)=>({id_partida:i+1})));
+  return Response.json([]);
+ }}));
+ const server=app.listen(0,'127.0.0.1');await new Promise(resolve=>server.once('listening',resolve));
+ try{await run(path=>fetch(`http://127.0.0.1:${server.address().port}/api/`+path,{headers:{Authorization:'Bearer qa-token'}}),calls);}finally{await new Promise(resolve=>server.close(resolve));}
+}
+test('partidas combina busca e times da sessão, pagina e preserva RLS',()=>fixture(async(get,calls)=>{
+ const r=await get('partidas?minhas=1&q=Valorant&status=finalizada&page=2');assert.equal(r.status,200);
+ const body=await r.json();assert.equal(body.data.length,24);assert.equal(body.hasMore,true);
+ const {u,options}=calls.find(c=>c.u.pathname.endsWith('/partidas'));
+ assert.equal(u.searchParams.get('offset'),'24');assert.equal(u.searchParams.get('status'),'eq.finalizada');
+ assert.equal(u.searchParams.get('and'),'(or(id_time_a.in.(7),id_time_b.in.(7)),or(id_time_a.in.(7),id_time_b.in.(7),id_campeonato.in.(3)))');
+ assert.equal(options.headers.Authorization,'Bearer qa-token');
+ assert.equal(calls.find(c=>c.u.pathname.endsWith('/contratos')).u.searchParams.get('id_jogador'),'eq.jogador-atual');
+}));
+test('histórico usa sempre jogador autenticado e relacionamentos explícitos',()=>fixture(async(get,calls)=>{
+ const r=await get('meu-historico?id_jogador=outra-pessoa');assert.equal(r.status,200);
+ for(const {u} of calls){assert.equal(u.searchParams.get('id_jogador'),'eq.jogador-atual');}
+ const history=calls.find(c=>c.u.pathname.endsWith('/historico_ranking')).u;
+ assert.match(history.searchParams.get('select'),/partidas!historico_ranking_id_partida_fkey/);
+}));
+test('leituras rejeitam página, status e identificadores inválidos antes da consulta',()=>fixture(async(get,calls)=>{
+ for(const path of ['partidas?page=-1','partidas?status=inventado','partidas/abc','meu-historico?page=1.5'])assert.equal((await get(path)).status,400,path);
+ assert.equal(calls.length,0);
+}));
+test('painel retorna rodadas e classificação pela API com vínculos explícitos',async()=>{
+ const app=express();const calls=[];
+ app.use('/api',createApi({configProvider:()=>({url:'https://example.test',key:'public'}),fetchImpl:async url=>{
+  if(url.endsWith('/auth/v1/user'))return Response.json({id:'jogador'});const u=new URL(url);calls.push(u);
+  if(u.pathname.endsWith('/campeonatos'))return Response.json([{id_campeonato:3,nome:'Copa'}]);
+  if(u.pathname.endsWith('/partidas'))return Response.json([{id_partida:1,rodada:1,time_a:{id_time:7,nome:'Alfa'},time_b:{id_time:8,nome:'Beta'}}]);
+  return Response.json([{id_time:7,pontos:3,times:{id_time:7,nome:'Alfa'}}]);
+ }}));
+ const server=app.listen(0,'127.0.0.1');await new Promise(resolve=>server.once('listening',resolve));
+ try{const response=await fetch(`http://127.0.0.1:${server.address().port}/api/campeonatos/3/painel`,{headers:{Authorization:'Bearer qa'}});assert.equal(response.status,200);
+  const {data}=await response.json();assert.equal(data.teams.length,2);assert.equal(data.matches[0].rodada,1);assert.equal(data.classification[0].pontos,3);
+  for(const u of calls)assert.equal(u.searchParams.get('id_campeonato'),'eq.3');
+ }finally{await new Promise(resolve=>server.close(resolve));}
+});

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#000000">
+    <title>Comunidades - Rivals Arena</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="page-community" data-auth-page="protected">
+    <header class="community-header">
+        <div class="community-header-top">
+            <a class="community-logo" href="homepage.html" aria-label="Rivals Arena - início"><img src="imagens/logo-menu.png" alt="Rivals Arena"></a>
+            <form class="community-search" role="search">
+                <label class="sr-only" for="community-search-input">Pesquisar comunidades</label>
+                <input id="community-search-input" type="search" placeholder="Pesquisar comunidades">
+                <button type="submit" aria-label="Pesquisar">⌕</button>
+            </form>
+            <button class="menu-icon menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false"><span></span><span></span><span></span></button>
+        </div>
+        <nav class="mobile-menu" aria-label="Menu principal">
+            <a href="homepage.html">Início</a><a href="perfil.html">Perfil</a><a href="comunidade.html" aria-current="page">Comunidade</a><a href="campeonatos.html">Campeonatos</a><a href="partidas.html">Partidas</a>
+        </nav>
+        <nav class="community-nav" aria-label="Navegação das comunidades"><a href="#categorias">Categorias</a><a href="#minhas-comunidades">Minhas comunidades</a><a href="#destaques">Em destaque</a></nav>
+        <div class="community-filters" aria-label="Filtros de comunidades">
+            <button type="button" class="is-active">Todos</button><button type="button">Brasileiros</button><button type="button">Simuladores</button><button type="button">RPG</button><button type="button">Battle Royale</button><button type="button">FPS</button><button type="button">Aventura</button>
+        </div>
+    </header>
+
+    <main class="community-main">
+        <section class="community-hero" aria-labelledby="community-hero-title">
+            <div class="community-hero-copy"><p class="eyebrow">COMPETIÇÃO E COMUNIDADE</p><h1 id="community-hero-title">Encontre sua comunidade</h1><p>Conheça jogadores, compartilhe suas partidas e crie seu espaço na arena.</p><a class="community-primary-action" href="#community-editor">Criar comunidade</a></div>
+            <div class="community-hero-art" aria-hidden="true"><img src="imagens/valorant.png" alt=""></div>
+        </section>
+        <p id="community-message" class="form-message" role="status" aria-live="polite">Carregando comunidades...</p>
+        <details id="community-editor" class="community-section social-panel">
+            <summary id="community-editor-title">Criar comunidade</summary>
+            <form id="community-form" class="social-form">
+                <label>Nome<input name="nome" required minlength="2" maxlength="100"></label>
+                <label>Identificador<input name="slug" required pattern="[a-z0-9][a-z0-9-]{2,139}" placeholder="minha-comunidade"></label>
+                <label>Jogo<input name="jogo" maxlength="100"></label>
+                <label>Categoria<select name="categoria"><option>Geral</option><option>Brasileiros</option><option>Simuladores</option><option>RPG</option><option>Battle Royale</option><option>FPS</option><option>Aventura</option></select></label>
+                <label class="social-full">Descrição<textarea name="descricao" maxlength="2000" rows="3"></textarea></label>
+                <label class="social-full">Link da imagem (opcional)<input name="imagem_url" type="url" pattern="https?://.*" maxlength="2048"></label>
+                <button type="submit">Salvar comunidade</button><button type="button" id="community-cancel-edit">Limpar formulário</button>
+            </form>
+        </details>
+        <section class="community-section" id="categorias">
+            <div class="community-section-heading"><h2><span>Explore</span> as comunidades</h2></div>
+            <div id="communities-grid" class="my-community-grid"></div>
+            <div class="social-pagination"><button type="button" id="community-prev">Anterior</button><span id="community-page">Página 1</span><button type="button" id="community-next">Próxima</button></div>
+        </section>
+        <section class="community-section" id="minhas-comunidades">
+            <div class="community-section-heading"><h2><span>Minhas</span> comunidades</h2></div>
+            <div id="my-communities-grid" class="my-community-grid"></div>
+        </section>
+        <section class="community-section" id="destaques">
+            <div class="community-section-heading"><h2><span>Comunidades</span> recentes</h2></div>
+            <div id="recent-communities-grid" class="featured-community-grid"></div>
+        </section>
+        <section id="community-detail" class="community-section social-panel" hidden aria-labelledby="community-detail-title">
+            <h2 id="community-detail-title"></h2><p id="community-detail-description"></p>
+            <p id="community-detail-count"></p><div id="community-actions" class="social-actions"></div>
+            <details><summary>Membros</summary><ul id="community-members"></ul></details>
+            <form id="community-post-form" class="social-form">
+                <label class="social-full">Nova publicação<textarea name="conteudo" required maxlength="5000" rows="3"></textarea></label>
+                <button type="submit">Publicar</button>
+            </form>
+            <h3>Publicações</h3><div id="community-posts"></div>
+            <div class="social-pagination"><button type="button" id="posts-prev">Anteriores</button><span id="posts-page"></span><button type="button" id="posts-next">Mais publicações</button></div>
+        </section>
+    </main>
+
+    <script src="menu.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
+    <script src="supabase-config.js"></script>
+    <script src="auth.js"></script>
+    <script src="comunidades.js"></script>
+</body>
+</html>
