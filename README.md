@@ -2,6 +2,17 @@
 
 Plataforma web em HTML/CSS/JavaScript, com API Express e PostgreSQL/Supabase.
 
+## Documentação para entrega
+
+Comece pelo [índice da documentação](docs/README.md): modelos conceitual, lógico
+e físico, dicionário de dados, requisitos, API exportada e roteiro de demonstração.
+A estrutura foi comparada em 19/11/2026: 12 tabelas, 92 atributos, 73 restrições
+PK/FK/UK/CHECK e 26 índices, com RLS nas 12 tabelas.
+
+`npm run docs:gerar` reproduz a conferência em banco descartável e gera as partes
+derivadas do SQL e da API. Não altera o Supabase remoto. SVGs podem ser regenerados
+com `npm run docs:diagramas`, conforme instruções no índice.
+
 ## Executar
 
 Requer Node.js 22 ou superior. Execute `npm install`, depois `npm start` e abra
@@ -138,7 +149,7 @@ Para instalar em outro banco, execute o esquema inicial, as quatro migrations
 da pasta `migrations` e então essa migration da pasta `supabase/migrations`.
 
 Ainda precisam ser concluídos:
-modelagem, Git, configuração final de autenticação/publicação e testes no domínio público.
+configuração final de autenticação, publicação e testes no domínio público.
 Grupos permanece fora desta entrega.
 
 ## Home, partidas e histórico (passo 5)

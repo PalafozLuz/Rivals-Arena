@@ -1,5 +1,26 @@
 # Arena Rivals — Análise e plano de implementação
 
+## Passo 7 documentado — 19/11/2026
+
+Modelos conceitual, lógico e físico organizados em docs/modelagem, com diagramas
+Mermaid e SVG, dicionário de tipos/chaves/restrições/índices e decisões de normalização.
+SQL inicial + cinco migrations recriados em banco descartável e comparados com
+metadados do Supabase: 12 tabelas, 92 atributos, 73 restrições PK/FK/UK/CHECK,
+26 índices, RLS nas 12 tabelas. Sem divergências no escopo comparado.
+Não foram consultados/exportados registros pessoais nem alterado o banco remoto.
+
+Requisitos, rastreabilidade do briefing, arquitetura, matriz de operações CRUD,
+OpenAPI exportada (25 caminhos) e roteiro com quatro identidades foram entregues.
+O roteiro final não foi marcado como aprovado sem execução. Restrições de exclusão
+e limitações de escopo/validação estão declaradas, sem inventar funcionalidade.
+Índice: [docs/README.md](docs/README.md).
+
+GitHub já criado e primeiro envio confirmado em PalafozLuz/Rivals-Arena.
+Próximo: publicar na Vercel e conferir Auth/e-mail, conteúdo externo e ciclo
+completo com contas distintas no domínio publicado. A configuração de URLs de
+Auth continua pendente. As referências históricas abaixo a modelagem/Git pendentes
+estão superadas; não indicam tarefas a refazer.
+
 ## Passo 6 implementado — 17/11/2026
 
 Concluída a passagem das operações restantes de campeonatos para a API Express:

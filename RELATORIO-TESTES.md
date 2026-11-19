@@ -2,6 +2,16 @@
 
 Data: 17/11/2026. Projeto Supabase: Rivals Arena.
 
+Atualização documental de 19/11/2026: `npm run docs:gerar` recriou o banco
+descartável e comparou tipos, nulabilidade, padrões, PK/FK/UK/CHECK, índices e
+habilitação de RLS com os metadados remotos: 12 tabelas, 92 atributos, 73 restrições,
+26 índices, sem divergências no escopo comparado. Sem escrita no Supabase remoto.
+OpenAPI com 25 caminhos exportada da aplicação local. Diagramas Mermaid
+validados, exportados em SVG e inspecionados visualmente em Chromium.
+As contagens de 21/16 abaixo correspondem às suítes já executadas na etapa
+anterior, não a uma nova homologação de produção. Detalhes em
+[docs/modelagem/conferencia.md](docs/modelagem/conferencia.md).
+
 | Camada | Resultado |
 | --- | --- |
 | API e PostgreSQL local | 21 testes aprovados (`npm test`) |

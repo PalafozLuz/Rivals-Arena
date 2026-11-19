@@ -1,0 +1,1730 @@
+{
+  "tables": [
+    {
+      "table_name": "campeonatos",
+      "column_name": "id_campeonato",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0,
+      "is_identity": "YES"
+    },
+    {
+      "table_name": "campeonatos",
+      "column_name": "nome",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 150,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "campeonatos",
+      "column_name": "jogo",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 100,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "campeonatos",
+      "column_name": "descricao",
+      "data_type": "text",
+      "udt_name": "text",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "campeonatos",
+      "column_name": "formato",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": "'eliminatoria'::character varying",
+      "character_maximum_length": 30,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "campeonatos",
+      "column_name": "max_times",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "campeonatos",
+      "column_name": "taxa_inscricao",
+      "data_type": "numeric",
+      "udt_name": "numeric",
+      "is_nullable": "NO",
+      "column_default": "0",
+      "character_maximum_length": null,
+      "numeric_precision": 10,
+      "numeric_scale": 2,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "campeonatos",
+      "column_name": "premio",
+      "data_type": "numeric",
+      "udt_name": "numeric",
+      "is_nullable": "NO",
+      "column_default": "0",
+      "character_maximum_length": null,
+      "numeric_precision": 12,
+      "numeric_scale": 2,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "campeonatos",
+      "column_name": "id_criador",
+      "data_type": "uuid",
+      "udt_name": "uuid",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "campeonatos",
+      "column_name": "data_inicio",
+      "data_type": "date",
+      "udt_name": "date",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "campeonatos",
+      "column_name": "data_fim",
+      "data_type": "date",
+      "udt_name": "date",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "campeonatos",
+      "column_name": "status",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": "'rascunho'::character varying",
+      "character_maximum_length": 20,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "campeonatos",
+      "column_name": "criado_em",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": "now()",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "campeonatos",
+      "column_name": "atualizado_em",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": "now()",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "classificacao_campeonatos",
+      "column_name": "id_campeonato",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "classificacao_campeonatos",
+      "column_name": "id_time",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "classificacao_campeonatos",
+      "column_name": "pontos",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": "0",
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "classificacao_campeonatos",
+      "column_name": "jogos",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": "0",
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "classificacao_campeonatos",
+      "column_name": "vitorias",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": "0",
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "classificacao_campeonatos",
+      "column_name": "derrotas",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": "0",
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "classificacao_campeonatos",
+      "column_name": "empates",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": "0",
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "classificacao_campeonatos",
+      "column_name": "saldo_gols",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": "0",
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "comunidades",
+      "column_name": "id_comunidade",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0,
+      "is_identity": "YES"
+    },
+    {
+      "table_name": "comunidades",
+      "column_name": "nome",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 120,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "comunidades",
+      "column_name": "slug",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 140,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "comunidades",
+      "column_name": "descricao",
+      "data_type": "text",
+      "udt_name": "text",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "comunidades",
+      "column_name": "jogo",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": 100,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "comunidades",
+      "column_name": "imagem_url",
+      "data_type": "text",
+      "udt_name": "text",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "comunidades",
+      "column_name": "id_criador",
+      "data_type": "uuid",
+      "udt_name": "uuid",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "comunidades",
+      "column_name": "criada_em",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": "now()",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "comunidades",
+      "column_name": "categoria",
+      "data_type": "text",
+      "udt_name": "text",
+      "is_nullable": "NO",
+      "column_default": "'Geral'::text",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "contratos",
+      "column_name": "id_contrato",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0,
+      "is_identity": "YES"
+    },
+    {
+      "table_name": "contratos",
+      "column_name": "id_jogador",
+      "data_type": "uuid",
+      "udt_name": "uuid",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "contratos",
+      "column_name": "id_time",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "contratos",
+      "column_name": "data_entrada",
+      "data_type": "date",
+      "udt_name": "date",
+      "is_nullable": "NO",
+      "column_default": "CURRENT_DATE",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "contratos",
+      "column_name": "data_saida",
+      "data_type": "date",
+      "udt_name": "date",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "contratos",
+      "column_name": "status",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": "'ativo'::character varying",
+      "character_maximum_length": 20,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "historico_ranking",
+      "column_name": "id_historico",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0,
+      "is_identity": "YES"
+    },
+    {
+      "table_name": "historico_ranking",
+      "column_name": "id_jogador",
+      "data_type": "uuid",
+      "udt_name": "uuid",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "historico_ranking",
+      "column_name": "id_campeonato",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "historico_ranking",
+      "column_name": "id_partida",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "historico_ranking",
+      "column_name": "pontos",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "historico_ranking",
+      "column_name": "motivo",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 100,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "historico_ranking",
+      "column_name": "criado_em",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": "now()",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "inscricoes",
+      "column_name": "id_inscricao",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0,
+      "is_identity": "YES"
+    },
+    {
+      "table_name": "inscricoes",
+      "column_name": "id_time",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "inscricoes",
+      "column_name": "id_campeonato",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "inscricoes",
+      "column_name": "data_inscricao",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": "now()",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "inscricoes",
+      "column_name": "status",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": "'pendente'::character varying",
+      "character_maximum_length": 20,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "jogadores",
+      "column_name": "id_jogador",
+      "data_type": "uuid",
+      "udt_name": "uuid",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "jogadores",
+      "column_name": "nome",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": "''::character varying",
+      "character_maximum_length": 100,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "jogadores",
+      "column_name": "username",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 50,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "jogadores",
+      "column_name": "avatar_url",
+      "data_type": "text",
+      "udt_name": "text",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "jogadores",
+      "column_name": "bio",
+      "data_type": "text",
+      "udt_name": "text",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "jogadores",
+      "column_name": "pontuacao_ranking",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": "0",
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "jogadores",
+      "column_name": "vitorias",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": "0",
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "jogadores",
+      "column_name": "derrotas",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": "0",
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "jogadores",
+      "column_name": "data_cadastro",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": "now()",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "jogadores",
+      "column_name": "atualizado_em",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": "now()",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "membros_comunidade",
+      "column_name": "id_comunidade",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "membros_comunidade",
+      "column_name": "id_jogador",
+      "data_type": "uuid",
+      "udt_name": "uuid",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "membros_comunidade",
+      "column_name": "papel",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": "'membro'::character varying",
+      "character_maximum_length": 20,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "membros_comunidade",
+      "column_name": "entrou_em",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": "now()",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "partidas",
+      "column_name": "id_partida",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0,
+      "is_identity": "YES"
+    },
+    {
+      "table_name": "partidas",
+      "column_name": "id_campeonato",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "partidas",
+      "column_name": "rodada",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "partidas",
+      "column_name": "numero_partida",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "partidas",
+      "column_name": "id_time_a",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "partidas",
+      "column_name": "id_time_b",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "partidas",
+      "column_name": "placar_a",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": "0",
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "partidas",
+      "column_name": "placar_b",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": "0",
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "partidas",
+      "column_name": "vencedor",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "partidas",
+      "column_name": "data_hora",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "partidas",
+      "column_name": "status",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": "'agendada'::character varying",
+      "character_maximum_length": 20,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "partidas",
+      "column_name": "resultado_processado",
+      "data_type": "boolean",
+      "udt_name": "bool",
+      "is_nullable": "NO",
+      "column_default": "false",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "publicacoes",
+      "column_name": "id_publicacao",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0,
+      "is_identity": "YES"
+    },
+    {
+      "table_name": "publicacoes",
+      "column_name": "id_comunidade",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "publicacoes",
+      "column_name": "id_autor",
+      "data_type": "uuid",
+      "udt_name": "uuid",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "publicacoes",
+      "column_name": "conteudo",
+      "data_type": "text",
+      "udt_name": "text",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "publicacoes",
+      "column_name": "criada_em",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": "now()",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "publicacoes",
+      "column_name": "atualizada_em",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": "now()",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "reacoes_publicacao",
+      "column_name": "id_publicacao",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "reacoes_publicacao",
+      "column_name": "id_jogador",
+      "data_type": "uuid",
+      "udt_name": "uuid",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "reacoes_publicacao",
+      "column_name": "tipo",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": "'curtida'::character varying",
+      "character_maximum_length": 20,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "reacoes_publicacao",
+      "column_name": "criada_em",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": "now()",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "times",
+      "column_name": "id_time",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0,
+      "is_identity": "YES"
+    },
+    {
+      "table_name": "times",
+      "column_name": "nome",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 100,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "times",
+      "column_name": "logo_url",
+      "data_type": "text",
+      "udt_name": "text",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "times",
+      "column_name": "id_capitao",
+      "data_type": "uuid",
+      "udt_name": "uuid",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "times",
+      "column_name": "status",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": "'ativo'::character varying",
+      "character_maximum_length": 20,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "times",
+      "column_name": "data_criacao",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": "now()",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    },
+    {
+      "table_name": "times",
+      "column_name": "atualizado_em",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": "now()",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_identity": "NO"
+    }
+  ],
+  "constraints": [
+    {
+      "table_name": "campeonatos",
+      "conname": "campeonatos_datas_validas",
+      "contype": "c",
+      "definition": "CHECK ((data_fim >= data_inicio))"
+    },
+    {
+      "table_name": "campeonatos",
+      "conname": "campeonatos_formato_valido",
+      "contype": "c",
+      "definition": "CHECK (((formato)::text = ANY ((ARRAY['eliminatoria'::character varying, 'pontos_corridos'::character varying, 'grupos'::character varying])::text[])))"
+    },
+    {
+      "table_name": "campeonatos",
+      "conname": "campeonatos_id_criador_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (id_criador) REFERENCES jogadores(id_jogador) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "campeonatos",
+      "conname": "campeonatos_jogo_check",
+      "contype": "c",
+      "definition": "CHECK ((length(TRIM(BOTH FROM jogo)) >= 2))"
+    },
+    {
+      "table_name": "campeonatos",
+      "conname": "campeonatos_max_times_check",
+      "contype": "c",
+      "definition": "CHECK (((max_times >= 2) AND (max_times <= 1024)))"
+    },
+    {
+      "table_name": "campeonatos",
+      "conname": "campeonatos_nome_check",
+      "contype": "c",
+      "definition": "CHECK ((length(TRIM(BOTH FROM nome)) >= 3))"
+    },
+    {
+      "table_name": "campeonatos",
+      "conname": "campeonatos_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id_campeonato)"
+    },
+    {
+      "table_name": "campeonatos",
+      "conname": "campeonatos_premio_check",
+      "contype": "c",
+      "definition": "CHECK ((premio >= (0)::numeric))"
+    },
+    {
+      "table_name": "campeonatos",
+      "conname": "campeonatos_status_valido",
+      "contype": "c",
+      "definition": "CHECK (((status)::text = ANY ((ARRAY['rascunho'::character varying, 'aberto'::character varying, 'em_andamento'::character varying, 'encerrado'::character varying, 'cancelado'::character varying])::text[])))"
+    },
+    {
+      "table_name": "campeonatos",
+      "conname": "campeonatos_taxa_inscricao_check",
+      "contype": "c",
+      "definition": "CHECK ((taxa_inscricao >= (0)::numeric))"
+    },
+    {
+      "table_name": "classificacao_campeonatos",
+      "conname": "classificacao_campeonatos_derrotas_check",
+      "contype": "c",
+      "definition": "CHECK ((derrotas >= 0))"
+    },
+    {
+      "table_name": "classificacao_campeonatos",
+      "conname": "classificacao_campeonatos_empates_check",
+      "contype": "c",
+      "definition": "CHECK ((empates >= 0))"
+    },
+    {
+      "table_name": "classificacao_campeonatos",
+      "conname": "classificacao_campeonatos_id_campeonato_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (id_campeonato) REFERENCES campeonatos(id_campeonato) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "classificacao_campeonatos",
+      "conname": "classificacao_campeonatos_id_time_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (id_time) REFERENCES times(id_time) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "classificacao_campeonatos",
+      "conname": "classificacao_campeonatos_jogos_check",
+      "contype": "c",
+      "definition": "CHECK ((jogos >= 0))"
+    },
+    {
+      "table_name": "classificacao_campeonatos",
+      "conname": "classificacao_campeonatos_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id_campeonato, id_time)"
+    },
+    {
+      "table_name": "classificacao_campeonatos",
+      "conname": "classificacao_campeonatos_pontos_check",
+      "contype": "c",
+      "definition": "CHECK ((pontos >= 0))"
+    },
+    {
+      "table_name": "classificacao_campeonatos",
+      "conname": "classificacao_campeonatos_vitorias_check",
+      "contype": "c",
+      "definition": "CHECK ((vitorias >= 0))"
+    },
+    {
+      "table_name": "comunidades",
+      "conname": "comunidades_categoria_check",
+      "contype": "c",
+      "definition": "CHECK ((categoria = ANY (ARRAY['Geral'::text, 'Brasileiros'::text, 'Simuladores'::text, 'RPG'::text, 'Battle Royale'::text, 'FPS'::text, 'Aventura'::text])))"
+    },
+    {
+      "table_name": "comunidades",
+      "conname": "comunidades_id_criador_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (id_criador) REFERENCES jogadores(id_jogador) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "comunidades",
+      "conname": "comunidades_nome_key",
+      "contype": "u",
+      "definition": "UNIQUE (nome)"
+    },
+    {
+      "table_name": "comunidades",
+      "conname": "comunidades_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id_comunidade)"
+    },
+    {
+      "table_name": "comunidades",
+      "conname": "comunidades_slug_key",
+      "contype": "u",
+      "definition": "UNIQUE (slug)"
+    },
+    {
+      "table_name": "contratos",
+      "conname": "contratos_datas_validas",
+      "contype": "c",
+      "definition": "CHECK (((data_saida IS NULL) OR (data_saida >= data_entrada)))"
+    },
+    {
+      "table_name": "contratos",
+      "conname": "contratos_id_jogador_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (id_jogador) REFERENCES jogadores(id_jogador) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "contratos",
+      "conname": "contratos_id_time_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (id_time) REFERENCES times(id_time) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "contratos",
+      "conname": "contratos_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id_contrato)"
+    },
+    {
+      "table_name": "contratos",
+      "conname": "contratos_status_consistente",
+      "contype": "c",
+      "definition": "CHECK (((((status)::text = 'ativo'::text) AND (data_saida IS NULL)) OR ((status)::text = ANY ((ARRAY['inativo'::character varying, 'pendente'::character varying])::text[]))))"
+    },
+    {
+      "table_name": "contratos",
+      "conname": "contratos_status_valido",
+      "contype": "c",
+      "definition": "CHECK (((status)::text = ANY ((ARRAY['ativo'::character varying, 'inativo'::character varying, 'pendente'::character varying])::text[])))"
+    },
+    {
+      "table_name": "historico_ranking",
+      "conname": "historico_ranking_id_campeonato_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (id_campeonato) REFERENCES campeonatos(id_campeonato) ON DELETE SET NULL"
+    },
+    {
+      "table_name": "historico_ranking",
+      "conname": "historico_ranking_id_jogador_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (id_jogador) REFERENCES jogadores(id_jogador) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "historico_ranking",
+      "conname": "historico_ranking_id_partida_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (id_partida) REFERENCES partidas(id_partida) ON DELETE SET NULL"
+    },
+    {
+      "table_name": "historico_ranking",
+      "conname": "historico_ranking_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id_historico)"
+    },
+    {
+      "table_name": "inscricoes",
+      "conname": "inscricoes_id_campeonato_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (id_campeonato) REFERENCES campeonatos(id_campeonato) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "inscricoes",
+      "conname": "inscricoes_id_time_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (id_time) REFERENCES times(id_time) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "inscricoes",
+      "conname": "inscricoes_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id_inscricao)"
+    },
+    {
+      "table_name": "inscricoes",
+      "conname": "inscricoes_status_valido",
+      "contype": "c",
+      "definition": "CHECK (((status)::text = ANY ((ARRAY['pendente'::character varying, 'aprovada'::character varying, 'recusada'::character varying, 'cancelada'::character varying])::text[])))"
+    },
+    {
+      "table_name": "inscricoes",
+      "conname": "inscricoes_time_campeonato_unicos",
+      "contype": "u",
+      "definition": "UNIQUE (id_time, id_campeonato)"
+    },
+    {
+      "table_name": "jogadores",
+      "conname": "jogadores_derrotas_check",
+      "contype": "c",
+      "definition": "CHECK ((derrotas >= 0))"
+    },
+    {
+      "table_name": "jogadores",
+      "conname": "jogadores_id_jogador_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (id_jogador) REFERENCES auth.users(id) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "jogadores",
+      "conname": "jogadores_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id_jogador)"
+    },
+    {
+      "table_name": "jogadores",
+      "conname": "jogadores_pontuacao_ranking_check",
+      "contype": "c",
+      "definition": "CHECK ((pontuacao_ranking >= 0))"
+    },
+    {
+      "table_name": "jogadores",
+      "conname": "jogadores_username_key",
+      "contype": "u",
+      "definition": "UNIQUE (username)"
+    },
+    {
+      "table_name": "jogadores",
+      "conname": "jogadores_vitorias_check",
+      "contype": "c",
+      "definition": "CHECK ((vitorias >= 0))"
+    },
+    {
+      "table_name": "membros_comunidade",
+      "conname": "membros_comunidade_id_comunidade_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (id_comunidade) REFERENCES comunidades(id_comunidade) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "membros_comunidade",
+      "conname": "membros_comunidade_id_jogador_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (id_jogador) REFERENCES jogadores(id_jogador) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "membros_comunidade",
+      "conname": "membros_comunidade_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id_comunidade, id_jogador)"
+    },
+    {
+      "table_name": "membros_comunidade",
+      "conname": "membros_papel_valido",
+      "contype": "c",
+      "definition": "CHECK (((papel)::text = ANY ((ARRAY['membro'::character varying, 'moderador'::character varying, 'dono'::character varying])::text[])))"
+    },
+    {
+      "table_name": "partidas",
+      "conname": "partidas_chave_unica",
+      "contype": "u",
+      "definition": "UNIQUE (id_campeonato, rodada, numero_partida)"
+    },
+    {
+      "table_name": "partidas",
+      "conname": "partidas_id_campeonato_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (id_campeonato) REFERENCES campeonatos(id_campeonato) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "partidas",
+      "conname": "partidas_id_time_a_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (id_time_a) REFERENCES times(id_time) ON DELETE SET NULL"
+    },
+    {
+      "table_name": "partidas",
+      "conname": "partidas_id_time_b_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (id_time_b) REFERENCES times(id_time) ON DELETE SET NULL"
+    },
+    {
+      "table_name": "partidas",
+      "conname": "partidas_numero_partida_check",
+      "contype": "c",
+      "definition": "CHECK ((numero_partida > 0))"
+    },
+    {
+      "table_name": "partidas",
+      "conname": "partidas_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id_partida)"
+    },
+    {
+      "table_name": "partidas",
+      "conname": "partidas_placar_a_check",
+      "contype": "c",
+      "definition": "CHECK ((placar_a >= 0))"
+    },
+    {
+      "table_name": "partidas",
+      "conname": "partidas_placar_b_check",
+      "contype": "c",
+      "definition": "CHECK ((placar_b >= 0))"
+    },
+    {
+      "table_name": "partidas",
+      "conname": "partidas_rodada_check",
+      "contype": "c",
+      "definition": "CHECK ((rodada > 0))"
+    },
+    {
+      "table_name": "partidas",
+      "conname": "partidas_status_valido",
+      "contype": "c",
+      "definition": "CHECK (((status)::text = ANY ((ARRAY['agendada'::character varying, 'em_andamento'::character varying, 'finalizada'::character varying, 'cancelada'::character varying])::text[])))"
+    },
+    {
+      "table_name": "partidas",
+      "conname": "partidas_times_diferentes",
+      "contype": "c",
+      "definition": "CHECK (((id_time_a IS NULL) OR (id_time_b IS NULL) OR (id_time_a <> id_time_b)))"
+    },
+    {
+      "table_name": "partidas",
+      "conname": "partidas_vencedor_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (vencedor) REFERENCES times(id_time) ON DELETE SET NULL"
+    },
+    {
+      "table_name": "partidas",
+      "conname": "partidas_vencedor_valido",
+      "contype": "c",
+      "definition": "CHECK (((vencedor IS NULL) OR ((vencedor = id_time_a) OR (vencedor = id_time_b))))"
+    },
+    {
+      "table_name": "publicacoes",
+      "conname": "publicacoes_conteudo_check",
+      "contype": "c",
+      "definition": "CHECK ((length(TRIM(BOTH FROM conteudo)) > 0))"
+    },
+    {
+      "table_name": "publicacoes",
+      "conname": "publicacoes_id_autor_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (id_autor) REFERENCES jogadores(id_jogador) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "publicacoes",
+      "conname": "publicacoes_id_comunidade_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (id_comunidade) REFERENCES comunidades(id_comunidade) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "publicacoes",
+      "conname": "publicacoes_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id_publicacao)"
+    },
+    {
+      "table_name": "reacoes_publicacao",
+      "conname": "reacoes_publicacao_id_jogador_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (id_jogador) REFERENCES jogadores(id_jogador) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "reacoes_publicacao",
+      "conname": "reacoes_publicacao_id_publicacao_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (id_publicacao) REFERENCES publicacoes(id_publicacao) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "reacoes_publicacao",
+      "conname": "reacoes_publicacao_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id_publicacao, id_jogador)"
+    },
+    {
+      "table_name": "reacoes_publicacao",
+      "conname": "reacoes_tipo_valido",
+      "contype": "c",
+      "definition": "CHECK (((tipo)::text = ANY ((ARRAY['curtida'::character varying, 'apoio'::character varying, 'risada'::character varying])::text[])))"
+    },
+    {
+      "table_name": "times",
+      "conname": "times_id_capitao_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (id_capitao) REFERENCES jogadores(id_jogador) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "times",
+      "conname": "times_nome_check",
+      "contype": "c",
+      "definition": "CHECK ((length(TRIM(BOTH FROM nome)) >= 2))"
+    },
+    {
+      "table_name": "times",
+      "conname": "times_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id_time)"
+    },
+    {
+      "table_name": "times",
+      "conname": "times_status_check",
+      "contype": "c",
+      "definition": "CHECK (((status)::text = ANY ((ARRAY['ativo'::character varying, 'inativo'::character varying])::text[])))"
+    }
+  ],
+  "indexes": [
+    {
+      "tablename": "campeonatos",
+      "indexname": "campeonatos_pkey",
+      "indexdef": "CREATE UNIQUE INDEX campeonatos_pkey ON public.campeonatos USING btree (id_campeonato)"
+    },
+    {
+      "tablename": "classificacao_campeonatos",
+      "indexname": "classificacao_campeonatos_pkey",
+      "indexdef": "CREATE UNIQUE INDEX classificacao_campeonatos_pkey ON public.classificacao_campeonatos USING btree (id_campeonato, id_time)"
+    },
+    {
+      "tablename": "comunidades",
+      "indexname": "comunidades_categoria_idx",
+      "indexdef": "CREATE INDEX comunidades_categoria_idx ON public.comunidades USING btree (categoria)"
+    },
+    {
+      "tablename": "comunidades",
+      "indexname": "comunidades_nome_key",
+      "indexdef": "CREATE UNIQUE INDEX comunidades_nome_key ON public.comunidades USING btree (nome)"
+    },
+    {
+      "tablename": "comunidades",
+      "indexname": "comunidades_pkey",
+      "indexdef": "CREATE UNIQUE INDEX comunidades_pkey ON public.comunidades USING btree (id_comunidade)"
+    },
+    {
+      "tablename": "comunidades",
+      "indexname": "comunidades_slug_key",
+      "indexdef": "CREATE UNIQUE INDEX comunidades_slug_key ON public.comunidades USING btree (slug)"
+    },
+    {
+      "tablename": "contratos",
+      "indexname": "contratos_jogador_ativo_unico",
+      "indexdef": "CREATE UNIQUE INDEX contratos_jogador_ativo_unico ON public.contratos USING btree (id_jogador) WHERE (((status)::text = 'ativo'::text) AND (data_saida IS NULL))"
+    },
+    {
+      "tablename": "contratos",
+      "indexname": "contratos_pkey",
+      "indexdef": "CREATE UNIQUE INDEX contratos_pkey ON public.contratos USING btree (id_contrato)"
+    },
+    {
+      "tablename": "contratos",
+      "indexname": "contratos_time_idx",
+      "indexdef": "CREATE INDEX contratos_time_idx ON public.contratos USING btree (id_time)"
+    },
+    {
+      "tablename": "contratos",
+      "indexname": "contratos_time_jogador_ativo_unico",
+      "indexdef": "CREATE UNIQUE INDEX contratos_time_jogador_ativo_unico ON public.contratos USING btree (id_time, id_jogador) WHERE (((status)::text = 'ativo'::text) AND (data_saida IS NULL))"
+    },
+    {
+      "tablename": "historico_ranking",
+      "indexname": "historico_ranking_pkey",
+      "indexdef": "CREATE UNIQUE INDEX historico_ranking_pkey ON public.historico_ranking USING btree (id_historico)"
+    },
+    {
+      "tablename": "inscricoes",
+      "indexname": "inscricoes_campeonato_idx",
+      "indexdef": "CREATE INDEX inscricoes_campeonato_idx ON public.inscricoes USING btree (id_campeonato)"
+    },
+    {
+      "tablename": "inscricoes",
+      "indexname": "inscricoes_pkey",
+      "indexdef": "CREATE UNIQUE INDEX inscricoes_pkey ON public.inscricoes USING btree (id_inscricao)"
+    },
+    {
+      "tablename": "inscricoes",
+      "indexname": "inscricoes_time_campeonato_unicos",
+      "indexdef": "CREATE UNIQUE INDEX inscricoes_time_campeonato_unicos ON public.inscricoes USING btree (id_time, id_campeonato)"
+    },
+    {
+      "tablename": "jogadores",
+      "indexname": "jogadores_pkey",
+      "indexdef": "CREATE UNIQUE INDEX jogadores_pkey ON public.jogadores USING btree (id_jogador)"
+    },
+    {
+      "tablename": "jogadores",
+      "indexname": "jogadores_username_key",
+      "indexdef": "CREATE UNIQUE INDEX jogadores_username_key ON public.jogadores USING btree (username)"
+    },
+    {
+      "tablename": "membros_comunidade",
+      "indexname": "membros_comunidade_jogador_idx",
+      "indexdef": "CREATE INDEX membros_comunidade_jogador_idx ON public.membros_comunidade USING btree (id_jogador, id_comunidade)"
+    },
+    {
+      "tablename": "membros_comunidade",
+      "indexname": "membros_comunidade_pkey",
+      "indexdef": "CREATE UNIQUE INDEX membros_comunidade_pkey ON public.membros_comunidade USING btree (id_comunidade, id_jogador)"
+    },
+    {
+      "tablename": "partidas",
+      "indexname": "partidas_campeonato_data_idx",
+      "indexdef": "CREATE INDEX partidas_campeonato_data_idx ON public.partidas USING btree (id_campeonato, data_hora)"
+    },
+    {
+      "tablename": "partidas",
+      "indexname": "partidas_chave_unica",
+      "indexdef": "CREATE UNIQUE INDEX partidas_chave_unica ON public.partidas USING btree (id_campeonato, rodada, numero_partida)"
+    },
+    {
+      "tablename": "partidas",
+      "indexname": "partidas_pkey",
+      "indexdef": "CREATE UNIQUE INDEX partidas_pkey ON public.partidas USING btree (id_partida)"
+    },
+    {
+      "tablename": "publicacoes",
+      "indexname": "publicacoes_comunidade_data_idx",
+      "indexdef": "CREATE INDEX publicacoes_comunidade_data_idx ON public.publicacoes USING btree (id_comunidade, criada_em DESC)"
+    },
+    {
+      "tablename": "publicacoes",
+      "indexname": "publicacoes_pkey",
+      "indexdef": "CREATE UNIQUE INDEX publicacoes_pkey ON public.publicacoes USING btree (id_publicacao)"
+    },
+    {
+      "tablename": "reacoes_publicacao",
+      "indexname": "reacoes_jogador_idx",
+      "indexdef": "CREATE INDEX reacoes_jogador_idx ON public.reacoes_publicacao USING btree (id_jogador, id_publicacao)"
+    },
+    {
+      "tablename": "reacoes_publicacao",
+      "indexname": "reacoes_publicacao_pkey",
+      "indexdef": "CREATE UNIQUE INDEX reacoes_publicacao_pkey ON public.reacoes_publicacao USING btree (id_publicacao, id_jogador)"
+    },
+    {
+      "tablename": "times",
+      "indexname": "times_pkey",
+      "indexdef": "CREATE UNIQUE INDEX times_pkey ON public.times USING btree (id_time)"
+    }
+  ],
+  "rls": [
+    {
+      "tablename": "campeonatos",
+      "rowsecurity": true
+    },
+    {
+      "tablename": "classificacao_campeonatos",
+      "rowsecurity": true
+    },
+    {
+      "tablename": "comunidades",
+      "rowsecurity": true
+    },
+    {
+      "tablename": "contratos",
+      "rowsecurity": true
+    },
+    {
+      "tablename": "historico_ranking",
+      "rowsecurity": true
+    },
+    {
+      "tablename": "inscricoes",
+      "rowsecurity": true
+    },
+    {
+      "tablename": "jogadores",
+      "rowsecurity": true
+    },
+    {
+      "tablename": "membros_comunidade",
+      "rowsecurity": true
+    },
+    {
+      "tablename": "partidas",
+      "rowsecurity": true
+    },
+    {
+      "tablename": "publicacoes",
+      "rowsecurity": true
+    },
+    {
+      "tablename": "reacoes_publicacao",
+      "rowsecurity": true
+    },
+    {
+      "tablename": "times",
+      "rowsecurity": true
+    }
+  ]
+}

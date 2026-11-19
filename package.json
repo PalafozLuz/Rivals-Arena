@@ -16,6 +16,8 @@
   },
   "scripts": {
     "start": "node server.js",
+    "docs:gerar": "node scripts/documentar-banco.js",
+    "docs:diagramas": "node scripts/renderizar-modelos.js",
     "test": "node --test --test-concurrency=1 test-api.js test-banco.js test-ciclo.js test-membros.js test-comunidades.js test-dados.js",
     "test:e2e": "playwright test"
   },
