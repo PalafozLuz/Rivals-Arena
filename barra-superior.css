@@ -1,0 +1,14 @@
+/* Modelo reutilizável da barra superior aprovada na apresentação. */
+.arena-public-header{display:flex;align-items:center;justify-content:space-between;gap:28px;width:100%;min-height:96px;padding:20px max(40px,calc((100% - 1160px)/2));position:relative;z-index:2;background:transparent;border-bottom:1px solid #ffffff12}
+.arena-public-header a{color:#fff;text-decoration:none}
+.arena-public-header a:focus-visible{outline:3px solid #ffb3cb;outline-offset:5px}
+.arena-public-brand{display:inline-flex;flex-shrink:0;align-items:center}
+.arena-public-brand img{display:block;width:150px;height:auto}
+.arena-public-nav,.arena-public-account{display:flex;align-items:center;gap:30px;font-size:14px;font-weight:600}
+.arena-public-nav a,.arena-public-login{padding-block:10px}
+.arena-public-nav a:hover,.arena-public-login:hover{color:#fa83a5}
+.arena-public-signup{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:9px 21px;border-radius:8px;background:#e65582;border:1px solid #e65582;font-size:14px;font-weight:700;line-height:1.5;transition:background .18s}
+.arena-public-signup:hover{background:#c83f6b;border-color:#c83f6b}
+@media(max-width:1000px){.arena-public-header{padding-inline:24px}}
+@media(max-width:720px){.arena-public-header{min-height:80px;gap:12px;padding:17px 20px}.arena-public-brand img{width:112px}.arena-public-nav{display:none}.arena-public-account{gap:16px;font-size:13px}.arena-public-signup{padding:8px 13px;min-height:40px;font-size:13px}}
+@media(prefers-reduced-motion:reduce){.arena-public-signup{transition:none}}
