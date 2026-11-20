@@ -2,6 +2,7 @@
   const config = window.RIVALS_SUPABASE_CONFIG || {};
   const hasConfig = Boolean(config.url && config.anonKey);
   const internalPages = new Set(['homepage.html', 'perfil.html', 'campeonatos.html', 'comunidade.html', 'partidas.html', 'times.html']);
+  let signingOut = false;
   const client = hasConfig && window.supabase
     ? window.supabase.createClient(config.url, config.anonKey)
     : null;
@@ -23,7 +24,7 @@
         });
         result = await response.json();
       } catch { throw Error('Não foi possível conectar. Verifique sua conexão e tente novamente.'); }
-      if (response.status === 401) {
+      if (response.status === 401 && !signingOut) {
         try { await client.auth.signOut({scope:'local'}); } catch { /* O login seguinte substitui a sessão inválida. */ }
         redirectToLogin(true);
       }
@@ -31,11 +32,13 @@
       return envelope ? result : result.data;
     },
     async signOut() {
+      if(signingOut)return;
+      signingOut=true;
       try {
         const {error} = client ? await client.auth.signOut() : {};
         if(error)throw error;
         window.location.href = 'login.html';
-      } catch { showMessage('Não foi possível sair. Verifique sua conexão e tente novamente.'); }
+      } catch { signingOut=false;showMessage('Não foi possível sair. Verifique sua conexão e tente novamente.'); }
     }
   };
 
@@ -46,6 +49,7 @@
     } catch { return 'homepage.html'; }
   };
   function redirectToLogin(expired = false) {
+    if(signingOut)return;
     const page=location.pathname.split('/').pop();
     if(internalPages.has(page))location.replace('login.html?'+(expired?'sessao=expirada&':'')+'redirect='+encodeURIComponent(page+location.search+location.hash));
   }
@@ -179,6 +183,12 @@
     document.querySelectorAll('[data-logout]').forEach((button) => button.addEventListener('click', () => window.rivalsAuth.signOut()));
     bindLogin();
     bindSignup();
+    document.querySelectorAll('[data-recovery-link]').forEach(link=>{
+      const disabled=config.enablePasswordRecovery===false;
+      link.style.visibility=disabled?'hidden':'';
+      link.inert=disabled;
+      link.setAttribute('aria-hidden',String(disabled));
+    });
     bindRecovery();
     try {
     await redirectIfAuthenticated();
@@ -189,6 +199,11 @@
 
   function bindRecovery() {
     const requestForm=document.querySelector('[data-recovery-form]');
+    if(requestForm && config.enablePasswordRecovery===false){
+      requestForm.hidden=true;requestForm.style.display='none';
+      showMessage('A recuperação de senha está indisponível no momento.');return;
+    }
+    if(requestForm){requestForm.hidden=false;requestForm.style.removeProperty('display');}
     if(requestForm)requestForm.addEventListener('submit',async event=>{
       event.preventDefault();if(!client)return showMessage('Não foi possível conectar. Recarregue a página.');
       setLoading(requestForm,true);

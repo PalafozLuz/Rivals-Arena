@@ -1,5 +1,14 @@
 {
   "version": 2,
-  "builds": [{ "src": "server.js", "use": "@vercel/node" }],
-  "routes": [{ "src": "/(.*)", "dest": "/server.js" }]
+  "framework": null,
+  "buildCommand": "npm run preparar:deploy",
+  "outputDirectory": "public",
+  "functions": {
+    "api/index.js": { "includeFiles": "supabase-config.js", "maxDuration": 30 }
+  },
+  "redirects": [{ "source": "/index.html", "destination": "/", "permanent": false }],
+  "rewrites": [
+    { "source": "/", "destination": "/apresentacao.html" },
+    { "source": "/api/:path*", "destination": "/api/index" }
+  ]
 }

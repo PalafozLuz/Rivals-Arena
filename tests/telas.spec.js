@@ -181,7 +181,9 @@ test('perfil mantém pontuação histórica e vínculo encerrado, e conteúdo se
  await expect(page.locator('#history-teams')).toContainText('Encerrado');await expect(page.locator('#history-teams')).toContainText('16/11/2026');
 });
 test('recuperação envia retorno para esta origem e permite definir nova senha',async({page})=>{
- await setup(page,false);await page.goto('/recuperar-senha.html');
+ await setup(page,false);
+ await page.route('**/supabase-config.js',async route=>{const r=await route.fetch();await route.fulfill({response:r,body:(await r.text())+';window.RIVALS_SUPABASE_CONFIG.enablePasswordRecovery=true;'});});
+ await page.goto('/recuperar-senha.html');
  await page.getByLabel('E-mail').fill('qa@example.test');await page.getByRole('button',{name:'Enviar link'}).click();
  await expect(page.locator('[data-auth-message]')).toContainText('Se este e-mail estiver cadastrado');
  expect(await page.evaluate(()=>window.qaRecovery.redirectTo)).toBe('http://127.0.0.1:3417/redefinir-senha.html');
@@ -225,4 +227,24 @@ test('campeonatos lê painel e cria/edita/cancela pela API sem cliente de banco'
  await page.locator('#championship-form button[type="submit"]').click();await expect(page.locator('#championship-message')).toHaveText('Alterações salvas.');
  await page.locator('[data-cancel-championship="3"]').click();await expect(page.locator('#championship-list')).toContainText('cancelado');
  expect(writes.map(w=>w.path)).toEqual(['/api/campeonatos/3','/api/campeonatos/3']);expect(writes[0].body.id_criador).toBeUndefined();expect(writes[1].body).toEqual({status:'cancelado'});
+});
+test('consulta recusada durante logout não altera o destino para sessão expirada',async({page})=>{
+ await setup(page);let release;const gate=new Promise(resolve=>release=resolve);
+ await page.route('**/api/jogadores/*',async route=>{await gate;await route.fulfill({status:401,json:{error:'Sessão inválida.'}}).catch(()=>{});});
+ const started=page.waitForRequest('**/api/jogadores/*');await page.goto('/perfil.html');await started;
+ await page.evaluate(()=>{window.rivalsAuth.client.auth.signOut=async()=>{localStorage.removeItem('qa-session');await new Promise(resolve=>window.releaseQaLogout=resolve);return {error:null};};});
+ const refused=page.waitForResponse('**/api/jogadores/*');
+ try{
+  await page.getByRole('button',{name:'Sair',exact:true}).click();release();await refused;
+  await expect(page).toHaveURL(/perfil.html$/);
+  await page.evaluate(()=>window.releaseQaLogout());await expect(page).toHaveURL(/login.html$/);
+  await expect(page.locator('[data-auth-message]')).toBeHidden();
+ }finally{release();}
+});
+test('recuperação adiada mantém espaço no login e não envia e-mail',async({page})=>{
+ await setup(page,false);await page.goto('/login.html');
+ await expect(page.locator('[data-recovery-link]')).toBeHidden();
+ expect(await page.locator('[data-recovery-link]').evaluate(e=>e.getBoundingClientRect().height)).toBeGreaterThan(0);
+ await page.goto('/recuperar-senha.html');await expect(page.locator('[data-auth-message]')).toContainText('indisponível no momento');
+ await expect(page.locator('[data-recovery-form]')).toBeHidden();expect(await page.evaluate(()=>window.qaRecovery)).toBeUndefined();
 });

@@ -1,0 +1,15 @@
+.git/
+.vscode/
+node_modules/
+.env*
+test-results/
+playwright-report/
+tests/
+test-*.js
+docs/
+migrations/
+supabase/
+*.md
+schema.sql
+scripts/documentar-banco.js
+scripts/renderizar-modelos.js

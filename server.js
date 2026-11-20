@@ -13,9 +13,7 @@ app.get('/', (req, res) => {
 app.disable('x-powered-by');
 app.use(express.json({ limit: '32kb' }));
 app.use('/api', createApi());
-const publicFiles = new Set(['apresentacao.html', 'login.html', 'cadastro.html', 'homepage.html',
-  'perfil.html', 'campeonatos.html', 'comunidade.html', 'partidas.html', 'style.css', 'recuperar-senha.html', 'redefinir-senha.html',
-  'menu.js', 'auth.js', 'supabase-config.js', 'BANNER1.png', 'torneios.js', 'times.html', 'arena-dados.js', 'membros.js', 'comunidades.js']);
+const publicFiles = new Set(require('./arquivos-publicos'));
 app.get('/index.html', (req, res) => res.redirect('/'));
 app.use('/imagens', express.static(path.join(__dirname, 'imagens'), { index: false, dotfiles: 'deny' }));
 app.get('/:file', (req, res, next) => {
