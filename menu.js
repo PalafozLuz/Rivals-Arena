@@ -1,5 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.mobile-menu').forEach(menu => {
+    if (!menu.querySelector('a[href="apresentacao.html"]')) {
+      const presentationLink = document.createElement('a');
+      presentationLink.href = 'apresentacao.html';
+      presentationLink.textContent = 'Sobre o Rivals Arena';
+      menu.appendChild(presentationLink);
+    }
     if (!menu.querySelector('a[href="times.html"]')) {
       const link = document.createElement('a');
       link.href = 'times.html';
