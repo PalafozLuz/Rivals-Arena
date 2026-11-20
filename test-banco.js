@@ -4,6 +4,41 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { PGlite } = require('@electric-sql/pglite');
 
+test('cadastro: username único sem sufixo, sem diferença de caixa e rollback do Auth', async () => {
+  const db = new PGlite();
+  try {
+    await db.exec(`CREATE ROLE anon; CREATE ROLE authenticated; CREATE SCHEMA auth;
+      CREATE TABLE auth.users(id UUID PRIMARY KEY,raw_user_meta_data JSONB DEFAULT '{}');
+      CREATE FUNCTION auth.uid() RETURNS UUID LANGUAGE SQL AS
+      'SELECT nullif(current_setting(''request.jwt.claim.sub'',true),'''')::UUID';
+      GRANT USAGE ON SCHEMA auth,public TO anon,authenticated;`);
+    await db.exec(fs.readFileSync(path.join(__dirname,'schema.sql'),'utf8'));
+    const migration=fs.readFileSync(path.join(__dirname,'supabase/migrations/20261120220301_username_unico_sem_renomear.sql'),'utf8');
+    await db.exec(migration);await db.exec(migration);
+    const addUser=(id,username)=>db.query('INSERT INTO auth.users(id,raw_user_meta_data) VALUES($1,$2)',[id,JSON.stringify({nome:'Jogador QA',username})]);
+    const first='00000000-0000-0000-0000-000000000091';
+    const second='00000000-0000-0000-0000-000000000092';
+    await addUser(first,'JogadorQA');
+    assert.equal((await db.query('SELECT username FROM public.jogadores WHERE id_jogador=$1',[first])).rows[0].username,'jogadorqa');
+    for(const username of ['jogadorqa','JOGADORQA']) {
+      await assert.rejects(addUser(second,username),error=>error.code==='23505');
+      assert.equal((await db.query('SELECT count(*)::int AS n FROM auth.users WHERE id=$1',[second])).rows[0].n,0);
+    }
+    await db.exec('SET ROLE anon');
+    for(const username of ['jogadorqa','JOGADORQA'])assert.equal((await db.query('SELECT public.username_disponivel($1) AS available',[username])).rows[0].available,false);
+    assert.equal((await db.query("SELECT public.username_disponivel('outro_jogador') AS available")).rows[0].available,true);
+    assert.equal((await db.query("SELECT public.username_disponivel('x') AS available")).rows[0].available,false);
+    await db.exec('RESET ROLE');
+    await addUser(second,'outro_jogador');
+    await assert.rejects(db.query("UPDATE public.jogadores SET username='JOGADORQA' WHERE id_jogador=$1",[second]),error=>error.code==='23505');
+    const longName='a'.repeat(50);
+    await addUser('00000000-0000-0000-0000-000000000093',longName);
+    assert.equal((await db.query('SELECT username FROM public.jogadores WHERE username=$1',[longName])).rows[0].username,longName);
+    assert.equal((await db.query("SELECT has_function_privilege('anon','public.handle_new_user()','EXECUTE') AS allowed")).rows[0].allowed,false);
+  } finally { await db.close(); }
+});
+
+
 test('migration: permissões de inscrição, limite, vencedor e pontuação única', async () => {
   const db = new PGlite();
   try {

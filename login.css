@@ -1,4 +1,4 @@
-/* Exclusivo do novo login: cadastro e demais páginas mantêm seus estilos. */
+/* Visual compartilhado pelo login e cadastro; demais páginas mantêm seus estilos. */
 .page-login.page-login-split{
   display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;
   min-height:100vh;min-height:100svh;height:auto;padding:0;margin:0;color:#fff;
@@ -6,7 +6,7 @@
 }
 .page-login-split .arena-public-header{background:#17111e}
 .page-login-split .login-stage{flex:1;display:flex;align-items:center;justify-content:center;gap:0;width:100%;padding:42px 24px;min-width:0}
-.page-login-split .login-panel{display:grid;grid-template-columns:1fr 1fr;width:min(960px,100%);min-height:590px;border:1px solid #73506d70;border-radius:18px;overflow:hidden;background:#211727;box-shadow:0 28px 80px #0005}
+.page-login-split .login-panel{display:grid;grid-template-columns:1fr 1fr;width:min(960px,100%);min-height:774px;border:1px solid #73506d70;border-radius:18px;overflow:hidden;background:#211727;box-shadow:0 28px 80px #0005}
 .page-login-split .login-visual{position:relative;min-width:0;isolation:isolate;overflow:hidden;background:#471e5e}
 .page-login-split .login-visual::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,#200c3099 0%,transparent 32%,#230e2844 55%,#180a23ed 100%)}
 .page-login-split .login-visual-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%;z-index:-2}
@@ -39,11 +39,10 @@
 .page-login-split .auth-message{width:100%;font-size:13px;line-height:1.6;margin-bottom:20px;overflow-wrap:anywhere}
 .page-login-split .auth-message[hidden]{display:none}
 .page-login-split .login-footer{padding:0 20px 22px;color:#a998b2;font-size:12px;line-height:1.8;text-align:center;background:none;animation:none}
-@media(min-width:1500px){.page-login-split .login-panel{min-height:620px}}
-@media(max-width:900px){.page-login-split .login-panel{min-height:560px;grid-template-columns:.9fr 1fr}.page-login-split .login-form-panel{padding:35px 28px}.page-login-split .login-visual-copy{left:28px}.page-login-split .login-visual-brand{left:28px}.page-login-split .login-visual-copy h2{font-size:32px}}
+@media(max-width:900px){.page-login-split .login-panel{min-height:800px;grid-template-columns:.9fr 1fr}.page-login-split .login-form-panel{padding:35px 28px}.page-login-split .login-visual-copy{left:28px}.page-login-split .login-visual-brand{left:28px}.page-login-split .login-visual-copy h2{font-size:32px}}
 @media(max-width:640px){
   .page-login-split .login-stage{padding:25px 20px 30px;align-items:flex-start}
-  .page-login-split .login-panel{grid-template-columns:1fr;min-height:0;border-radius:14px;max-width:450px}
+  .page-login-split .login-panel{grid-template-columns:1fr;grid-template-rows:215px 1fr;min-height:1024px;border-radius:14px;max-width:450px}
   .page-login-split .login-visual{height:215px}
   .page-login-split .login-visual-image{object-position:50% 33%}
   .page-login-split .login-visual-brand{display:none}
@@ -57,3 +56,17 @@
   .page-login-split .login-back{margin-top:18px}
 }
 @media(prefers-reduced-motion:reduce){.page-login-split .input-group input,.page-login-split .btn-entrar{transition:none}}
+
+/* Ajustes de espaço apenas no cadastro, que tem cinco campos. */
+.page-signup .login-form-panel{padding-block:32px}
+.page-signup .login-subtitle{margin-bottom:20px}
+.page-signup .input-group{margin-bottom:14px}
+.page-signup .login-signup{margin-top:16px}
+.page-signup .login-back{margin-top:14px}
+.page-signup .auth-message[data-type="success"]{
+  background:linear-gradient(120deg,#471e5e,#57233e);
+  border:1px solid #a45b89;
+  border-left:3px solid #fa83a5;
+  color:#fff;
+  font-size:14px;
+}

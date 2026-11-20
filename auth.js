@@ -115,14 +115,36 @@
       if (form.senha.value !== form.confirmarSenha.value) return showMessage('As senhas precisam ser iguais.');
       setLoading(form, true);
       try {
-      const { error } = await client.auth.signUp({
+      const username = form.username.value.trim().toLowerCase();
+      const usernameTakenMessage = 'Este nome de usuário já está cadastrado. Escolha outro.';
+      const availability = await client.rpc('username_disponivel', {p_username: username});
+      if (availability.error || typeof availability.data !== 'boolean') {
+        return showMessage('Não foi possível verificar o nome de usuário. Tente novamente.');
+      }
+      if (!availability.data) return showMessage(usernameTakenMessage);
+      const { data, error } = await client.auth.signUp({
         email: form.email.value.trim(),
         password: form.senha.value,
-        options: { data: { nome: form.nome.value.trim(), username: form.username.value.trim() } }
+        options: { data: { nome: form.nome.value.trim(), username } }
       });
-      if (error) return showMessage(error.message);
+      if (error) {
+        if (error.code === 'unexpected_failure' || /database error saving new user/i.test(error.message || '')) {
+          const recheck = await client.rpc('username_disponivel', {p_username: username});
+          return showMessage(!recheck.error && recheck.data === false
+            ? usernameTakenMessage
+            : 'Não foi possível concluir o cadastro. Tente novamente.');
+        }
+        const message = /^user already registered[.!]?$/i.test((error.message || '').trim())
+          ? 'Este e-mail já está cadastrado. Use outro e-mail.'
+          : error.message;
+        return showMessage(message);
+      }
 
-      showMessage('Cadastro enviado. Se a confirmação por e-mail estiver habilitada, confirme sua conta antes de entrar.', 'success');
+      if (data?.session) {
+        window.location.replace(safeDestination(new URLSearchParams(window.location.search).get('redirect')));
+        return;
+      }
+      showMessage('Cadastro concluído! Confirme seu e-mail para acessar sua conta.', 'success');
       form.reset();
       } catch { showMessage('Não foi possível cadastrar. Verifique sua conexão e tente novamente.'); }
       finally { setLoading(form, false); }

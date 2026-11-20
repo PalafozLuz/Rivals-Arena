@@ -21,7 +21,7 @@ async function setup(page, loggedIn = true) {
         resetPasswordForEmail: async (email,options) => {window.qaRecovery={email,...options};return {error:null}},
         updateUser: async body => {window.qaPasswordUpdated=Boolean(body.password);return {error:null}},
         onAuthStateChange: () => ({data:{subscription:{unsubscribe(){}}}})
-      }, from: () => {throw Error('A tela deve usar a API Express para dados.')} })};
+      }, rpc: async (name) => {if(name!=='username_disponivel')throw Error('RPC inesperada');return {data:true,error:null}}, from: () => {throw Error('A tela deve usar a API Express para dados.')} })};
     ` });
     if (!url.startsWith('http://127.0.0.1:3417/')) return route.abort();
     if(new URL(url).pathname.startsWith('/api/')) {
@@ -48,6 +48,91 @@ test('login rejeita redirecionamento externo e mantém sessão ao navegar', asyn
   await expect(page).toHaveURL(/homepage.html$/);
   await page.goto('/times.html'); await expect(page).toHaveURL(/times.html$/);
 });
+async function preencherCadastro(page) {
+  await page.getByLabel('Nome',{exact:true}).fill('Jogador QA');
+  await page.getByLabel('Nome de usuário',{exact:true}).fill('jogador_qa');
+  await page.getByLabel('E-mail',{exact:true}).fill('qa@example.test');
+  await page.getByLabel('Senha',{exact:true}).fill('TesteSenha#123');
+  await page.getByLabel('Confirmar senha',{exact:true}).fill('TesteSenha#123');
+}
+
+for (const query of ['', '?redirect=https://example.org']) test('cadastro com sessão entra na arena e mantém login '+(query?'com destino externo':'sem destino'),async({page})=>{
+  await setup(page,false);await page.goto('/cadastro.html'+query);
+  await page.evaluate(user=>{
+    window.rivalsAuth.client.auth.signUp=async()=>{
+      localStorage.setItem('qa-session',JSON.stringify(user));
+      return {data:{user,session:{user,access_token:'qa-test'}},error:null};
+    };
+  },user);
+  await preencherCadastro(page);
+  await page.getByRole('button',{name:'Criar conta',exact:true}).click();
+  await expect(page).toHaveURL(/\/homepage.html$/);
+  await page.reload();await expect(page).toHaveURL(/\/homepage.html$/);
+  await page.goto('/perfil.html');await expect(page.locator('[data-profile-name]')).toHaveText('Jogador QA');
+});
+
+test('cadastro sem sessão informa confirmação e permanece na página pública',async({page})=>{
+  await setup(page,false);await page.goto('/cadastro.html');
+  await page.evaluate(()=>window.rivalsAuth.client.auth.signUp=async()=>({data:{user:{id:'qa-pending'},session:null},error:null}));
+  await preencherCadastro(page);
+  await page.getByRole('button',{name:'Criar conta',exact:true}).click();
+  await expect(page.locator('[data-auth-message]')).toHaveText('Cadastro concluído! Confirme seu e-mail para acessar sua conta.');
+  await expect(page).toHaveURL(/\/cadastro.html$/);
+  expect(await page.evaluate(()=>localStorage.getItem('qa-session'))).toBeNull();
+  await expect(page.getByLabel('Nome',{exact:true})).toHaveValue('');
+});
+
+test('cadastro bloqueia username repetido antes de criar a conta',async({page})=>{
+  await setup(page,false);await page.goto('/cadastro.html');
+  await page.evaluate(()=>{
+    window.qaSignupCalled=false;
+    window.rivalsAuth.client.rpc=async(name,args)=>{window.qaCheckedUsername=args.p_username;return {data:false,error:null}};
+    window.rivalsAuth.client.auth.signUp=async()=>{window.qaSignupCalled=true;return {error:null}};
+  });
+  await preencherCadastro(page);await page.getByLabel('Nome de usuário',{exact:true}).fill('JOGADOR_QA');
+  await page.getByRole('button',{name:'Criar conta',exact:true}).click();
+  await expect(page.locator('[data-auth-message]')).toHaveText('Este nome de usuário já está cadastrado. Escolha outro.');
+  expect(await page.evaluate(()=>window.qaCheckedUsername)).toBe('jogador_qa');
+  expect(await page.evaluate(()=>window.qaSignupCalled)).toBe(false);
+  await expect(page.getByLabel('Nome de usuário',{exact:true})).toHaveValue('JOGADOR_QA');
+  await expect(page.getByRole('button',{name:'Criar conta',exact:true})).toBeEnabled();
+});
+
+test('cadastro trata colisão de username entre verificação e criação',async({page})=>{
+  await setup(page,false);await page.goto('/cadastro.html');
+  await page.evaluate(()=>{
+    let checks=0;
+    window.rivalsAuth.client.rpc=async()=>({data:++checks===1,error:null});
+    window.rivalsAuth.client.auth.signUp=async()=>({error:{code:'unexpected_failure',message:'Database error saving new user'}});
+  });
+  await preencherCadastro(page);await page.getByRole('button',{name:'Criar conta',exact:true}).click();
+  await expect(page.locator('[data-auth-message]')).toHaveText('Este nome de usuário já está cadastrado. Escolha outro.');
+  await expect(page).toHaveURL(/cadastro.html$/);
+});
+
+test('cadastro interrompe envio se verificação de username falha',async({page})=>{
+  await setup(page,false);await page.goto('/cadastro.html');
+  await page.evaluate(()=>{
+    window.qaSignupCalled=false;
+    window.rivalsAuth.client.rpc=async()=>({data:null,error:{message:'Indisponível'}});
+    window.rivalsAuth.client.auth.signUp=async()=>{window.qaSignupCalled=true;return {error:null}};
+  });
+  await preencherCadastro(page);await page.getByRole('button',{name:'Criar conta',exact:true}).click();
+  await expect(page.locator('[data-auth-message]')).toHaveText('Não foi possível verificar o nome de usuário. Tente novamente.');
+  expect(await page.evaluate(()=>window.qaSignupCalled)).toBe(false);
+});
+
+test('cadastro recusado preserva campos e permite tentar novamente',async({page})=>{
+  await setup(page,false);await page.goto('/cadastro.html');
+  await page.evaluate(()=>window.rivalsAuth.client.auth.signUp=async()=>({data:{session:null},error:{message:'Não foi possível criar esta conta.'}}));
+  await preencherCadastro(page);
+  await page.getByRole('button',{name:'Criar conta',exact:true}).click();
+  await expect(page.locator('[data-auth-message]')).toHaveText('Não foi possível criar esta conta.');
+  await expect(page).toHaveURL(/\/cadastro.html$/);
+  await expect(page.getByLabel('Nome',{exact:true})).toHaveValue('Jogador QA');
+  await expect(page.getByRole('button',{name:'Criar conta',exact:true})).toBeEnabled();
+});
+
 test('perfil carrega, salva pela API e faz logout', async ({ page }) => {
   await setup(page);
   let profile = { nome:'Jogador QA',username:'jogadorqa',bio:'Minha bio',avatar_url:'',vitorias:3,pontuacao_ranking:30 };
