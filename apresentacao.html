@@ -7,14 +7,24 @@
   <meta name="description" content="Reúna seu time, participe de campeonatos e encontre sua comunidade no Rivals Arena.">
   <title>Rivals Arena — Seu jogo. Seu time. Sua arena.</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="barra-superior.css">
   <link rel="stylesheet" href="apresentacao.css">
 </head>
 <body class="page-apresentacao landing">
   <a class="landing-skip" href="#conteudo">Pular para o conteúdo</a>
-  <header class="landing-header">
-    <a class="landing-brand" href="apresentacao.html" aria-label="Rivals Arena — apresentação"><img src="imagens/logo.png" alt="Rivals Arena" width="160" height="43"></a>
-    <nav class="landing-nav" aria-label="Navegação da apresentação"><a href="#a-arena">A arena</a><a href="#como-funciona">Como funciona</a></nav>
-    <div class="landing-account"><a class="landing-login" href="login.html">Entrar</a><a class="landing-button landing-button-small" href="cadastro.html">Criar conta</a></div>
+  <header class="arena-public-header">
+    <a class="arena-public-brand" href="apresentacao.html" aria-label="Rivals Arena — apresentação"><img src="imagens/logo.png" alt="Rivals Arena" width="150" height="40"></a>
+    <nav class="arena-public-nav" aria-label="Navegação da apresentação"><a href="#a-arena">A arena</a><a href="#como-funciona">Como funciona</a></nav>
+    <div class="arena-public-account"><a class="arena-public-login" href="login.html">Entrar</a><a class="arena-public-signup" href="cadastro.html">Criar conta</a></div>
+    <button class="menu-icon menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="presentation-menu"><span></span><span></span><span></span></button>
+    <nav class="mobile-menu" id="presentation-menu" aria-label="Menu principal">
+      <a href="homepage.html">Início</a>
+      <a href="perfil.html">Perfil</a>
+      <a href="comunidade.html">Comunidade</a>
+      <a href="campeonatos.html">Campeonatos</a>
+      <a href="partidas.html">Partidas</a>
+      <a href="times.html">Meus times</a>
+    </nav>
   </header>
   <main id="conteudo">
     <section class="landing-hero landing-wrap" aria-labelledby="hero-title">
@@ -57,5 +67,6 @@
       </div>
     </div>
   </footer>
+  <script src="menu.js"></script>
 </body>
 </html>

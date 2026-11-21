@@ -431,6 +431,51 @@ test('campeonatos mostra contagens reais e atualiza após aprovar inscrição',a
  await expect(page.locator('#championship-list')).toContainText('4 de 8 times confirmados');
 });
 
+test('meus times: criar, convidar, cancelar convite, transferir capitania e sair',async({page})=>{
+ await setup(page);page.on('dialog',dialog=>dialog.accept());let created=false,pending=false,captain=true;const writes=[];
+ const team=()=>({id_time:1,nome:'Time <b>QA</b>',id_capitao:captain?user.id:'outro',bloqueado:false,membros:[{id_jogador:user.id,username:'jogadorqa',status:'ativo'},{id_jogador:'outro',username:'colega',status:'ativo'},...(pending?[{id_jogador:'convidado',username:'novojogador',status:'pendente'}]:[])]});
+ await page.route('**/api/**',route=>{
+  const req=route.request(),path=new URL(req.url()).pathname;let data=[];
+  if(path==='/api/meus-times')data={times:created?[team()]:[],convites:[]};
+  else if(req.method()==='POST'){
+   const body=req.postDataJSON();writes.push({path,body});
+   if(path==='/api/times')created=true;
+   else if(body.acao==='convidar')pending=true;
+   else if(body.acao==='remover')pending=false;
+   else if(body.acao==='transferir')captain=false;
+   else if(body.acao==='sair')created=false;
+  }
+  return route.fulfill({json:{data}});
+ });
+ await page.goto('/times.html');await page.getByLabel('Nome do novo time').fill('Time <b>QA</b>');
+ await page.locator('#create-team-form').getByRole('button',{name:'Criar time',exact:true}).click();
+ await expect(page.locator('#create-team-form')).toBeHidden();await expect(page.locator('#teams-roster-count')).toHaveText('1');
+ await expect(page.locator('#team-rosters h3')).toHaveText('Time <b>QA</b>');await expect(page.locator('#team-rosters h3 b')).toHaveCount(0);
+ await page.getByLabel('Convidar pelo nome de usuário').fill('novojogador');await page.getByRole('button',{name:'Convidar',exact:true}).click();
+ await expect(page.locator('.teams-roster-summary')).toHaveText('2 membros ativos · 1 convite pendente');
+ await page.getByRole('button',{name:'Cancelar convite',exact:true}).click();await expect(page.locator('.teams-roster-summary')).toHaveText('2 membros ativos');
+ await page.getByRole('button',{name:'Tornar capitão',exact:true}).click();await expect(page.getByRole('button',{name:'Sair do time',exact:true})).toBeVisible();
+ await expect(page.getByLabel('Convidar pelo nome de usuário')).toHaveCount(0);
+ await page.getByRole('button',{name:'Sair do time',exact:true}).click();await expect(page.locator('#create-team-form')).toBeVisible();
+ expect(writes.map(w=>w.body)).toEqual([{nome:'Time <b>QA</b>'},{acao:'convidar',username:'novojogador'},{acao:'remover',id_jogador:'convidado'},{acao:'transferir',id_jogador:'outro'},{acao:'sair'}]);
+});
+
+test('meus times: aceitar e recusar convites preserva bloqueio do elenco',async({page})=>{
+ await setup(page);let accepted=false,refused=false;
+ await page.route('**/api/**',route=>{
+  const req=route.request(),path=new URL(req.url()).pathname;let data=[];
+  if(path==='/api/meus-times')data={times:accepted?[{id_time:1,nome:'Time competitivo',id_capitao:'outro',bloqueado:true,membros:[{id_jogador:user.id,username:'jogadorqa',status:'ativo'}]}]:[],convites:[...(!accepted?[{id_time:1,nome:'Time competitivo'}]:[]),...(!refused?[{id_time:2,nome:'Segundo convite'}]:[])]};
+  else if(req.method()==='POST'){const body=req.postDataJSON();if(body.acao==='aceitar')accepted=true;if(body.acao==='recusar')refused=true;}
+  return route.fulfill({json:{data}});
+ });
+ await page.goto('/times.html');await expect(page.locator('#teams-invite-count')).toHaveText('2');
+ await page.locator('#team-invites article').filter({hasText:'Time competitivo'}).getByRole('button',{name:'Aceitar',exact:true}).click();
+ await expect(page.locator('#teams-invite-count')).toHaveText('1');await expect(page.getByRole('button',{name:'Sair do time',exact:true})).toBeDisabled();
+ await expect(page.locator('.teams-lock-notice')).toBeVisible();
+ await page.locator('#team-invites').getByRole('button',{name:'Recusar',exact:true}).click();await expect(page.locator('#teams-invite-count')).toHaveText('0');
+ await expect(page.locator('#team-invites .teams-empty')).toBeVisible();
+});
+
 test('consulta recusada durante logout não altera o destino para sessão expirada',async({page})=>{
  await setup(page);let release;const gate=new Promise(resolve=>release=resolve);
  await page.route('**/api/jogadores/*',async route=>{await gate;await route.fulfill({status:401,json:{error:'Sessão inválida.'}}).catch(()=>{});});

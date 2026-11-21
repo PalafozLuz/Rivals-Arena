@@ -1,33 +1,35 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meus times - Rivals Arena</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#17111e">
+  <title>Meus times - Rivals Arena</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="barra-superior.css">
+  <link rel="stylesheet" href="times.css">
 </head>
-<body class="page-profile page-teams" data-auth-page="protected">
-    <header>
-        <div class="header-top">
-            <a class="logo" href="homepage.html" aria-label="Início"><img src="imagens/logo-menu.png" alt="Rivals Arena"></a>
-            <button class="menu-icon menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false"><span></span><span></span><span></span></button>
-        </div>
-        <nav class="mobile-menu" aria-label="Menu principal">
-            <a href="homepage.html">Início</a><a href="perfil.html">Perfil</a><a href="comunidade.html">Comunidade</a>
-            <a href="campeonatos.html">Campeonatos</a><a href="partidas.html">Partidas</a><a href="times.html" aria-current="page">Meus times</a>
-        </nav>
-    </header>
-    <main class="teams-main">
-        <h1>Meus times</h1>
-        <p id="teams-message" role="status" aria-live="polite">Carregando...</p>
-        <form id="create-team-form" class="teams-card teams-form">
-            <label>Nome do novo time<input name="nome" required minlength="2" maxlength="100" autocomplete="off"></label>
-            <button type="submit">Criar time</button>
-        </form>
-        <section aria-labelledby="invites-title"><h2 id="invites-title">Convites recebidos</h2><div id="team-invites" class="teams-grid"></div></section>
-        <section aria-labelledby="roster-title"><h2 id="roster-title">Times e membros</h2><div id="team-rosters" class="teams-grid"></div></section>
-    </main>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
-    <script src="supabase-config.js"></script><script src="auth.js"></script><script src="menu.js"></script><script src="membros.js"></script>
+<body class="teams-refresh" data-auth-page="protected">
+  <a class="teams-skip" href="#conteudo">Pular para o conteúdo</a>
+  <header class="arena-public-header">
+    <a class="arena-public-brand" href="homepage.html" aria-label="Rivals Arena — início"><img src="imagens/logo.png" alt="Rivals Arena" width="150" height="40"></a>
+    <nav class="teams-header-nav" aria-label="Navegação rápida"><a href="comunidade.html">Comunidades</a><a href="campeonatos.html">Campeonatos</a><a href="partidas.html">Partidas</a></nav>
+    <button class="menu-icon menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="teams-menu"><span></span><span></span><span></span></button>
+    <nav class="mobile-menu" id="teams-menu" aria-label="Menu principal"><a href="homepage.html">Início</a><a href="perfil.html">Perfil</a><a href="comunidade.html">Comunidade</a><a href="campeonatos.html">Campeonatos</a><a href="partidas.html">Partidas</a><a href="times.html" aria-current="page">Meus times</a></nav>
+  </header>
+  <main class="teams-main" id="conteudo">
+    <section class="teams-intro" aria-labelledby="teams-title"><p class="teams-eyebrow">AS MELHORES JOGADAS COMEÇAM EM EQUIPE</p><h1 id="teams-title">Sua galera.<br>Seu próximo time.</h1><div class="teams-intro-bottom"><p>Crie seu time, convide outros jogadores e prepare o elenco para competir na arena.</p></div></section>
+    <nav class="teams-tabs" aria-label="Navegação dos times"><a href="#roster-section">Times e membros</a><a href="#invites-section">Convites recebidos</a><a href="campeonatos.html">Encontrar campeonato</a></nav>
+    <p id="teams-message" role="status" aria-live="polite">Carregando times...</p>
+    <form id="create-team-form" class="teams-card teams-create-form">
+      <p class="teams-eyebrow">O PRIMEIRO PASSO É REUNIR A GALERA</p><h2>Criar meu time</h2><p class="teams-section-intro">Escolha um nome. Depois, convide os jogadores para fazer parte do elenco.</p>
+      <div class="teams-create-fields"><label>Nome do novo time<input name="nome" required minlength="2" maxlength="100" autocomplete="off" placeholder="Ex.: Titans Arena"></label><button type="submit">Criar time</button></div>
+    </form>
+    <section class="teams-section" id="invites-section" aria-labelledby="invites-title"><div class="teams-section-heading"><div><p class="teams-eyebrow">TEM GENTE QUERENDO JOGAR COM VOCÊ</p><h2 id="invites-title">Convites recebidos <span id="teams-invite-count" class="teams-count">0</span></h2></div></div><div id="team-invites" class="teams-grid"></div></section>
+    <section class="teams-section" id="roster-section" aria-labelledby="roster-title"><div class="teams-section-heading"><div><p class="teams-eyebrow">CADA JOGADOR FAZ A DIFERENÇA</p><h2 id="roster-title">Times e membros <span id="teams-roster-count" class="teams-count">0</span></h2></div><a class="teams-text-link" href="campeonatos.html">Ver campeonatos</a></div><div id="team-rosters" class="teams-grid teams-roster-grid"></div></section>
+    <aside class="teams-invite-panel"><div><p class="teams-eyebrow">SEU TIME COMEÇA AQUI</p><h2>Encontre sua próxima disputa.</h2><p>Confira os campeonatos da arena e escolha onde seu time vai competir.</p></div><a class="teams-primary-action" href="campeonatos.html">Explorar campeonatos</a></aside>
+  </main>
+  <footer class="teams-footer"><a class="arena-public-brand" href="apresentacao.html" aria-label="Sobre o Rivals Arena"><img src="imagens/logo.png" alt="Rivals Arena" width="110" height="30"></a><p>© 2026 Rivals Arena. Todos os direitos reservados.</p><a class="teams-instagram" href="https://www.instagram.com/rivalsarenaking/" target="_blank" rel="noopener noreferrer" aria-label="Instagram @rivalsarenaking (abre em nova aba)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg>@rivalsarenaking</a></footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script><script src="supabase-config.js"></script><script src="auth.js"></script><script src="menu.js"></script><script src="membros.js"></script>
 </body>
 </html>

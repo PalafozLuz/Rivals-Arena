@@ -21,6 +21,10 @@ html:has(body.landing){scroll-behavior:smooth}
 .page-apresentacao.landing{
   background:#17111e;
 }
+.landing .arena-public-header{background:#17111e}
+.landing .menu-toggle{position:static;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;flex:0 0 40px;width:40px;height:40px;margin:0;padding:8px;border:1px solid #715477;border-radius:8px;background:#211727;cursor:pointer}
+.landing .menu-toggle span{display:block;width:20px;height:2px;margin:0;border-radius:2px;background:#fff}
+.landing .menu-toggle:focus-visible{outline:3px solid #ffb3cb;outline-offset:4px}
 .landing .landing-hero{position:relative;isolation:isolate}
 .landing .landing-hero::before{content:"";position:absolute;z-index:-1;top:-96px;bottom:0;left:50%;width:100vw;transform:translateX(-50%);background:var(--gradient-brand);pointer-events:none}
 .landing .landing-header{background:transparent}
@@ -30,6 +34,7 @@ html:has(body.landing){scroll-behavior:smooth}
 .landing .landing-button-outline{background:#32003f66;border-color:#e8c8ed}
 .landing .landing-button-outline:hover{background:#32003fa6;border-color:#fff}
 @media(max-width:720px){.landing .landing-hero::before{top:-80px}}
+@media(max-width:720px){.landing .arena-public-header{gap:12px}.landing .menu-toggle{flex-basis:36px;width:36px;height:36px;padding:7px}.landing .menu-toggle span{width:18px}}
 
 .landing .landing-footer{display:block;border-top:1px solid #ffffff18;padding-top:26px}
 .landing .landing-footer-top{display:flex;align-items:center;justify-content:space-between;gap:20px;font-size:13px}
