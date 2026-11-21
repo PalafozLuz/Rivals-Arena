@@ -243,6 +243,9 @@ function createApi({ fetchImpl = global.fetch, configProvider = configuration } 
     }
     if(req.method==='GET') {
       if(req.params.resource==='campeonatos') {
+        query.set('select','*,times_confirmados:inscricoes!inscricoes_id_campeonato_fkey(count),times_pendentes:inscricoes!inscricoes_id_campeonato_fkey(count)');
+        query.set('times_confirmados.status','eq.aprovada');
+        query.set('times_pendentes.status','eq.pendente');
         query.set('order','criado_em.desc,id_campeonato.desc');
         if(req.query.minhas==='1')query.set('id_criador',`eq.${req.user.id}`);
         if(req.query.disponiveis==='1')query.set('status','in.(rascunho,aberto)');

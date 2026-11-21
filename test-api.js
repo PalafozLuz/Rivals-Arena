@@ -194,6 +194,10 @@ test('filtros de proprietário usam sessão, classificação tem chave composta 
   const headers={Authorization:'Bearer qa'};
   for(const path of ['/api/campeonatos?minhas=1&page=2&id_criador=outro','/api/times?capitao=1','/api/classificacao?minhas=1'])assert.equal((await fetch(base+path,{headers})).status,200);
   assert.equal(calls[0].searchParams.get('id_criador'),'eq.jogador-atual');assert.equal(calls[0].searchParams.get('offset'),'100');
+  assert.match(calls[0].searchParams.get('select'),/times_confirmados:inscricoes!inscricoes_id_campeonato_fkey\(count\)/);
+  assert.match(calls[0].searchParams.get('select'),/times_pendentes:inscricoes!inscricoes_id_campeonato_fkey\(count\)/);
+  assert.equal(calls[0].searchParams.get('times_confirmados.status'),'eq.aprovada');
+  assert.equal(calls[0].searchParams.get('times_pendentes.status'),'eq.pendente');
   assert.equal(calls[1].searchParams.get('id_capitao'),'eq.jogador-atual');
   assert.equal(calls[2].pathname,'/rest/v1/classificacao_campeonatos');assert.equal(calls[2].searchParams.get('order'),'id_campeonato.asc,id_time.asc');assert.equal(calls[2].searchParams.get('campeonatos.id_criador'),'eq.jogador-atual');
   assert.equal((await fetch(base+'/api/classificacao/3',{headers})).status,404);

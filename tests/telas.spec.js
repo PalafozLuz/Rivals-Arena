@@ -383,6 +383,54 @@ test('campeonatos lê painel e cria/edita/cancela pela API sem cliente de banco'
  await page.locator('[data-cancel-championship="3"]').click();await expect(page.locator('#championship-list')).toContainText('cancelado');
  expect(writes.map(w=>w.path)).toEqual(['/api/campeonatos/3','/api/campeonatos/3']);expect(writes[0].body.id_criador).toBeUndefined();expect(writes[1].body).toEqual({status:'cancelado'});
 });
+test('campeonatos: busca, jogo, paginação e seleção do campeonato para inscrição',async({page})=>{
+ await setup(page);
+ const cups=Array.from({length:7},(_,i)=>({id_campeonato:i+1,nome:i===0?'Copa <b>segura</b>':'Copa '+(i+1),jogo:i===0?'LoL':i%2?'Valorant':'Fortnite',formato:'eliminatoria',status:'aberto',max_times:8,data_inicio:'2099-01-01',data_fim:'2099-01-02'}));
+ cups.push({...cups[0],id_campeonato:8,nome:'Cancelado oculto',status:'cancelado'},{...cups[0],id_campeonato:9,nome:'HOMOLOG-qa'});
+ await page.route('**/api/**',route=>{
+  const url=new URL(route.request().url());let data=[];
+  if(url.pathname==='/api/campeonatos'&&url.searchParams.get('minhas')!=='1')data=cups;
+  if(url.pathname==='/api/times')data=[{id_time:1,id_capitao:user.id,nome:'Time QA',status:'ativo'}];
+  return route.fulfill({json:{data}});
+ });
+ await page.goto('/campeonatos.html');
+ const cards=page.locator('.championship-game-card');await expect(cards).toHaveCount(6);
+ await expect(page.locator('#championship-explore-message')).toHaveText('7 campeonatos encontrados.');
+ await expect(cards.first().locator('.championship-game-name')).toHaveText('Copa <b>segura</b>');
+ await expect(cards.locator('b')).toHaveCount(0);
+ await page.locator('#championship-explore-next').click();await expect(cards).toHaveCount(1);
+ await page.getByRole('button',{name:'League of Legends',exact:true}).click();await expect(cards).toHaveCount(1);
+ await expect(cards.first().locator('.championship-game-title')).toHaveText('LoL');
+ await cards.first().getByRole('button',{name:'Inscrever time',exact:true}).click();
+ await expect(page.locator('#inscricao-form [name=id_campeonato]')).toHaveValue('1');
+ await expect(cards.first().getByRole('link',{name:'Ver campeonato',exact:true})).toHaveAttribute('href','campeonatos.html?campeonato=1#matches-list');
+ await page.getByRole('button',{name:'Todos',exact:true}).click();
+ await page.locator('#championship-search-input').fill('Valorant');await expect(cards).toHaveCount(3);
+ await page.locator('#championship-search-input').fill('inexistente');await expect(cards).toHaveCount(0);
+ await expect(page.locator('.championship-empty')).toBeVisible();
+ await expect(page.locator('#championship-explore-prev')).toBeDisabled();await expect(page.locator('#championship-explore-next')).toBeDisabled();
+});
+
+test('campeonatos mostra contagens reais e atualiza após aprovar inscrição',async({page})=>{
+ await setup(page);let approved=false;
+ const cup={id_campeonato:3,id_criador:user.id,nome:'Copa com inscrições',jogo:'Valorant',formato:'eliminatoria',status:'aberto',max_times:8,data_inicio:'2099-01-01',data_fim:'2099-01-02'};
+ const counted=()=>({...cup,times_confirmados:[{count:approved?4:3}],times_pendentes:[{count:approved?1:2}]});
+ await page.route('**/api/**',route=>{
+  const req=route.request(),url=new URL(req.url());let data=[];
+  if(url.pathname==='/api/campeonatos')data=[counted()];
+  else if(url.pathname==='/api/inscricoes/1'&&req.method()==='PATCH'){expect(req.postDataJSON()).toEqual({status:'aprovada'});approved=true;data={};}
+  else if(url.pathname==='/api/inscricoes')data=[{id_inscricao:1,id_time:2,id_campeonato:3,status:approved?'aprovada':'pendente',times:{nome:'Time convidado',id_capitao:'outro'},campeonatos:cup}];
+  return route.fulfill({json:{data}});
+ });
+ await page.goto('/campeonatos.html');
+ const counts=page.locator('.championship-game-card .championship-team-counts');
+ await expect(counts).toContainText('3 de 8 times confirmados');await expect(counts).toContainText('2 aguardando aprovação');
+ await expect(page.locator('#championship-list')).toContainText('3 de 8 times confirmados');
+ await page.locator('#inscricao-list').getByRole('button',{name:'Aprovar',exact:true}).click();
+ await expect(counts).toContainText('4 de 8 times confirmados');await expect(counts).toContainText('1 aguardando aprovação');
+ await expect(page.locator('#championship-list')).toContainText('4 de 8 times confirmados');
+});
+
 test('consulta recusada durante logout não altera o destino para sessão expirada',async({page})=>{
  await setup(page);let release;const gate=new Promise(resolve=>release=resolve);
  await page.route('**/api/jogadores/*',async route=>{await gate;await route.fulfill({status:401,json:{error:'Sessão inválida.'}}).catch(()=>{});});

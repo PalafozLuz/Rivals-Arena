@@ -1,461 +1,58 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#160d1c">
-    <title>Campeonatos - Rivals Arena</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <style>
-        :root {
-            color-scheme: dark;
-            --pink: #dc3d78;
-            --pink-light: #ef6193;
-            --purple: #421751;
-            --ink: #050505;
-            --white: #f7f4f6;
-            --muted: #b9adb9;
-        }
-
-        * { box-sizing: border-box; }
-        html { min-width: 320px; background: var(--ink); }
-        body { margin: 0; color: var(--white); background: var(--ink); font-family: Inter, Arial, sans-serif; }
-        button, input { font: inherit; }
-        button { color: inherit; }
-        .page { min-height: 100vh; overflow: hidden; }
-
-        .topbar {
-            height: 60px;
-            display: grid;
-            grid-template-columns: 60px minmax(240px, 520px) 1fr 38px;
-            align-items: center;
-            gap: 28px;
-            padding: 0 38px;
-            background: linear-gradient(105deg, #e14076 0%, #8d2874 48%, #351747 100%);
-        }
-        .brand { display: inline-flex; width: 52px; height: 30px; align-items: center; justify-content: center; }
-        .brand img { display: block; width: 52px; height: 30px; object-fit: contain; }
-        .search { position: relative; width: 100%; }
-        .search input {
-            width: 100%; height: 36px; padding: 0 44px 0 18px;
-            color: #29232b; background: #f4f1f3; border: 0; border-radius: 22px;
-            outline: 0; font-size: 14px;
-        }
-        .search input::placeholder { color: #777078; }
-        .search button {
-            position: absolute; top: 0; right: 2px; width: 36px; height: 36px;
-            border: 0; background: transparent; color: #3b263a; cursor: pointer;
-        }
-        .search svg { width: 20px; height: 20px; fill: currentColor; vertical-align: middle; }
-        .menu-icon { justify-self: end; width: 38px; height: 38px; align-items: center; justify-content: center; }
-        .menu-icon span { width: 29px; height: 3px; }
-
-        .navigation { background: linear-gradient(100deg, #41184f, #40124b 60%, #2e123e); }
-        .tabs { min-height: 46px; display: flex; align-items: center; gap: 16px; padding: 0 38px; }
-        .tab {
-            min-height: 36px; display: inline-flex; align-items: center; justify-content: center;
-            padding: 0 26px; border-radius: 8px; color: #fff; text-decoration: none;
-            font-size: 16px; font-weight: 500; white-space: nowrap;
-        }
-        .tab.active, .tab:hover { background: rgba(226, 58, 117, .28); }
-        .tab.create { margin-left: 4px; }
-        .filters {
-            min-height: 50px; display: flex; align-items: center; justify-content: space-between; gap: 16px;
-            padding: 0 38px 8px; overflow-x: auto; scrollbar-width: none;
-        }
-        .filters::-webkit-scrollbar { display: none; }
-        .chip {
-            flex: 0 0 auto; width: auto; min-width: 0; height: 30px; padding: 0 18px;
-            border: 0; border-radius: 9px; background: var(--pink); color: white;
-            font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap;
-        }
-        .chip.active, .chip:hover { background: var(--pink-light); }
-        .chip:nth-child(1) { width: 12.0%; }
-        .chip:nth-child(2) { width: 12.5%; }
-        .chip:nth-child(3) { width: 14.0%; }
-        .chip:nth-child(4) { width: 10.0%; }
-        .chip:nth-child(5) { width: 15.0%; }
-        .chip:nth-child(6) { width: 11.0%; }
-        .chip:nth-child(7) { width: 12.0%; }
-
-        main { min-height: 2200px; padding: 24px 52px 100px; background: #050505; }
-        .section { min-height: 640px; }
-        .section-heading { margin: 0; color: #f3eff2; font-size: 36px; line-height: 1.3; font-weight: 400; }
-        .section-heading .accent { color: var(--pink); font-weight: 700; }
-        .featured-section { min-height: 810px; }
-        .public-section { min-height: 640px; }
-        .create-section { min-height: 360px; }
-
-        .team-form-wrap {
-            max-width: 720px;
-            margin-top: 22px;
-            padding: 24px 22px;
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 18px;
-            background: linear-gradient(180deg, rgba(94,51,84,0.3), rgba(17,12,20,0.92));
-            box-shadow: 0 18px 36px rgba(0,0,0,0.2);
-        }
-
-        .team-form {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 18px;
-        }
-
-        .field {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            color: var(--white);
-            font-size: 15px;
-        }
-
-        .field input {
-            width: 100%;
-            height: 46px;
-            padding: 0 14px;
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 12px;
-            background: rgba(14,10,17,0.9);
-            color: var(--white);
-            outline: none;
-        }
-
-        .field input:focus {
-            border-color: rgba(220,61,120,0.7);
-            box-shadow: 0 0 0 3px rgba(220,61,120,0.18);
-        }
-
-        .team-form button {
-            align-self: end;
-            height: 46px;
-            padding: 0 22px;
-            border: 0;
-            border-radius: 12px;
-            background: linear-gradient(90deg, #dc3d78, #ef6193);
-            color: white;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .team-form button:hover {
-            filter: brightness(1.05);
-        }
-
-        .team-form button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .form-message {
-            min-height: 24px;
-            margin-top: 16px;
-            color: var(--muted);
-            font-size: 14px;
-        }
-
-        .form-message.error {
-            color: #ffb0c7;
-        }
-
-        .form-message.success {
-            color: #9ff0bb;
-        }
-
-        .championship-wrap {
-            margin-top: 22px;
-            display: grid;
-            grid-template-columns: minmax(0, 1.3fr) minmax(260px, 0.7fr);
-            gap: 20px;
-        }
-
-        .championship-form,
-        .championship-list {
-            padding: 22px;
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 18px;
-            background: linear-gradient(180deg, rgba(94,51,84,0.3), rgba(17,12,20,0.92));
-            box-shadow: 0 18px 36px rgba(0,0,0,0.18);
-        }
-
-        .championship-form {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 18px;
-        }
-
-        .championship-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .list-item {
-            padding: 14px 16px;
-            border-radius: 12px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-        }
-
-        .list-item h3 {
-            margin: 0 0 6px 0;
-            font-size: 20px;
-        }
-
-        .list-item p {
-            margin: 4px 0;
-            color: var(--muted);
-            font-size: 14px;
-        }
-
-        .list-item .status {
-            display: inline-block;
-            margin-top: 8px;
-            padding: 5px 10px;
-            border-radius: 999px;
-            background: rgba(220, 61, 120, 0.2);
-            color: #ffdbe8;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .list-item-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        .mini-button {
-            border: 0;
-            border-radius: 10px;
-            padding: 8px 10px;
-            background: rgba(255,255,255,0.08);
-            color: var(--white);
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        .mini-button.danger {
-            background: rgba(220, 61, 120, 0.18);
-            color: #ffdbe8;
-        }
-
-        @media (max-width: 760px) {
-            .topbar { height: 54px; grid-template-columns: 52px minmax(0, 1fr) 36px; gap: 10px; padding: 0 14px; }
-            .brand { width: 52px; }
-            .brand img { width: 52px; height: 30px; }
-            .search input { width: 100%; height: 36px; padding: 0 38px 0 12px; font-size: 12px; }
-            .search button { width: 36px; height: 36px; }
-            .menu-icon { width: 32px; }
-            .tabs { min-height: 44px; gap: 7px; padding: 0 12px; overflow-x: auto; }
-            .tab { min-height: 40px; padding: 0 14px; font-size: 13px; }
-            .filters { min-height: 48px; gap: 9px; padding: 0 12px 8px; }
-            .chip { min-width: max-content; width: auto !important; height: 30px; padding: 0 14px; font-size: 12px; }
-            main { min-height: 1400px; padding: 22px 18px 70px; }
-            .section-heading { font-size: 25px; }
-            .section, .featured-section { min-height: 470px; }
-            .public-section { min-height: 390px; }
-            .create-section { min-height: 220px; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#17111e">
+  <title>Campeonatos - Rivals Arena</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="barra-superior.css">
+  <link rel="stylesheet" href="campeonatos.css">
 </head>
-<body data-auth-page="protected">
-    <div class="page">
-        <header>
-            <div class="topbar">
-                <a class="brand" href="homepage.html" aria-label="Rivals Arena - início">
-                    <img src="imagens/logo-menu.png" alt="Rivals Arena">
-                </a>
-                <form class="search" role="search">
-                    <input type="search" aria-label="Pesquisar campeonatos" placeholder="Pesquisar campeonatos">
-                    <button type="submit" aria-label="Pesquisar">
-                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5a6.5 6.5 0 1 0-6.5 6.5 6.47 6.47 0 0 0 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zM9.5 14C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-                    </button>
-                </form>
-                <button class="menu-icon menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false"><span></span><span></span><span></span></button>
-            </div>
-            <nav class="mobile-menu" aria-label="Menu principal">
-                <a href="homepage.html">Início</a>
-                <a href="perfil.html">Perfil</a>
-                <a href="comunidade.html">Comunidade</a>
-                <a href="campeonatos.html" aria-current="page">Campeonatos</a>
-                <a href="partidas.html">Partidas</a>
-            </nav>
-            <nav class="navigation" aria-label="Navegação de campeonatos">
-                <div class="tabs">
-                    <a class="tab active" href="#meus-campeonatos">Meus Campeonatos</a>
-                    <a class="tab" href="#ranking">Hanking</a>
-                    <a class="tab create" href="#criar-equipe">Criar campeonato</a>
-                </div>
-                <div class="filters" aria-label="Filtrar por categoria">
-                    <button class="chip active" type="button">Todos</button>
-                    <button class="chip" type="button">Brasileiros</button>
-                    <button class="chip" type="button">Simuladores</button>
-                    <button class="chip" type="button">RPG</button>
-                    <button class="chip" type="button">Battle Royale</button>
-                    <button class="chip" type="button">FPS</button>
-                    <button class="chip" type="button">Aventura</button>
-                </div>
-            </nav>
-        </header>
-
-        <main>
-            <section class="section featured-section" id="meus-campeonatos" aria-labelledby="featured-title">
-                <h1 class="section-heading" id="featured-title"><span class="accent">Equipes</span> em destaque</h1>
-            </section>
-            <section class="section public-section" id="ranking" aria-labelledby="public-title">
-                <h2 class="section-heading" id="public-title"><span class="accent">Entrar</span> em equipes públicas</h2>
-            </section>
-            <section class="section create-section" id="criar-equipe" aria-labelledby="create-title">
-                <h2 class="section-heading" id="create-title"><span class="accent">Criar</span> equipe</h2>
-
-                <div class="team-form-wrap">
-                    <form class="team-form" id="team-form">
-                        <label class="field">
-                            Nome do time
-                            <input type="text" name="nome" placeholder="Ex.: Titans Arena" required>
-                        </label>
-
-                        <label class="field">
-                            Logo do time (opcional)
-                            <input type="url" name="logo_url" placeholder="https://.../logo.png">
-                        </label>
-
-                        <button type="submit">Salvar time</button>
-                    </form>
-                    <p class="form-message" id="team-message" role="status" aria-live="polite"></p>
-                </div>
-
-                <div class="championship-wrap">
-                    <form class="championship-form" id="championship-form">
-                        <h3 id="championship-form-title" style="grid-column:1/-1;">Criar campeonato</h3>
-                        <label class="field">
-                            Nome do campeonato
-                            <input type="text" name="nome" required>
-                        </label>
-
-                        <label class="field">
-                            Jogo
-                            <input type="text" name="jogo" required>
-                        </label>
-
-                        <label class="field" style="grid-column: 1 / -1;">
-                            Descrição
-                            <input type="text" name="descricao" placeholder="Opcional">
-                        </label>
-
-                        <label class="field">
-                            Formato
-                            <select name="formato" style="width:100%; height:46px; border-radius:12px; background:rgba(14,10,17,0.9); border:1px solid rgba(255,255,255,0.12); color:#fff; padding:0 12px;">
-                                <option value="eliminatoria">Eliminatória</option>
-                                <option value="pontos_corridos">Pontos corridos</option>
-                            </select>
-                        </label>
-
-                        <label class="field">
-                            Máximo de times
-                            <input type="number" name="max_times" min="2" max="1024" value="8" required>
-                        </label>
-
-                        <label class="field">
-                            Taxa de inscrição
-                            <input type="number" name="taxa_inscricao" min="0" step="0.01" value="0">
-                        </label>
-
-                        <label class="field">
-                            Prêmio
-                            <input type="number" name="premio" min="0" step="0.01" value="0">
-                        </label>
-
-                        <label class="field">
-                            Data de início
-                            <input type="date" name="data_inicio" required>
-                        </label>
-
-                        <label class="field">
-                            Data de fim
-                            <input type="date" name="data_fim" required>
-                        </label>
-
-                        <button type="submit" style="grid-column: 1 / -1; justify-self: start;">Salvar campeonato</button>
-                        <button id="cancel-championship-edit" type="button" hidden>Cancelar edição</button>
-                        <p style="grid-column:1/-1;">Eliminatória: 2, 4, 8, 16… times aprovados, sem folgas. Pontos corridos aceita quantidade ímpar.</p>
-                    </form>
-
-                    <aside class="championship-list" id="championship-list">
-                        <h3 style="margin:0; font-size: 22px;">Meus campeonatos</h3>
-                        <p class="form-message" id="championship-message" role="status" aria-live="polite"></p>
-                    </aside>
-                </div>
-
-                <div class="championship-wrap" style="margin-top: 18px;">
-                    <aside class="championship-list" id="team-list">
-                        <h3 style="margin:0; font-size: 22px;">Meus times</h3>
-                        <p class="form-message" id="team-list-message" role="status" aria-live="polite"></p>
-                    </aside>
-
-                    <form class="championship-form" id="inscricao-form">
-                        <label class="field">
-                            Meu time
-                            <select name="id_time" required style="width:100%; height:46px; border-radius:12px; background:rgba(14,10,17,0.9); border:1px solid rgba(255,255,255,0.12); color:#fff; padding:0 12px;">
-                                <option value="">Carregando times...</option>
-                            </select>
-                        </label>
-
-                        <label class="field">
-                            Campeonato
-                            <select name="id_campeonato" required style="width:100%; height:46px; border-radius:12px; background:rgba(14,10,17,0.9); border:1px solid rgba(255,255,255,0.12); color:#fff; padding:0 12px;">
-                                <option value="">Carregando campeonatos...</option>
-                            </select>
-                        </label>
-
-                        <button type="submit" style="grid-column: 1 / -1; justify-self: start;">Inscrever time</button>
-                    </form>
-
-                    <aside class="championship-list" id="inscricao-list">
-                        <h3 style="margin:0; font-size: 22px;">Inscrições dos meus times e campeonatos</h3>
-                        <p class="form-message" id="inscricao-message" role="status" aria-live="polite"></p>
-                    </aside>
-                </div>
-
-                <div class="championship-wrap" style="margin-top: 18px;">
-                    <aside class="championship-list" id="ranking-list">
-                        <h3 style="margin:0; font-size: 22px;">Classificação</h3>
-                        <p class="form-message" id="ranking-message" role="status" aria-live="polite"></p>
-                    </aside>
-                </div>
-                <div class="championship-wrap" style="margin-top: 18px;">
-                    <section class="championship-list" id="matches-list" aria-labelledby="matches-title">
-                        <h3 id="matches-title">Confrontos e resultados</h3>
-                        <p class="form-message" id="matches-message" role="status" aria-live="polite">Selecione um campeonato em Meus campeonatos.</p>
-                        <div id="matches-content"></div>
-                    </section>
-                </div>
-            </section>
-        </main>
-    </div>
-    <script>
-        document.querySelector('.search').addEventListener('submit', (event) => event.preventDefault());
-        document.querySelectorAll('.chip').forEach((chip) => {
-            chip.addEventListener('click', () => {
-                document.querySelector('.chip.active')?.classList.remove('active');
-                chip.classList.add('active');
-            });
-        });
-        document.querySelectorAll('.tabs .tab').forEach((tab) => {
-            tab.addEventListener('click', () => {
-                document.querySelector('.tabs .tab.active')?.classList.remove('active');
-                tab.classList.add('active');
-            });
-        });
-    </script>
+<body class="championship-refresh" data-auth-page="protected">
+  <a class="championship-skip" href="#conteudo">Pular para o conteúdo</a>
+  <header class="arena-public-header">
+    <a class="arena-public-brand" href="homepage.html" aria-label="Rivals Arena — início"><img src="imagens/logo.png" alt="Rivals Arena" width="150" height="40"></a>
+    <form class="search" role="search"><label class="sr-only" for="championship-search-input">Pesquisar campeonatos</label><input id="championship-search-input" type="search" placeholder="Pesquisar campeonatos"><button type="submit" aria-label="Pesquisar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></button></form>
+    <button class="menu-icon menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="championship-menu"><span></span><span></span><span></span></button>
+    <nav class="mobile-menu" id="championship-menu" aria-label="Menu principal"><a href="homepage.html">Início</a><a href="perfil.html">Perfil</a><a href="comunidade.html">Comunidade</a><a href="campeonatos.html" aria-current="page">Campeonatos</a><a href="partidas.html">Partidas</a></nav>
+  </header>
+  <main class="championship-main" id="conteudo">
+    <section class="championship-intro" aria-labelledby="championship-title"><p class="championship-eyebrow">A DISPUTA COMEÇA NA ARENA</p><h1 id="championship-title">Seu time. Seu jogo.<br>Sua próxima conquista.</h1><div class="championship-intro-bottom"><p>Encontre um campeonato, reúna seu time e acompanhe cada rodada até a final.</p><a class="championship-primary-action" href="#criar-campeonato">Criar campeonato</a></div></section>
+    <nav class="tabs" aria-label="Navegação de campeonatos"><a class="tab active" href="#explorar-campeonatos" aria-current="location">Explorar campeonatos</a><a class="tab" href="#meus-campeonatos">Meus campeonatos</a><a class="tab" href="#ranking">Ranking</a><a class="tab" href="#inscrever-time">Inscrever time</a></nav>
+    <section id="explorar-campeonatos" class="championship-section" aria-labelledby="explore-title">
+      <div class="championship-section-heading"><div><p class="championship-eyebrow">ESCOLHA SUA PRÓXIMA DISPUTA</p><h2 id="explore-title">Campeonatos na arena</h2></div></div>
+      <div class="filters" aria-label="Filtrar por jogo"><button class="chip active" type="button" data-game="Todos" aria-pressed="true">Todos</button><button class="chip" type="button" data-game="Among Us" aria-pressed="false">Among Us</button><button class="chip" type="button" data-game="League of Legends" aria-pressed="false">League of Legends</button><button class="chip" type="button" data-game="Fortnite" aria-pressed="false">Fortnite</button><button class="chip" type="button" data-game="Counter Strike Source" aria-pressed="false">Counter Strike Source</button><button class="chip" type="button" data-game="Brawl Stars" aria-pressed="false">Brawl Stars</button><button class="chip" type="button" data-game="Valorant" aria-pressed="false">Valorant</button></div>
+      <p id="championship-explore-message" class="form-message" role="status" aria-live="polite">Carregando campeonatos...</p>
+      <div id="championship-explore-grid" class="championship-explore-grid"></div>
+      <nav class="championship-pagination" aria-label="Páginas dos campeonatos"><button id="championship-explore-prev" type="button" disabled>Anterior</button><span id="championship-explore-page">Página 1</span><button id="championship-explore-next" type="button" disabled>Próxima</button></nav>
+    </section>
+    <section class="championship-section" id="meus-campeonatos" aria-labelledby="featured-title"><div class="championship-section-heading"><div><p class="championship-eyebrow">ORGANIZE CADA ETAPA</p><h2 id="featured-title">Meus campeonatos</h2></div><a class="championship-text-link" href="#criar-campeonato">Criar campeonato</a></div><div class="championship-list championship-owned-list" id="championship-list"><p class="form-message" id="championship-message" role="status" aria-live="polite"></p></div></section>
+    <section class="championship-section championship-panel" id="criar-campeonato" aria-labelledby="championship-form-title">
+      <p class="championship-eyebrow">SUA COMPETIÇÃO, SUAS REGRAS</p><h2 id="championship-form-title">Criar campeonato</h2><p class="championship-section-intro">Defina o jogo, o formato e as datas para receber os times na arena.</p>
+      <form class="championship-form" id="championship-form">
+        <label class="field">Nome do campeonato<input type="text" name="nome" placeholder="Ex.: Copa Rivals Arena" required></label>
+        <label class="field">Jogo<input type="text" name="jogo" placeholder="Ex.: Valorant" required></label>
+        <label class="field championship-full">Descrição<input type="text" name="descricao" placeholder="Conte mais sobre a competição (opcional)"></label>
+        <label class="field">Formato<select name="formato"><option value="eliminatoria">Eliminatória</option><option value="pontos_corridos">Pontos corridos</option></select></label>
+        <label class="field">Máximo de times<input type="number" name="max_times" min="2" max="1024" value="8" required></label>
+        <label class="field">Taxa de inscrição (R$)<input type="number" name="taxa_inscricao" min="0" step="0.01" value="0"></label>
+        <label class="field">Prêmio (R$)<input type="number" name="premio" min="0" step="0.01" value="0"></label>
+        <label class="field">Data de início<input type="date" name="data_inicio" required></label><label class="field">Data de fim<input type="date" name="data_fim" required></label>
+        <p class="championship-form-hint championship-full">Eliminatória: 2, 4, 8, 16… times aprovados, sem folgas. Pontos corridos aceita quantidade ímpar.</p>
+        <div class="championship-form-actions championship-full"><button type="submit">Salvar campeonato</button><button id="cancel-championship-edit" class="secondary-button" type="button" hidden>Cancelar edição</button></div>
+      </form>
+    </section>
+    <section class="championship-section" id="criar-equipe" aria-labelledby="create-title"><div class="championship-section-heading"><div><p class="championship-eyebrow">JUNTE SUA GALERA</p><h2 id="create-title">Seu time começa aqui</h2></div><a class="championship-text-link" href="times.html">Gerenciar times</a></div>
+      <div class="championship-wrap"><div class="championship-panel"><h3>Criar time</h3><form class="team-form" id="team-form"><label class="field">Nome do time<input type="text" name="nome" placeholder="Ex.: Titans Arena" required></label><label class="field">Logo do time (opcional)<input type="url" name="logo_url" placeholder="https://exemplo.com/logo.png"></label><button type="submit">Salvar time</button></form><p class="form-message" id="team-message" role="status" aria-live="polite"></p></div><aside class="championship-list championship-panel" id="team-list"><h3>Meus times</h3><p class="form-message" id="team-list-message" role="status" aria-live="polite"></p></aside></div>
+    </section>
+    <section class="championship-section championship-panel" id="inscrever-time" aria-labelledby="inscription-title"><p class="championship-eyebrow">PRONTO PARA ENTRAR EM CAMPO?</p><h2 id="inscription-title">Inscreva seu time</h2><p class="championship-section-intro">Escolha um time em que você é capitão e solicite a participação no campeonato.</p><form class="championship-form" id="inscricao-form"><label class="field">Meu time<select name="id_time" required><option value="">Carregando times...</option></select></label><label class="field">Campeonato<select name="id_campeonato" required><option value="">Carregando campeonatos...</option></select></label><button type="submit">Inscrever time</button></form></section>
+    <section class="championship-section championship-panel championship-list" id="inscricao-list" aria-labelledby="inscriptions-title"><p class="championship-eyebrow">ACOMPANHE AS SOLICITAÇÕES</p><h2 id="inscriptions-title">Inscrições dos meus times e campeonatos</h2><p class="form-message" id="inscricao-message" role="status" aria-live="polite"></p></section>
+    <section class="championship-section championship-panel" id="ranking" aria-labelledby="ranking-title"><p class="championship-eyebrow">CADA RODADA CONTA</p><h2 id="ranking-title">Classificação</h2><div class="championship-list" id="ranking-list"><p class="form-message" id="ranking-message" role="status" aria-live="polite"></p></div></section>
+    <section class="championship-section championship-panel championship-list" id="matches-list" aria-labelledby="matches-title"><p class="championship-eyebrow">DA PRIMEIRA RODADA ATÉ A FINAL</p><h2 id="matches-title">Confrontos e resultados</h2><p class="form-message" id="matches-message" role="status" aria-live="polite">Selecione um campeonato para acompanhar os confrontos.</p><div id="matches-content"></div></section>
+  </main>
+  <footer class="championship-footer"><a class="arena-public-brand" href="apresentacao.html" aria-label="Sobre o Rivals Arena"><img src="imagens/logo.png" alt="Rivals Arena" width="110" height="30"></a><p>© 2026 Rivals Arena. Todos os direitos reservados.</p><a class="championship-instagram" href="https://www.instagram.com/rivalsarenaking/" target="_blank" rel="noopener noreferrer" aria-label="Instagram @rivalsarenaking (abre em nova aba)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg>@rivalsarenaking</a></footer>
+  <script src="campeonatos-explorar.js"></script>
     <script src="menu.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
     <script src="supabase-config.js"></script>
@@ -571,6 +168,8 @@
 
                 const { data, error } = await apiResult('/api/campeonatos?minhas=1');
 
+                if (!error) window.dispatchEvent(new Event('rivals:campeonatos-atualizados'));
+
                 if (error) {
                     championshipMessage.textContent = error.message;
                     championshipMessage.className = 'form-message error';
@@ -600,7 +199,8 @@
                         <p>${escapeHtml(item.jogo)}</p>
                         <p>${escapeHtml(item.formato)}</p>
                         <p>De ${item.data_inicio} até ${item.data_fim}</p>
-                        <p>${item.max_times} times · ${item.status}</p>
+                        <p class="championship-confirmed-count">${Number(item.times_confirmados?.[0]?.count ?? 0)} de ${item.max_times} times confirmados</p>
+                        <p class="championship-pending-count">${Number(item.times_pendentes?.[0]?.count ?? 0)} aguardando aprovação</p>
                         <div class="list-item-row">
                             <span class="status">${item.status}</span>
                             ${!isCanceled && item.status !== 'encerrado' ? '<button type="button" class="mini-button danger" data-cancel-championship="' + item.id_campeonato + '">Cancelar</button>' : ''}
@@ -863,6 +463,10 @@
                     option.textContent = `${campeonato.nome} · ${campeonato.jogo}`;
                     selectChampionship.appendChild(option);
                 });
+                if (selectChampionship.dataset.preselected) {
+                    selectChampionship.value = selectChampionship.dataset.preselected;
+                    delete selectChampionship.dataset.preselected;
+                }
             };
 
             const inscriptionRequest = (url, method = 'GET', body) => window.rivalsAuth.request(url, {method, body});
@@ -1031,6 +635,7 @@
                                 try {
                                     await inscriptionRequest(`/api/inscricoes/${item.id_inscricao}`, 'PATCH', { status });
                                     await renderInscriptions();
+                                    await renderChampionships();
                                 } catch (error) {
                                     inscricaoMessage.textContent = error.message;
                                     inscricaoMessage.className = 'form-message error';
@@ -1050,6 +655,7 @@
                             try {
                                 await inscriptionRequest(`/api/inscricoes/${item.id_inscricao}`, 'PATCH', { status: 'cancelada' });
                                 await renderInscriptions();
+                                await renderChampionships();
                             } catch (error) { inscricaoMessage.textContent = error.message; cancel.disabled = false; }
                         });
                         card.appendChild(cancel);
@@ -1146,6 +752,7 @@
                         inscricaoMessage.className = 'form-message success';
                         inscricaoForm.reset();
                         await renderInscriptions();
+                        await renderChampionships();
                     } catch (error) {
                         inscricaoMessage.textContent = error.message || 'Não foi possível inscrever o time.';
                         inscricaoMessage.className = 'form-message error';
