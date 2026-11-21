@@ -233,12 +233,39 @@ test('comunidades: entrar, publicar texto seguro, curtir, editar, excluir e sair
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBeTruthy();
  await page.screenshot({path:'test-results/comunidades-mobile.png',fullPage:true});
 });
+test('carrossel mostra os sete jogos, desliza e abre comunidade com três posts',async({page})=>{
+ await setup(page);await page.setViewportSize({width:390,height:900});
+ const community={id_comunidade:12,nome:'Minecraft',slug:'minecraft',jogo:'Minecraft',categoria:'Aventura',id_criador:'outro',membros_comunidade:[{count:1}]};
+ await page.route('**/api/**',route=>{
+  const p=new URL(route.request().url()).pathname;
+  let data=[];
+  if(p==='/api/inicio')data={comunidades:[],campeonatos:[],partidas:[],jogos:[]};
+  else if(p==='/api/comunidades')data=[community];
+  else if(p==='/api/comunidades/12')data=community;
+  else if(p==='/api/publicacoes')data=[1,2,3].map(n=>({id_publicacao:n,id_autor:'outro',conteudo:'Publicação inicial '+n,criada_em:'2026-11-20T12:00:00Z',jogadores:{username:'editor'},minhas_reacoes:[],reacoes_publicacao:[{count:0}]}));
+  return route.fulfill({json:{data}});
+ });
+ await page.goto('/homepage.html');
+ const covers=page.locator('#home-game-carousel a');await expect(covers).toHaveCount(7);
+ await expect(covers.nth(0)).toHaveAttribute('href','comunidade.html?comunidade=minecraft');
+ await expect(covers.nth(1)).toHaveAttribute('href','comunidade.html?comunidade=hollow-knight');
+ await expect(covers.nth(6)).toHaveAttribute('href','comunidade.html?comunidade=resident-evil');
+ await page.getByRole('button',{name:'Próximos jogos',exact:true}).click();
+ await expect.poll(()=>page.locator('#home-game-carousel').evaluate(e=>e.scrollLeft)).toBeGreaterThan(0);
+ await page.getByRole('button',{name:'Jogos anteriores',exact:true}).click();
+ await expect.poll(()=>page.locator('#home-game-carousel').evaluate(e=>e.scrollLeft)).toBeLessThan(2);
+ await page.getByRole('link',{name:'Abrir comunidade de Minecraft',exact:true}).click();
+ await expect(page.locator('#community-detail-title')).toHaveText('Minecraft');
+ await expect(page.locator('#community-posts .social-post')).toHaveCount(3);
+});
+
 test('home busca dados persistidos e links levam ao confronto e comunidade',async({page})=>{
  await setup(page);
  const queries=[];
  await page.route('**/api/inicio?*',route=>{queries.push(new URL(route.request().url()).searchParams.get('q'));return route.fulfill({json:{data:{comunidades:[{id_comunidade:2,nome:'Comunidade real',membros_comunidade:[{count:3}]}],campeonatos:[{id_campeonato:3,nome:'Copa real',jogo:'Valorant',status:'aberto'}],jogos:['Valorant'],partidas:[{id_partida:9,time_a:{nome:'Alfa'},time_b:{nome:'Beta'},status:'agendada',rodada:1}]}}});});
  await page.goto('/homepage.html');await expect(page.locator('#home-message')).toHaveText('Arena atualizada.');
- await expect(page.getByRole('link',{name:'Ver comunidade'})).toHaveAttribute('href','comunidade.html#comunidade-2');
+ await expect(page.getByRole('link',{name:'Abrir comunidade de Minecraft',exact:true})).toHaveAttribute('href','comunidade.html?comunidade=minecraft');
+ await expect(page.getByRole('heading',{name:'Comunidades recentes',exact:true})).toHaveCount(0);
  await expect(page.getByRole('link',{name:'Ver confronto'})).toHaveAttribute('href','partidas.html?partida=9');
  await page.locator('#home-search-input').fill('Valorant');await page.getByRole('button',{name:'Pesquisar',exact:true}).click();
  await expect(page.locator('#home-message')).toHaveText('Resultados da busca.');expect(queries).toEqual(['','Valorant']);

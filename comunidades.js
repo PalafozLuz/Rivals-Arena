@@ -31,7 +31,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const result = node('article', '', 'my-community-card social-community-card');
     const cover = node('div', '', 'my-community-cover');
     const image = document.createElement('img'); image.alt = '';
-    image.src = /^https?:\/\//i.test(community.imagem_url || '') ? community.imagem_url : 'imagens/valorant.png';
+    const gameCover = window.RIVALS_JOGOS_COMUNIDADES?.find(game => game.slug === community.slug);
+    const usesOriginalCover = gameCover && community.imagem_url?.endsWith('/' + gameCover.imagem.replace('group43-', ''));
+    image.src = usesOriginalCover ? gameCover.imagem
+      : /^https?:\/\//i.test(community.imagem_url || '') ? community.imagem_url : 'imagens/valorant.png';
     image.addEventListener('error', () => { image.src = 'imagens/valorant.png'; }, { once: true });
     cover.appendChild(image);
     const body = node('div', '', 'social-card-body');
@@ -182,5 +185,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     await load();
     const match = location.hash.match(/^#comunidade-(\d+)$/);
     if (match) await openCommunity(Number(match[1]), true);
+    else {
+      const slug = new URLSearchParams(location.search).get('comunidade');
+      if (slug) {
+        const found = await request('/api/comunidades?' + new URLSearchParams({slug}));
+        if (!found.length) throw Error('Esta comunidade não foi encontrada.');
+        await openCommunity(found[0].id_comunidade, true, true);
+      }
+    }
   } catch (error) { message(error.message); }
 });

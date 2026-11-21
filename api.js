@@ -255,6 +255,10 @@ function createApi({ fetchImpl = global.fetch, configProvider = configuration } 
       if(!req.params.id) {query.set('limit','24');query.set('offset',String((page-1)*24));}
       if(req.params.resource==='comunidades') {
         query.set('select','*,membros_comunidade(count)');query.set('order','criada_em.desc');
+        if(req.query.slug!==undefined){
+          if(typeof req.query.slug!=='string'||!/^[a-z0-9][a-z0-9-]{2,139}$/.test(req.query.slug))return res.status(400).json({error:'Identificador de comunidade inválido.'});
+          query.set('slug', 'eq.'+req.query.slug);
+        }
         if(req.query.minhas==='1') {
           try {
             const response=await fetchImpl(`${req.remote.url}/rest/v1/membros_comunidade?select=id_comunidade&id_jogador=eq.${req.user.id}&limit=1000`,{headers:req.remote.headers,signal:AbortSignal.timeout(10000)});

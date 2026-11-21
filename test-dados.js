@@ -26,11 +26,37 @@ test('partidas combina busca e times da sessão, pagina e preserva RLS',()=>fixt
  assert.equal(options.headers.Authorization,'Bearer qa-token');
  assert.equal(calls.find(c=>c.u.pathname.endsWith('/contratos')).u.searchParams.get('id_jogador'),'eq.jogador-atual');
 }));
+test('home filtra homologação antes dos limites e mantém busca e histórico disponíveis',()=>fixture(async(get,calls)=>{
+ const r=await get('inicio?q=Valorant');assert.equal(r.status,200);
+ const communities=calls.find(c=>c.u.pathname.endsWith('/comunidades')).u;
+ const championships=calls.find(c=>c.u.pathname.endsWith('/campeonatos')&&c.u.searchParams.has('status')).u;
+ const matches=calls.find(c=>c.u.pathname.endsWith('/partidas')).u;
+ assert.equal(communities.searchParams.get('and'),'(nome.not.ilike.HOMOLOG*)');
+ assert.equal(communities.searchParams.get('nome'),'ilike.*Valorant*');
+ assert.equal(championships.searchParams.get('and'),'(nome.not.ilike.HOMOLOG*)');
+ assert.equal(championships.searchParams.get('or'),'(nome.ilike.*Valorant*,jogo.ilike.*Valorant*)');
+ assert.equal(matches.searchParams.get('campeonatos.nome'),'not.ilike.HOMOLOG*');
+ assert.equal(matches.searchParams.get('limit'),'6');
+ calls.length=0;await get('partidas');
+ assert.equal(calls.find(c=>c.u.pathname.endsWith('/partidas')).u.searchParams.has('campeonatos.nome'),false);
+ calls.length=0;await get('meu-historico');
+ assert.equal(calls.some(c=>c.u.searchParams.toString().includes('HOMOLOG')),false);
+}));
+
 test('histórico usa sempre jogador autenticado e relacionamentos explícitos',()=>fixture(async(get,calls)=>{
  const r=await get('meu-historico?id_jogador=outra-pessoa');assert.equal(r.status,200);
  for(const {u} of calls){assert.equal(u.searchParams.get('id_jogador'),'eq.jogador-atual');}
  const history=calls.find(c=>c.u.pathname.endsWith('/historico_ranking')).u;
  assert.match(history.searchParams.get('select'),/partidas!historico_ranking_id_partida_fkey/);
+}));
+
+test('comunidades resolve slug exato e recusa identificador inválido',()=>fixture(async(get,calls)=>{
+ assert.equal((await get('comunidades?slug=hollow-knight')).status,200);
+ assert.equal(calls.at(-1).u.searchParams.get('slug'),'eq.hollow-knight');
+ calls.length=0;
+ assert.equal((await get('comunidades?slug=eq.minecraft')).status,400);
+ assert.equal((await get('comunidades?slug=minecraft&slug=valorant')).status,400);
+ assert.equal(calls.length,0);
 }));
 test('leituras rejeitam página, status e identificadores inválidos antes da consulta',()=>fixture(async(get,calls)=>{
  for(const path of ['partidas?page=-1','partidas?status=inventado','partidas/abc','meu-historico?page=1.5'])assert.equal((await get(path)).status,400,path);

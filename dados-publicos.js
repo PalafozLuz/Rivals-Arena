@@ -47,6 +47,8 @@ function readRoutes(fetchImpl) {
   async function matches(req,{preview=false}={}) {
     const page=pageNumber(req.query.page);
     const params={select:MATCH_SELECT,order:'data_hora.asc.nullslast,id_partida.desc',limit:preview?'6':'25',offset:preview?'0':String((page-1)*24)};
+    // HOMOLOG identifica os campeonatos de validação, preservados no histórico.
+    if(preview)params['campeonatos.nome']='not.ilike.HOMOLOG*';
     const groups=[];
     if(req.params.id)params.id_partida=`eq.${positiveId(req.params.id)}`;
     if(req.query.campeonato)params.id_campeonato=`eq.${positiveId(req.query.campeonato)}`;
@@ -82,8 +84,8 @@ function readRoutes(fetchImpl) {
   }
   router.get('/inicio',route(async(req,res)=>{
     const q=textFilter(req.query.q);
-    const communityQuery={select:'*,membros_comunidade(count)',order:'criada_em.desc',limit:'8'};
-    const championshipQuery={select:'id_campeonato,nome,jogo,formato,status,data_inicio,data_fim,max_times',status:'neq.cancelado',order:'criado_em.desc',limit:'12'};
+    const communityQuery={select:'*,membros_comunidade(count)',and:'(nome.not.ilike.HOMOLOG*)',order:'criada_em.desc',limit:'8'};
+    const championshipQuery={select:'id_campeonato,nome,jogo,formato,status,data_inicio,data_fim,max_times',and:'(nome.not.ilike.HOMOLOG*)',status:'neq.cancelado',order:'criado_em.desc',limit:'12'};
     if(q){communityQuery.nome=`ilike.*${q}*`;championshipQuery.or=`(nome.ilike.*${q}*,jogo.ilike.*${q}*)`;}
     const [communities,championships,schedule]=await Promise.all([rest(req,'comunidades',communityQuery),rest(req,'campeonatos',championshipQuery),matches(req,{preview:true})]);
     res.json({data:{comunidades:communities,campeonatos:championships,partidas:schedule.items,jogos:[...new Set(championships.map(item=>item.jogo).filter(Boolean))]}});

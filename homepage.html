@@ -3,26 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#000000">
+    <meta name="theme-color" content="#17111e">
     <title>Início - Rivals Arena</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="barra-superior.css">
+    <link rel="stylesheet" href="homepage.css">
 </head>
-<body class="page-home" data-auth-page="protected">
-    <header class="navbar">
-        <a class="logo" href="homepage.html" aria-label="Rivals Arena - início">
-            <img src="imagens/logo-menu.png" alt="Rivals Arena">
+<body class="page-home home-refresh" data-auth-page="protected">
+    <a class="home-skip" href="#conteudo">Pular para o conteúdo</a>
+    <header class="arena-public-header">
+        <a class="arena-public-brand" href="homepage.html" aria-label="Rivals Arena - início">
+            <img src="imagens/logo.png" alt="Rivals Arena" width="150" height="40">
         </a>
         <form class="home-search" role="search" aria-label="Pesquisar na arena">
             <label class="sr-only" for="home-search-input">Pesquisar comunidades, times ou campeonatos</label>
             <input id="home-search-input" type="search" placeholder="Pesquisar comunidades, times ou campeonatos">
-            <button type="submit" aria-label="Pesquisar">⌕</button>
+            <button type="submit" aria-label="Pesquisar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></button>
         </form>
-        <button class="menu-icon menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false">
+        <button class="menu-icon menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="home-menu">
             <span></span>
             <span></span>
             <span></span>
         </button>
-        <nav class="mobile-menu" aria-label="Menu principal">
+        <nav class="mobile-menu" id="home-menu" aria-label="Menu principal">
             <a href="homepage.html">Início</a>
             <a href="perfil.html">Perfil</a>
             <a href="comunidade.html">Comunidade</a>
@@ -31,27 +34,35 @@
         </nav>
     </header>
 
-    <section class="main-banner" aria-label="Banner principal">
-        <img src="BANNER1.png" alt="Banner principal da Rivals Arena">
-    </section>
-
-    <main class="content">
+    <main class="content" id="conteudo">
+        <section class="home-welcome" aria-labelledby="home-title"><div><p class="home-eyebrow">SEU JOGO. SEU TIME. SUA ARENA.</p><h1 id="home-title">O próximo desafio começa aqui.</h1><p>Encontre sua comunidade e acompanhe o que acontece na arena.</p></div><a class="home-primary" href="campeonatos.html">Explorar campeonatos</a></section>
+        <section class="main-banner" aria-label="Banner principal">
+            <img src="BANNER1.png" alt="Bem-vindo ao Rivals Arena — jogador com headset em uma arena de esports" width="1440" height="810" fetchpriority="high">
+        </section>
+        <section class="category-section home-game-section" aria-labelledby="home-game-title">
+            <div class="home-section-heading"><div><p class="home-eyebrow">UMA COMUNIDADE PARA CADA JOGO</p><h2 id="home-game-title">Escolha seu jogo.</h2></div>
+                <div class="home-carousel-controls">
+                    <button type="button" id="home-games-prev" aria-label="Jogos anteriores" aria-controls="home-game-carousel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></button>
+                    <button type="button" id="home-games-next" aria-label="Próximos jogos" aria-controls="home-game-carousel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg></button>
+                </div>
+            </div>
+            <div class="home-game-carousel" id="home-game-carousel" role="region" aria-roledescription="carrossel" aria-label="Comunidades por jogo" tabindex="0"></div>
+        </section>
         <p id="home-message" role="status" aria-live="polite">Carregando a arena...</p>
-        <section class="category-section"><h2>Comunidades recentes</h2><div id="home-communities" class="arena-grid"></div></section>
-        <section class="category-section"><div class="team-callout"><div><h2>Seu time começa aqui</h2><p>Monte sua equipe e prepare o próximo campeonato.</p></div><a class="btn-primary" href="times.html">Meus times</a></div></section>
-        <section class="category-section"><h2 class="heading-peach">Campeonatos da arena</h2><div id="home-championships" class="arena-grid"></div></section>
-        <section class="category-section"><h2>Jogos com campeonatos</h2><div id="home-games" class="arena-grid"></div></section>
-        <section class="category-section"><h2 class="heading-peach">Clipe em destaque</h2>
+        <section class="category-section"><div class="team-callout"><div class="home-team-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="10" r="4"/><path d="M3 27v-4a9 9 0 0 1 18 0v4M22 6a4 4 0 0 1 0 8m3 4a7 7 0 0 1 4 6v3"/></svg></div><div class="home-team-copy"><p class="home-eyebrow">JOGAR JUNTO FAZ A DIFERENÇA</p><h2>Seu time começa aqui.</h2><p>Monte sua equipe e prepare o próximo campeonato.</p></div><a class="home-primary" href="times.html">Meus times</a></div></section>
+        <section class="category-section"><div class="home-section-heading"><div><p class="home-eyebrow">ENTRE NA COMPETIÇÃO</p><h2>Campeonatos da arena</h2></div><a class="home-text-link" href="campeonatos.html">Todos os campeonatos</a></div><div id="home-championships" class="arena-grid"></div></section>
+        <section class="category-section"><div class="home-section-heading"><div><p class="home-eyebrow">ESCOLHA SUA PRÓXIMA DISPUTA</p><h2>Jogos com campeonatos</h2></div></div><div id="home-games" class="arena-grid"></div></section>
+        <section class="category-section"><div class="home-section-heading"><div><p class="home-eyebrow">FORA DO PLACAR, DENTRO DO JOGO</p><h2>Clipe em destaque</h2></div><span class="home-external-label">TWITCH</span></div>
             <div class="main-stream-card"><div class="main-stream-player">
-                <div class="twitch-fallback"><p class="twitch-fallback-message">Conteúdo externo da Twitch.</p><a href="https://clips.twitch.tv/SecretiveGloriousLemurDogFace-cZHdCnkpaEr0_dyA" target="_blank" rel="noopener noreferrer">Assistir ao clipe na Twitch</a></div>
+                <div class="twitch-fallback"><p class="twitch-fallback-message">Conteúdo externo da Twitch.</p><a href="https://clips.twitch.tv/BadBoldWeaselBabyRage-tbhs_f-k40WXDdwM" target="_blank" rel="noopener noreferrer">Assistir ao clipe na Twitch</a></div>
                 <iframe class="twitch-clip" title="Clipe da Twitch" allow="autoplay; fullscreen" loading="lazy" referrerpolicy="origin"></iframe>
                 <strong>CLIPE DA COMUNIDADE</strong>
-            </div><aside class="main-stream-details"><div><h3>Conteúdo da Twitch</h3><p>Clipe selecionado para a comunidade. A disponibilidade depende da Twitch.</p></div></aside></div>
+            </div><aside class="main-stream-details"><div><p class="home-eyebrow">UM MOMENTO DA COMUNIDADE</p><h3>O jogo também acontece por aqui.</h3><p>Confira o clipe selecionado para a arena e acompanhe a conversa na comunidade.</p><a class="home-text-link" href="comunidade.html">Explorar comunidades</a><small>Conteúdo externo. A disponibilidade depende da Twitch.</small></div></aside></div>
         </section>
-        <section class="category-section"><h2>Confrontos cadastrados</h2><div id="home-matches" class="arena-grid"></div><a href="partidas.html" class="arena-link">Ver todas as partidas</a></section>
+        <section class="category-section"><div class="home-section-heading"><div><p class="home-eyebrow">ACOMPANHE A DISPUTA</p><h2>Confrontos cadastrados</h2></div><a href="partidas.html" class="home-text-link">Ver todas as partidas</a></div><div id="home-matches" class="arena-grid"></div></section>
     </main>
 
-    <footer class="footer"><h3>Explore a arena</h3><nav class="arena-actions"><a href="comunidade.html">Comunidades</a><a href="times.html">Times</a><a href="campeonatos.html">Campeonatos</a><a href="partidas.html">Partidas</a></nav></footer>
+    <footer class="home-footer"><a class="arena-public-brand" href="apresentacao.html" aria-label="Sobre o Rivals Arena"><img src="imagens/logo.png" alt="Rivals Arena" width="110" height="30"></a><p>© 2026 Rivals Arena. Todos os direitos reservados.</p><a class="home-instagram" href="https://www.instagram.com/rivalsarenaking/" target="_blank" rel="noopener noreferrer" aria-label="Instagram @rivalsarenaking (abre em nova aba)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg>@rivalsarenaking</a></footer>
 
     <script>
         document.querySelector('.home-search')?.addEventListener('submit', (event) => {
@@ -72,7 +83,7 @@
             }
 
             const params = new URLSearchParams({
-                clip: 'SecretiveGloriousLemurDogFace-cZHdCnkpaEr0_dyA',
+                clip: 'BadBoldWeaselBabyRage-tbhs_f-k40WXDdwM',
                 parent: parentDomain,
                 autoplay: 'true',
                 muted: 'true'
@@ -104,6 +115,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
     <script src="supabase-config.js"></script>
     <script src="auth.js"></script>
+    <script src="jogos-comunidades.js"></script>
+    <script src="home-carrossel.js"></script>
     <script src="arena-dados.js"></script>
 </body>
 </html>

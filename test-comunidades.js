@@ -2,6 +2,26 @@ const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const {PGlite}=require('@electric-sql/pglite');
 const fs=require('node:fs'),path=require('node:path');
+
+test('comunidades dos jogos: sete comunidades, três posts e reexecução sem duplicar',async()=>{
+ const db=new PGlite();
+ try{
+  await db.exec(`CREATE ROLE anon; CREATE ROLE authenticated; CREATE SCHEMA auth;
+   CREATE TABLE auth.users(id UUID PRIMARY KEY,raw_user_meta_data JSONB DEFAULT '{}');
+   CREATE FUNCTION auth.uid() RETURNS UUID LANGUAGE SQL AS 'SELECT nullif(current_setting(''request.jwt.claim.sub'',true),'''')::UUID';
+   GRANT USAGE ON SCHEMA auth,public TO authenticated,anon;`);
+  for(const file of ['schema.sql','supabase/migrations/20261117215510_comunidades_integradas.sql'])await db.exec(fs.readFileSync(path.join(__dirname,file),'utf8'));
+  await db.query("INSERT INTO auth.users(id,raw_user_meta_data) VALUES('00000000-0000-0000-0000-000000000001',$1)",[JSON.stringify({username:'palafozluz'})]);
+  await db.exec("INSERT INTO public.comunidades(nome,slug,id_criador) VALUES('Comunidade existente','existente','00000000-0000-0000-0000-000000000001')");
+  const seed=fs.readFileSync(path.join(__dirname,'scripts/criar-comunidades-jogos.sql'),'utf8');
+  await db.exec(seed);await db.exec(seed);
+  const rows=(await db.query('SELECT c.slug,count(p.id_publicacao)::int AS posts FROM public.comunidades c LEFT JOIN public.publicacoes p USING(id_comunidade) GROUP BY c.slug ORDER BY c.slug')).rows;
+  assert.equal(rows.length,8);assert.equal(rows.find(c=>c.slug==='existente').posts,0);
+  assert.equal(rows.filter(c=>c.posts===3).length,7);
+  assert.equal((await db.query("SELECT count(*)::int AS n FROM public.publicacoes WHERE id_autor<>'00000000-0000-0000-0000-000000000001'")).rows[0].n,0);
+  assert.equal((await db.query("SELECT count(*)::int AS n FROM public.membros_comunidade WHERE papel='dono'")).rows[0].n,8);
+ }finally{await db.close();}
+});
 test('comunidades: dono automático, entrada/saída, conteúdo e reações com autorização',async()=>{
  const db=new PGlite();
  try{

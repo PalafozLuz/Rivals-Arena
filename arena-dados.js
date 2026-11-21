@@ -29,7 +29,6 @@
       let revision=0;
       const load=async()=>{const current=++revision;$('home-message').textContent='Carregando a arena...';
         try {const {data}=await request('inicio?'+new URLSearchParams({q:$('home-search-input').value.trim()}));if(current!==revision)return;
-          list('home-communities',data.comunidades,c=>card(c.nome,[c.jogo,c.descricao,`${c.membros_comunidade?.[0]?.count ?? 0} membro(s)`],[link('Ver comunidade',`comunidade.html#comunidade-${c.id_comunidade}`)]),'Nenhuma comunidade encontrada.');
           list('home-championships',data.campeonatos,c=>card(c.nome,[c.jogo,label(c.status),label(c.formato)],[link('Ver campeonato',champLink(c.id_campeonato))]),'Nenhum campeonato encontrado.');
           list('home-games',data.jogos,j=>card(j,[],[link('Ver partidas','partidas.html?'+new URLSearchParams({jogo:j}))]),'Os jogos aparecerão quando houver campeonatos cadastrados.');
           list('home-matches',data.partidas,m=>matchCard(m),'Nenhum confronto cadastrado para esta busca.');
