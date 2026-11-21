@@ -269,13 +269,15 @@ test('comunidades: entrar, publicar texto seguro, curtir, editar, excluir e sair
 test('carrossel mostra os sete jogos, desliza e abre comunidade com três posts',async({page})=>{
  await setup(page);await page.setViewportSize({width:390,height:900});
  const community={id_comunidade:12,nome:'Minecraft',slug:'minecraft',jogo:'Minecraft',categoria:'Aventura',id_criador:'outro',membros_comunidade:[{count:1}]};
+ await page.route('https://avatar.example.test/foto.svg',route=>route.fulfill({contentType:'image/svg+xml',body:'<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><rect width="40" height="40" fill="pink"/></svg>'}));
+ await page.route('https://avatar.example.test/quebrada.png',route=>route.abort());
  await page.route('**/api/**',route=>{
   const p=new URL(route.request().url()).pathname;
   let data=[];
   if(p==='/api/inicio')data={comunidades:[],campeonatos:[],partidas:[],jogos:[]};
   else if(p==='/api/comunidades')data=[community];
   else if(p==='/api/comunidades/12')data=community;
-  else if(p==='/api/publicacoes')data=[1,2,3].map(n=>({id_publicacao:n,id_autor:'outro',conteudo:'Publicação inicial '+n,criada_em:'2026-11-20T12:00:00Z',jogadores:{username:'editor'},minhas_reacoes:[],reacoes_publicacao:[{count:0}]}));
+  else if(p==='/api/publicacoes')data=[1,2,3].map(n=>({id_publicacao:n,id_autor:'outro',conteudo:'Publicação inicial '+n,criada_em:'2026-11-20T12:00:00Z',jogadores:{username:'editor',avatar_url:n===1?'https://avatar.example.test/foto.svg':n===2?'https://avatar.example.test/quebrada.png':''},minhas_reacoes:[],reacoes_publicacao:[{count:0}]}));
   return route.fulfill({json:{data}});
  });
  await page.goto('/homepage.html');
@@ -290,6 +292,14 @@ test('carrossel mostra os sete jogos, desliza e abre comunidade com três posts'
  await page.getByRole('link',{name:'Abrir comunidade de Minecraft',exact:true}).click();
  await expect(page.locator('#community-detail-title')).toHaveText('Minecraft');
  await expect(page.locator('#community-posts .social-post')).toHaveCount(3);
+ const avatars=page.locator('.community-post-heading>img');
+ await expect(avatars.nth(0)).toHaveAttribute('src','https://avatar.example.test/foto.svg');
+ await expect.poll(()=>avatars.nth(0).evaluate(img=>img.complete&&img.naturalWidth>0)).toBe(true);
+ await expect(avatars.nth(0)).not.toHaveClass(/is-default-avatar/);
+ for(const index of [1,2]){
+  await expect(avatars.nth(index)).toHaveAttribute('src','imagens/avatar-padrao.svg');
+  await expect(avatars.nth(index)).toHaveClass(/is-default-avatar/);
+ }
 });
 
 test('home busca dados persistidos e links levam ao confronto e comunidade',async({page})=>{

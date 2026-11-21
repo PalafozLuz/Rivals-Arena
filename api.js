@@ -277,7 +277,7 @@ function createApi({ fetchImpl = global.fetch, configProvider = configuration } 
         if(req.query.q)query.set('nome',`ilike.*${String(req.query.q).slice(0,80).replace(/[%_*\\]/g,'')}*`);
         if(req.query.categoria && req.query.categoria!=='Todos')query.set('categoria',`eq.${String(req.query.categoria).slice(0,40)}`);
       } else {
-        query.set('select','*,jogadores!publicacoes_id_autor_fkey(nome,username),reacoes_publicacao!reacoes_publicacao_id_publicacao_fkey(count),minhas_reacoes:reacoes_publicacao!reacoes_publicacao_id_publicacao_fkey(id_jogador)');
+        query.set('select','*,jogadores!publicacoes_id_autor_fkey(nome,username,avatar_url),reacoes_publicacao!reacoes_publicacao_id_publicacao_fkey(count),minhas_reacoes:reacoes_publicacao!reacoes_publicacao_id_publicacao_fkey(id_jogador)');
         query.set('minhas_reacoes.id_jogador',`eq.${req.user.id}`);query.set('order','criada_em.desc');
         if(req.query.id_comunidade) {
           const id=Number(req.query.id_comunidade);

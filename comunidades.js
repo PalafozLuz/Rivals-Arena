@@ -27,14 +27,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     result.addEventListener('click', () => run(result, work));
     return result;
   }
+  function imageForCommunity(community) {
+    const gameCover = window.RIVALS_JOGOS_COMUNIDADES?.find(game => game.slug === community.slug);
+    const usesOriginalCover = gameCover && community.imagem_url?.endsWith('/' + gameCover.imagem.replace('group43-', ''));
+    return usesOriginalCover ? gameCover.imagem
+      : /^https?:\/\//i.test(community.imagem_url || '') ? community.imagem_url : 'imagens/valorant.png';
+  }
   function card(community) {
     const result = node('article', '', 'my-community-card social-community-card');
     const cover = node('div', '', 'my-community-cover');
     const image = document.createElement('img'); image.alt = '';
-    const gameCover = window.RIVALS_JOGOS_COMUNIDADES?.find(game => game.slug === community.slug);
-    const usesOriginalCover = gameCover && community.imagem_url?.endsWith('/' + gameCover.imagem.replace('group43-', ''));
-    image.src = usesOriginalCover ? gameCover.imagem
-      : /^https?:\/\//i.test(community.imagem_url || '') ? community.imagem_url : 'imagens/valorant.png';
+    image.src = imageForCommunity(community); image.loading = 'lazy';
     image.addEventListener('error', () => { image.src = 'imagens/valorant.png'; }, { once: true });
     cover.appendChild(image);
     const body = node('div', '', 'social-card-body');
@@ -45,7 +48,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   function renderCards(id, communities, empty) {
     $(id).replaceChildren(...communities.map(card));
-    if (!communities.length) $(id).appendChild(node('p', empty));
+    if (!communities.length) $(id).appendChild(node('p', empty, 'community-empty'));
   }
   async function load() {
     const version = ++listVersion;
@@ -88,6 +91,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const member = memberships.has(String(id));
     const owner = community.id_criador === user;
     $('community-detail').hidden = false;
+    const detailCover = document.querySelector('[data-community-cover]');
+    if (detailCover) {
+      detailCover.onerror = () => { detailCover.onerror = null; detailCover.src = 'imagens/valorant.png'; };
+      detailCover.src = imageForCommunity(community);
+    }
     $('community-detail-title').textContent = community.nome;
     $('community-detail-description').textContent = community.descricao || 'Participe e compartilhe suas experiências.';
     $('community-detail-count').textContent = `${community.membros_comunidade?.[0]?.count || 0} membros · ${community.categoria}`;
@@ -100,8 +108,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     }));
     $('community-members').replaceChildren(...members.map(item => node('li', `@${item.jogadores?.username || 'jogador'} · ${item.papel}`)));
     $('community-post-form').hidden = !member;
+    const joinHint = $('community-join-hint');
+    if (joinHint) joinHint.hidden = member;
     $('community-posts').replaceChildren();
-    if (!posts.length) $('community-posts').appendChild(node('p', 'Nenhuma publicação nesta página.'));
+    if (!posts.length) $('community-posts').appendChild(node('p', 'Nenhuma publicação nesta página.', 'community-empty'));
     for (const post of posts) {
       const article = node('article', '', 'social-post');
       const author = node('h4', `@${post.jogadores?.username || 'jogador'}`);
@@ -115,7 +125,21 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
       reaction.disabled = !member; reaction.setAttribute('aria-pressed', String(liked));
       actions.appendChild(reaction);
-      article.append(author, time, content, actions);
+      const heading = node('div', '', 'community-post-heading');
+      const authorAvatar = document.createElement('img');
+      const avatarUrl = post.jogadores?.avatar_url || '';
+      const useDefaultAvatar = () => {
+        authorAvatar.classList.add('is-default-avatar');
+        authorAvatar.src = 'imagens/avatar-padrao.svg';
+      };
+      authorAvatar.onerror = () => { authorAvatar.onerror = null; useDefaultAvatar(); };
+      if (/^https?:\/\//i.test(avatarUrl)) authorAvatar.src = avatarUrl;
+      else useDefaultAvatar();
+      authorAvatar.alt = '';
+      authorAvatar.width = 40; authorAvatar.height = 40;
+      const authorInfo = node('div'); authorInfo.append(author, time);
+      heading.append(authorAvatar, authorInfo);
+      article.append(heading, content, actions);
       if (post.id_autor === user) {
         const editForm = node('form', '', 'social-form'); editForm.hidden = true;
         const label = node('label', 'Editar publicação', 'social-full');
@@ -175,6 +199,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.querySelectorAll('.community-filters button').forEach(filter => filter.addEventListener('click', async () => {
     category = filter.textContent; page = 1;
     document.querySelector('.community-filters .is-active')?.classList.remove('is-active'); filter.classList.add('is-active');
+    document.querySelectorAll('.community-filters button').forEach(item => item.setAttribute('aria-pressed', String(item === filter)));
     try { await load(); } catch (error) { message(error.message); }
   }));
   $('community-prev').addEventListener('click', () => { page = Math.max(1,page-1); load().catch(error=>message(error.message)); });

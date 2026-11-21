@@ -163,6 +163,7 @@ test('comunidade: identidade da sessão, autor protegido, feed sem ambiguidade e
   assert.equal(calls.at(-1).url.searchParams.get('id_jogador'),`eq.${uid}`);
   assert.equal((await send('/api/publicacoes?id_comunidade=1','GET')).status,200);
   assert.match(calls.at(-1).url.searchParams.get('select'),/jogadores!publicacoes_id_autor_fkey/);
+  assert.match(calls.at(-1).url.searchParams.get('select'),/jogadores!publicacoes_id_autor_fkey\(nome,username,avatar_url\)/);
   assert.equal(calls.at(-1).url.searchParams.get('minhas_reacoes.id_jogador'),`eq.${uid}`);
   assert.equal((await send('/api/publicacoes/1/reacao','POST',{tipo:'curtida'})).status,200);
   assert.match(calls.at(-1).options.headers.Prefer,/ignore-duplicates/);
