@@ -47,8 +47,8 @@ function readRoutes(fetchImpl) {
   async function matches(req,{preview=false}={}) {
     const page=pageNumber(req.query.page);
     const params={select:MATCH_SELECT,order:'data_hora.asc.nullslast,id_partida.desc',limit:preview?'6':'25',offset:preview?'0':String((page-1)*24)};
-    // HOMOLOG identifica os campeonatos de validação, preservados no histórico.
-    if(preview)params['campeonatos.nome']='not.ilike.HOMOLOG*';
+    // Oculta testes das listagens; links diretos e histórico continuam disponíveis.
+    if(preview || !req.params.id)params['campeonatos.nome']='not.ilike.HOMOLOG*';
     const groups=[];
     if(req.params.id)params.id_partida=`eq.${positiveId(req.params.id)}`;
     if(req.query.campeonato)params.id_campeonato=`eq.${positiveId(req.query.campeonato)}`;

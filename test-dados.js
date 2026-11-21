@@ -26,7 +26,7 @@ test('partidas combina busca e times da sessão, pagina e preserva RLS',()=>fixt
  assert.equal(options.headers.Authorization,'Bearer qa-token');
  assert.equal(calls.find(c=>c.u.pathname.endsWith('/contratos')).u.searchParams.get('id_jogador'),'eq.jogador-atual');
 }));
-test('home filtra homologação antes dos limites e mantém busca e histórico disponíveis',()=>fixture(async(get,calls)=>{
+test('home e partidas filtram homologação antes dos limites e preservam histórico e links diretos',()=>fixture(async(get,calls)=>{
  const r=await get('inicio?q=Valorant');assert.equal(r.status,200);
  const communities=calls.find(c=>c.u.pathname.endsWith('/comunidades')).u;
  const championships=calls.find(c=>c.u.pathname.endsWith('/campeonatos')&&c.u.searchParams.has('status')).u;
@@ -37,7 +37,13 @@ test('home filtra homologação antes dos limites e mantém busca e histórico d
  assert.equal(championships.searchParams.get('or'),'(nome.ilike.*Valorant*,jogo.ilike.*Valorant*)');
  assert.equal(matches.searchParams.get('campeonatos.nome'),'not.ilike.HOMOLOG*');
  assert.equal(matches.searchParams.get('limit'),'6');
- calls.length=0;await get('partidas');
+ for(const path of ['partidas','partidas?page=2&minhas=1&status=finalizada&q=Valorant','partidas?campeonato=3&jogo=Valorant']){
+  calls.length=0;assert.equal((await get(path)).status,200);
+  const query=calls.find(c=>c.u.pathname.endsWith('/partidas')).u.searchParams;
+  assert.equal(query.get('campeonatos.nome'),'not.ilike.HOMOLOG*');
+  assert.equal(query.get('limit'),'25');
+ }
+ calls.length=0;await get('partidas/7');
  assert.equal(calls.find(c=>c.u.pathname.endsWith('/partidas')).u.searchParams.has('campeonatos.nome'),false);
  calls.length=0;await get('meu-historico');
  assert.equal(calls.some(c=>c.u.searchParams.toString().includes('HOMOLOG')),false);

@@ -14,6 +14,28 @@
   const champLink = id => `campeonatos.html?campeonato=${encodeURIComponent(id)}#matches-list`;
   function matchCard(m, detail=false) {
     const score=m.status==='finalizada'?`${m.placar_a ?? '—'} × ${m.placar_b ?? '—'}`:'×';
+    if(document.body.classList.contains('matches-refresh')) {
+      const result=node('article',undefined,'match-card');
+      const header=node('div',undefined,'match-card-heading');
+      const status=node('span',label(m.status),'match-status');
+      if(['agendada','em_andamento','finalizada','cancelada'].includes(m.status))status.dataset.status=m.status;
+      header.append(node('p',m.campeonatos?.jogo||'Jogo a definir','match-game'),status);
+      result.append(header,node('h3',`${m.time_a?.nome||'A definir'} ${score} ${m.time_b?.nome||'A definir'}`,'sr-only'));
+      const board=node('div',undefined,'match-scoreboard');board.setAttribute('aria-hidden','true');
+      const team = data => {
+        const side=node('div',undefined,'match-team');
+        const image=document.createElement('img');image.alt='';image.width=56;image.height=56;image.loading='lazy';
+        const fallback=()=>{image.classList.add('is-default-logo');image.src='imagens/logo-menu.png';};
+        image.onerror=()=>{image.onerror=null;fallback();};
+        if(/^https?:\/\//i.test(data?.logo_url||''))image.src=data.logo_url;else fallback();
+        side.append(image,node('span',data?.nome||'A definir'));return side;
+      };
+      board.append(team(m.time_a),node('strong',score,'match-score'),team(m.time_b));
+      const footer=node('div',undefined,'match-card-footer');
+      footer.append(node('p',m.campeonatos?.nome||'Campeonato a definir','match-championship'),node('p',`Rodada ${m.rodada??'a definir'} · ${date(m.data_hora)}`,'match-schedule'));
+      const action=detail?link('Ver campeonato',champLink(m.id_campeonato)):link('Ver confronto',`partidas.html?partida=${encodeURIComponent(m.id_partida)}`);
+      footer.appendChild(action);result.append(board,footer);return result;
+    }
     return card(`${m.time_a?.nome || 'A definir'} ${score} ${m.time_b?.nome || 'A definir'}`,
       [m.campeonatos?.nome,m.campeonatos?.jogo,`${label(m.status)} · Rodada ${m.rodada ?? 'a definir'}`,date(m.data_hora)],
       detail?[link('Ver campeonato',champLink(m.id_campeonato))]:[link('Ver confronto',`partidas.html?partida=${encodeURIComponent(m.id_partida)}`)]);
