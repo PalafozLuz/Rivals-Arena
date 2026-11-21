@@ -44,9 +44,16 @@ O gerador do banco/OpenAPI não usa o CDN nem depende do navegador.
 
 ## Estado da entrega
 
-Aplicação implementada e versionada. A documentação não certifica publicação na
-Vercel nem recebimento de e-mail: essas verificações continuam pendentes.
-O roteiro completo com contas distintas é uma sequência para execução final;
-não deve ser apresentado como evidência de teste já realizado no domínio publicado.
-Como o repositório é privado, a equipe precisa garantir acesso do instrutor ou
-fornecer a cópia de entrega por um meio combinado com ele.
+Aplicação publicada em [rivals-arena-beta.vercel.app](https://rivals-arena-beta.vercel.app/).
+O deploy de produção está associado ao branch `versao-estavel` e ao commit
+`bb35f2c`. O repositório [Rivals-Arena](https://github.com/PalafozLuz/Rivals-Arena)
+é público.
+
+As páginas principais e `/api/health` responderam com HTTP 200 na verificação
+mais recente. Os testes automatizados locais passaram: 27 de API/banco e 31 de
+tela; os testes de tela usam sessões e dados simulados, portanto não substituem
+uma validação completa com contas reais no domínio público.
+
+A busca da página inicial ainda não pesquisa times nem exibe comunidades. A
+recuperação de senha por e-mail está desativada. O roteiro de demonstração está
+disponível para a conferência manual dos fluxos autenticados.

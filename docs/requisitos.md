@@ -66,7 +66,7 @@ Papéis são definidos pela relação com o registro, sem administrador global n
 | RNF05 | Código versionado e instruções reprodutíveis | GitHub, package-lock.json, README, testes e scripts SQL |
 | RNF06 | Tratamento de erros e acessibilidade básica | Estados de carregamento, mensagens, rótulos, teclado e menu; sem auditoria WCAG completa |
 | RNF07 | Tempo de resposta e escala adequados | Limites/paginação/índices/timeouts; sem benchmark ou teste de carga, sem SLA afirmado |
-| RNF08 | Plataforma acessível por navegador em endereço público | Configuração Vercel presente; publicação e teste final ainda pendentes |
+| RNF08 | Plataforma acessível por navegador em endereço público | Publicada em https://rivals-arena-beta.vercel.app; páginas principais e API de saúde responderam HTTP 200 |
 
 ## Relação com as entregas do briefing
 
@@ -78,7 +78,7 @@ Papéis são definidos pela relação com o registro, sem administrador global n
 | CRUD das entidades | Matriz em docs/api/README.md | Operações disponíveis e restrições explícitas; não há DELETE público para toda tabela |
 | Banco conceitual, lógico e físico | docs/modelagem, schema.sql e migrations | Documentado e conferido por metadados |
 | Integridade, PK/FK e normalização | Dicionário, constraints e decisões físicas | Documentado; agregados derivados declarados |
-| Git e README | PalafozLuz/Rivals-Arena e README.md | Repositório privado criado e primeiro envio confirmado |
+| Git e README | PalafozLuz/Rivals-Arena e README.md | Repositório público; branch padrão `versao-estavel` |
 | Regras de pontuação, limites e datas | Migrations e testes de banco/API | Implementado; evidências no relatório |
 
 O critério de avaliação menciona CRUD para todas as entidades, enquanto a entrega
@@ -95,7 +95,7 @@ Inscrição atende à alternativa de participação prevista na contextualizaç�
 Imagens são URLs e o clipe é conteúdo externo. O briefing contextualiza App + Web,
 mas a entrega detalhada exige plataforma acessível via navegador; não foi criado app nativo.
 
-Continuam pendentes: publicar na Vercel, autorizar URLs de Auth, receber e validar
-o e-mail de recuperação, verificar o clipe no domínio publicado e executar o
-roteiro completo com contas distintas em produção. Não há evidência de carga,
-auditoria completa de acessibilidade ou homologação por instrutor nesta etapa.
+Continuam pendentes: completar a busca da página inicial para times e comunidades
+e executar o roteiro completo com contas distintas em produção. A recuperação de
+senha por e-mail está desativada. Não há evidência de carga, auditoria completa
+de acessibilidade ou homologação por instrutor nesta etapa.
