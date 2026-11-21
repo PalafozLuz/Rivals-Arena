@@ -18,6 +18,10 @@ CREATE TABLE public.jogadores (
     nome VARCHAR(100) NOT NULL DEFAULT '',
     username VARCHAR(50) NOT NULL UNIQUE,
     avatar_url TEXT,
+    banner_url TEXT CONSTRAINT jogadores_banner_url_check CHECK (
+      banner_url IS NULL OR banner_url='' OR
+      (length(banner_url)<=2048 AND banner_url ~* '^https?://[^[:space:]]+$')
+    ),
     bio TEXT,
     pontuacao_ranking INTEGER NOT NULL DEFAULT 0 CHECK (pontuacao_ranking >= 0),
     vitorias INTEGER NOT NULL DEFAULT 0 CHECK (vitorias >= 0),
@@ -415,7 +419,7 @@ CREATE POLICY reacoes_delete ON public.reacoes_publicacao FOR DELETE TO authenti
 REVOKE ALL ON ALL TABLES IN SCHEMA public FROM anon, authenticated;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO anon, authenticated;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO authenticated;
-GRANT UPDATE (nome, username, avatar_url, bio) ON public.jogadores TO authenticated;
+GRANT UPDATE (nome, username, avatar_url, banner_url, bio) ON public.jogadores TO authenticated;
 GRANT INSERT (nome, logo_url, id_capitao), UPDATE (nome, logo_url), DELETE ON public.times TO authenticated;
 GRANT INSERT (id_jogador, id_time, data_entrada, data_saida, status), UPDATE (data_saida, status), DELETE ON public.contratos TO authenticated;
 GRANT INSERT (nome, jogo, descricao, formato, max_times, taxa_inscricao, premio, id_criador, data_inicio, data_fim, status), UPDATE (nome, jogo, descricao, formato, max_times, taxa_inscricao, premio, data_inicio, data_fim, status), DELETE ON public.campeonatos TO authenticated;

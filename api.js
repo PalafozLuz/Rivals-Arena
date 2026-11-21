@@ -13,7 +13,7 @@ function configuration() {
 }
 
 const resources = {
-  jogadores: { id: 'id_jogador', fields: ['nome', 'username', 'avatar_url', 'bio'], methods: ['GET', 'PATCH'] },
+  jogadores: { id: 'id_jogador', fields: ['nome', 'username', 'avatar_url', 'banner_url', 'bio'], methods: ['GET', 'PATCH'] },
   times: { id: 'id_time', fields: ['nome', 'logo_url', 'status'], owner: 'id_capitao', methods: ['GET', 'POST', 'PATCH'] },
   campeonatos: { id: 'id_campeonato', fields: ['nome', 'jogo', 'descricao', 'formato', 'max_times', 'data_inicio', 'data_fim', 'taxa_inscricao', 'premio', 'status'], owner: 'id_criador', methods: ['GET', 'POST', 'PATCH', 'DELETE'] },
   classificacao: { id: 'id_campeonato', fields: [], methods: ['GET'], listOnly: true },
@@ -46,6 +46,12 @@ function validate(body, config, creating) {
   if (config.id === 'id_publicacao' && 'conteudo' in body && (!body.conteudo.trim() || body.conteudo.length > 5000)) throw Error('Publicação deve ter entre 1 e 5000 caracteres.');
   if (config.id === 'id_publicacao' && creating && (!body.conteudo || !body.id_comunidade)) throw Error('Informe a comunidade e o conteúdo.');
   if ('username' in body && !/^[A-Za-z0-9_]{3,50}$/.test(body.username)) throw Error('Nome de usuário inválido.');
+  if ('banner_url' in body && body.banner_url) {
+    let banner;
+    try { banner = new URL(body.banner_url); } catch { throw Error('Use um link HTTP ou HTTPS válido para o banner.'); }
+    if (!['http:','https:'].includes(banner.protocol) || body.banner_url.length > 2048 || /\s/.test(body.banner_url))
+      throw Error('Use um link HTTP ou HTTPS de até 2048 caracteres para o banner.');
+  }
   if (config.id === 'id_time' && 'status' in body && !['ativo', 'inativo'].includes(body.status)) throw Error('Status do time inválido.');
   if (config.id === 'id_campeonato' && 'status' in body && (creating || body.status !== 'cancelado' || Object.keys(body).length !== 1)) throw Error('Para cancelar, envie somente status cancelado. O início e encerramento são automáticos.');
   for (const field of ['avatar_url','logo_url']) if (field in body && body[field] && !/^https?:\/\//i.test(body[field])) throw Error('Use um link HTTP ou HTTPS para a imagem.');

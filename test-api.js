@@ -41,6 +41,25 @@ test('API verifica identidade, limita colunas, atribui dono e preserva token RLS
     assert.equal((await fetch(base + '/api/campeonatos', { method: 'POST', headers, body: '{"nome":"Copa","jogo":"Jogo","max_times":4,"data_inicio":"2026-02-30","data_fim":"2026-03-04"}' })).status, 400);
   });
 });
+test('API do perfil aceita banner válido, remoção e rejeita links inválidos e terceiros',async()=>{
+ const user='12345678-1234-1234-1234-123456789abc',writes=[];
+ const local=express();local.use(express.json());
+ local.use('/api',createApi({configProvider:()=>({url:'https://example.test',key:'public-test'}),fetchImpl:async(url,options)=>{
+  if(url.endsWith('/auth/v1/user'))return Response.json({id:user});
+  writes.push(options);return Response.json([{id_jogador:user,...JSON.parse(options.body)}]);
+ }}));
+ await serve(local,async base=>{
+  const send=(banner_url,id=user)=>fetch(base+'/api/jogadores/'+id,{method:'PATCH',headers:{Authorization:'Bearer token-test','Content-Type':'application/json'},body:JSON.stringify({banner_url})});
+  assert.equal((await send('https://example.test/banner.png')).status,200);
+  assert.equal(JSON.parse(writes[0].body).banner_url,'https://example.test/banner.png');
+  assert.equal(writes[0].headers.Authorization,'Bearer token-test');
+  assert.equal((await send('')).status,200);
+  for(const bad of ['javascript:alert(1)','data:image/png;base64,aaaa','https://','https://example.test/'+ 'a'.repeat(2048)])assert.equal((await send(bad)).status,400);
+  assert.equal((await send('https://example.test/banner.png','aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa')).status,403);
+  assert.equal(writes.length,2);
+ });
+});
+
 test('token inválido não acessa dados do banco', async () => {
   let calls = 0;
   const local = express();

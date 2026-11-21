@@ -1,87 +1,88 @@
 <!DOCTYPE html>
-<html lang="pt-PT">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil - Rivals Arena</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#17111e">
+  <title>Meu perfil — Rivals Arena</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="barra-superior.css">
+  <link rel="stylesheet" href="perfil.css">
 </head>
-<body class="page-profile" data-auth-page="protected">
+<body class="page-profile profile-refresh" data-auth-page="protected">
+  <a class="profile-skip" href="#conteudo">Pular para o conteúdo</a>
+  <header class="arena-public-header">
+    <a class="arena-public-brand" href="homepage.html" aria-label="Rivals Arena — início"><img src="imagens/logo.png" alt="Rivals Arena" width="150" height="40"></a>
+    <nav class="profile-header-nav" aria-label="Navegação da arena"><a href="homepage.html">Início</a><a href="times.html">Meus times</a><a href="comunidade.html">Comunidades</a></nav>
+    <button class="menu-icon menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="profile-menu"><span></span><span></span><span></span></button>
+    <nav class="mobile-menu" id="profile-menu" aria-label="Menu principal"><a href="homepage.html">Início</a><a href="perfil.html" aria-current="page">Perfil</a><a href="comunidade.html">Comunidade</a><a href="campeonatos.html">Campeonatos</a><a href="partidas.html">Partidas</a></nav>
+  </header>
 
-    <header>
-        <div class="header-top">
-            <a class="logo" href="homepage.html" aria-label="Rivals Arena - início">
-                <img src="imagens/logo-menu.png" alt="Rivals Arena">
-            </a>
-            <button class="menu-icon menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
+  <main class="profile-main" id="conteudo">
+    <div class="profile-page-intro"><div><p class="profile-eyebrow">SUA HISTÓRIA NA ARENA</p><h2>Seu espaço. Suas conquistas.</h2></div><a class="profile-text-link" href="homepage.html">Voltar à arena</a></div>
+    <section class="profile-overview" aria-labelledby="profile-name">
+      <div class="profile-cover"><img class="profile-cover-image" data-profile-banner alt="" hidden><img class="profile-cover-mark" src="imagens/logo-menu.png" alt="Rivals Arena" width="54" height="32"></div>
+      <div class="profile-header">
+        <div class="user-info">
+          <div class="avatar-container"><img src="imagens/avatar-padrao.svg" alt="Avatar do jogador" class="avatar" width="100" height="100" data-profile-avatar></div>
+          <div class="user-details"><h1 id="profile-name" data-profile-name>Carregando...</h1><p data-profile-username></p></div>
         </div>
-        <nav class="mobile-menu" aria-label="Menu principal">
-            <a href="homepage.html">Início</a>
-            <a href="perfil.html">Perfil</a>
-            <a href="comunidade.html">Comunidade</a>
-            <a href="campeonatos.html">Campeonatos</a>
-            <a href="partidas.html">Partidas</a>
-        </nav>
-    </header>
+        <div class="profile-header-actions"><button class="btn-edit profile-primary" type="button" data-edit-profile aria-expanded="false" aria-controls="profile-edit-form">Editar perfil</button><button class="profile-secondary" type="button" data-logout>Sair</button></div>
+      </div>
+    </section>
 
-    <main class="profile-main">
-        <section class="profile-header">
-            <div class="user-info">
-                <div class="avatar-container">
-                    <img src="imagens/logo-menu.png" alt="Avatar do jogador" class="avatar" data-profile-avatar>
-                    <div class="status-dot"></div>
-                </div>
-                <div class="user-details">
-                    <h1 data-profile-name>Carregando...</h1>
-                    <p data-profile-username></p>
-                </div>
-            </div>
-            <button class="btn-edit" type="button" data-edit-profile>Editar perfil</button>
-            <button class="btn-edit" type="button" data-logout>Sair</button>
-        </section>
+    <div class="profile-details-grid">
+      <section class="profile-bio profile-panel"><p class="profile-eyebrow">QUEM JOGA POR AQUI</p><h2>Sobre você</h2><p data-profile-bio>Carregando...</p></section>
+      <aside class="profile-account profile-panel" aria-labelledby="profile-account-title"><p class="profile-eyebrow">SUA CONTA</p><h2 id="profile-account-title">Pronto para o próximo desafio?</h2><p>Encontre sua equipe e mantenha seus dados de acesso atualizados.</p><div class="profile-account-actions"><a class="profile-primary" href="times.html">Meus times</a><a class="profile-secondary" href="redefinir-senha.html">Alterar senha</a></div></aside>
+    </div>
 
-        <p class="auth-message" data-auth-message hidden role="status"></p>
-        <section class="profile-stats">
-            <div class="stat">
-                <span class="stat-number" data-profile-wins>—</span>
-                <span class="stat-label">Vitórias</span>
-            </div>
-            <div class="stat">
-                <span class="stat-number" data-profile-ranking>—</span>
-                <span class="stat-label">Pontos de ranking</span>
-            </div>
-        </section>
+    <p class="auth-message" data-auth-message hidden role="status" aria-live="polite"></p>
+    <form id="profile-edit-form" class="profile-edit-form profile-panel" data-profile-form hidden aria-labelledby="profile-edit-title">
+      <div class="profile-section-heading"><div><p class="profile-eyebrow">DO SEU JEITO</p><h2 id="profile-edit-title">Editar dados</h2></div><button class="profile-close" type="button" data-close-profile>Fechar edição</button></div>
+      <div class="profile-edit-grid">
+        <div class="input-group"><label for="profile-nome">Nome</label><input id="profile-nome" name="nome" autocomplete="name" required></div>
+        <div class="input-group"><label for="profile-username">Nome de usuário</label><input id="profile-username" name="username" autocomplete="username" pattern="[A-Za-z0-9_]{3,50}" required></div>
+        <div class="input-group profile-field-full"><label for="profile-bio">Bio</label><textarea id="profile-bio" name="bio" maxlength="1000" rows="3" placeholder="Conte um pouco sobre você e os jogos que curte."></textarea></div>
+        <div class="input-group profile-field-full"><label for="profile-avatar">Link da foto</label><input id="profile-avatar" name="avatar_url" type="url" pattern="https?://.*" placeholder="https://exemplo.com/minha-foto.jpg"></div>
+        <div class="input-group profile-field-full"><label for="profile-banner">Link do banner</label><input id="profile-banner" name="banner_url" type="url" pattern="https?://.*" maxlength="2048" placeholder="https://exemplo.com/meu-banner.jpg" aria-describedby="profile-banner-hint"><p id="profile-banner-hint" class="profile-field-hint" aria-live="polite">Use um link direto para a imagem. Deixe vazio para usar o fundo roxo da arena.</p></div>
+      </div>
+      <button type="submit" class="btn-entrar profile-primary">Salvar alterações</button>
+    </form>
 
-        <section class="profile-bio">
-            <h2>Bio</h2>
-            <p data-profile-bio>Carregando...</p>
-        </section>
-        <section class="arena-section" aria-labelledby="history-title">
-            <h2 id="history-title">Histórico de partidas e pontos</h2>
-            <p id="history-message" role="status" aria-live="polite">Carregando histórico...</p>
-            <div id="history-results" class="arena-grid"></div>
-            <h2>Histórico de times</h2><div id="history-teams" class="arena-grid"></div>
-            <div class="arena-actions"><button id="history-prev" disabled>Anterior</button><span id="history-page">Página 1</span><button id="history-next" disabled>Próxima</button></div>
-        </section>
-    </main>
+    <section class="profile-stats" aria-label="Suas estatísticas">
+      <div class="stat profile-panel"><div class="profile-stat-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 4h14v8a7 7 0 0 1-14 0V4ZM9 7H4v4a6 6 0 0 0 6 6m13-10h5v4a6 6 0 0 1-6 6M16 19v7m-6 2h12"/></svg></div><div><span class="stat-number" data-profile-wins>—</span><span class="stat-label">Vitórias</span><p>Conquistas nas suas partidas</p></div></div>
+      <div class="stat profile-panel"><div class="profile-stat-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 26h22M8 22v-6h5v6m6 0V9h5v13M7 11l8-6 5 2 6-4"/></svg></div><div><span class="stat-number" data-profile-ranking>—</span><span class="stat-label">Pontos de ranking</span><p>Sua pontuação acumulada na arena</p></div></div>
+    </section>
 
-        <form class="profile-edit-form" data-profile-form hidden>
-            <h2>Editar dados</h2>
-            <div class="input-group"><label for="profile-nome">Nome</label><input id="profile-nome" name="nome" required></div>
-            <div class="input-group"><label for="profile-username">Nome de usuário</label><input id="profile-username" name="username" pattern="[A-Za-z0-9_]{3,50}" required></div>
-            <div class="input-group"><label for="profile-bio">Bio</label><input id="profile-bio" name="bio" maxlength="1000"></div>
-            <div class="input-group"><label for="profile-avatar">Link da foto</label><input id="profile-avatar" name="avatar_url" type="url" pattern="https?://.*"></div>
-            <button type="submit" class="btn-entrar">Salvar alterações</button>
-        </form>
-    <script src="menu.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
-    <script src="supabase-config.js"></script>
-    <script src="auth.js"></script>
-    <script src="arena-dados.js"></script>
-    <script>document.querySelector('[data-edit-profile]')?.addEventListener('click', () => { const form = document.querySelector('[data-profile-form]'); form.hidden = !form.hidden; });</script>
+    <section class="arena-section profile-history" aria-labelledby="history-title">
+      <div class="profile-section-heading"><div><p class="profile-eyebrow">CADA PARTIDA CONTA</p><h2 id="history-title">Histórico de partidas e pontos</h2></div></div>
+      <p id="history-message" role="status" aria-live="polite">Carregando histórico...</p>
+      <div id="history-results" class="arena-grid"></div>
+      <div class="profile-section-heading profile-team-heading"><div><p class="profile-eyebrow">OS TIMES DA SUA JORNADA</p><h2>Histórico de times</h2></div></div>
+      <div id="history-teams" class="arena-grid"></div>
+      <nav class="arena-actions profile-pagination" aria-label="Páginas do histórico"><button type="button" id="history-prev" disabled>Anterior</button><span id="history-page">Página 1</span><button type="button" id="history-next" disabled>Próxima</button></nav>
+    </section>
+  </main>
+
+  <footer class="profile-footer"><a class="arena-public-brand" href="apresentacao.html" aria-label="Sobre o Rivals Arena"><img src="imagens/logo.png" alt="Rivals Arena" width="110" height="30"></a><p>© 2026 Rivals Arena. Todos os direitos reservados.</p><a class="profile-instagram" href="https://www.instagram.com/rivalsarenaking/" target="_blank" rel="noopener noreferrer" aria-label="Instagram @rivalsarenaking (abre em nova aba)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg>@rivalsarenaking</a></footer>
+  <script src="menu.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
+  <script src="supabase-config.js"></script>
+  <script src="auth.js"></script>
+  <script src="arena-dados.js"></script>
+  <script>
+    const profileEditor = document.querySelector('[data-profile-form]');
+    const profileEditButton = document.querySelector('[data-edit-profile]');
+    function setProfileEditor(open) {
+      profileEditor.hidden = !open;
+      profileEditButton.setAttribute('aria-expanded', String(open));
+      if (open) {
+        profileEditor.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'center'});
+        profileEditor.querySelector('input').focus({preventScroll: true});
+      } else profileEditButton.focus({preventScroll: true});
+    }
+    profileEditButton.addEventListener('click', () => setProfileEditor(profileEditor.hidden));
+    document.querySelector('[data-close-profile]').addEventListener('click', () => setProfileEditor(false));
+  </script>
 </body>
 </html>

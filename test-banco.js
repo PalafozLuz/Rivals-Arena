@@ -4,6 +4,35 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { PGlite } = require('@electric-sql/pglite');
 
+test('banner do perfil: migração preserva dados e RLS limita edição ao proprietário',async()=>{
+ const db=new PGlite();
+ try{
+  await db.exec(`CREATE ROLE anon; CREATE ROLE authenticated; CREATE SCHEMA auth;
+   CREATE TABLE auth.users(id UUID PRIMARY KEY,raw_user_meta_data JSONB DEFAULT '{}');
+   CREATE FUNCTION auth.uid() RETURNS UUID LANGUAGE SQL AS 'SELECT nullif(current_setting(''request.jwt.claim.sub'',true),'''')::UUID';
+   GRANT USAGE ON SCHEMA auth,public TO authenticated,anon;`);
+  await db.exec(fs.readFileSync(path.join(__dirname,'schema.sql'),'utf8'));
+  const first='00000000-0000-0000-0000-000000000081',second='00000000-0000-0000-0000-000000000082';
+  await db.query('INSERT INTO auth.users(id) VALUES($1),($2)',[first,second]);
+  await db.exec('ALTER TABLE public.jogadores DROP COLUMN banner_url');
+  const migration=fs.readFileSync(path.join(__dirname,'supabase/migrations/20261121003401_perfil_banner.sql'),'utf8');
+  await db.exec(migration);await db.exec(migration);
+  assert.equal((await db.query('SELECT count(*)::int AS n FROM public.jogadores')).rows[0].n,2);
+  await db.query("SELECT set_config('request.jwt.claim.sub',$1,false)",[first]);
+  await db.exec('SET ROLE authenticated');
+  const banner='https://example.test/banner.png';
+  await db.query('UPDATE public.jogadores SET banner_url=$1 WHERE id_jogador=$2',[banner,first]);
+  assert.equal((await db.query('SELECT banner_url FROM public.jogadores WHERE id_jogador=$1',[first])).rows[0].banner_url,banner);
+  await db.query('UPDATE public.jogadores SET banner_url=$1 WHERE id_jogador=$2',[banner,second]);
+  assert.equal((await db.query('SELECT banner_url FROM public.jogadores WHERE id_jogador=$1',[second])).rows[0].banner_url,null);
+  await assert.rejects(db.query('UPDATE public.jogadores SET banner_url=$1 WHERE id_jogador=$2',['javascript:alert(1)',first]),e=>e.code==='23514');
+  await db.query("UPDATE public.jogadores SET banner_url='' WHERE id_jogador=$1",[first]);
+  await db.exec('RESET ROLE;SET ROLE anon');
+  await assert.rejects(db.query('UPDATE public.jogadores SET banner_url=$1 WHERE id_jogador=$2',[banner,first]),e=>e.code==='42501');
+ }finally{await db.close();}
+});
+
+
 test('cadastro: username único sem sufixo, sem diferença de caixa e rollback do Auth', async () => {
   const db = new PGlite();
   try {

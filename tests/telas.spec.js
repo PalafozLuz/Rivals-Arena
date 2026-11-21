@@ -149,6 +149,39 @@ test('perfil carrega, salva pela API e faz logout', async ({ page }) => {
   await page.getByRole('button',{name:'Sair',exact:true}).click();
   await expect(page).toHaveURL(/login.html$/);
 });
+test('banner do perfil salva, recarrega, falha com segurança e permite remover',async({page})=>{
+ await setup(page);
+ const banner='https://images.example.test/banner.png',broken='https://images.example.test/broken.png',writes=[];
+ let profile={nome:'Jogador QA',username:'jogadorqa',bio:'',avatar_url:'',banner_url:'',vitorias:0,pontuacao_ranking:0};
+ await page.route('**/api/jogadores/*',route=>{
+  if(route.request().method()==='PATCH'){const body=route.request().postDataJSON();writes.push(body);profile={...profile,...body};}
+  return route.fulfill({json:{data:profile}});
+ });
+ await page.route(banner,route=>route.fulfill({path:require('node:path').join(__dirname,'..','BANNER1.png')}));
+ await page.route(broken,route=>route.fulfill({status:404,body:'Not found'}));
+ await page.goto('/perfil.html');await page.getByRole('button',{name:'Editar perfil',exact:true}).click();
+ await page.getByLabel('Link do banner',{exact:true}).fill(banner);
+ await page.getByRole('button',{name:'Salvar alterações',exact:true}).click();
+ await expect(page.locator('[data-profile-banner]')).toBeVisible();
+ await expect(page.locator('.profile-cover')).toHaveClass(/has-custom-banner/);
+ expect(writes[0].banner_url).toBe(banner);
+ await page.reload();await expect(page.locator('[data-profile-banner]')).toBeVisible();
+ await page.getByRole('button',{name:'Editar perfil',exact:true}).click();
+ await expect(page.getByLabel('Link do banner',{exact:true})).toHaveValue(banner);
+ await page.getByLabel('Link do banner',{exact:true}).fill(broken);
+ await page.getByRole('button',{name:'Salvar alterações',exact:true}).click();
+ await expect(page.locator('#profile-banner-hint')).toContainText('Não foi possível carregar');
+ await expect(page.locator('[data-profile-banner]')).toBeHidden();
+ await expect(page.locator('.profile-cover')).not.toHaveClass(/has-custom-banner/);
+ await page.getByLabel('Link do banner',{exact:true}).fill('');
+ await page.getByRole('button',{name:'Salvar alterações',exact:true}).click();
+ await expect(page.locator('[data-auth-message]')).toHaveText('Perfil atualizado.');
+ expect(writes.at(-1).banner_url).toBe('');
+ await page.reload();await expect(page.locator('[data-profile-name]')).toHaveText('Jogador QA');
+ await expect(page.locator('[data-profile-banner]')).toBeHidden();
+ await expect(page.locator('#profile-banner-hint')).not.toContainText('Não foi possível carregar');
+});
+
 test('logout responde mesmo com a consulta do perfil ainda carregando',async({page})=>{
  await setup(page);
  let release;const gate=new Promise(resolve=>release=resolve);

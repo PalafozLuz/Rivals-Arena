@@ -168,12 +168,34 @@
       form.username.value = profile.username || '';
       form.bio.value = profile.bio || '';
       form.avatar_url.value = profile.avatar_url || '';
+      form.banner_url.value = profile.banner_url || '';
       const renderDetails = (data) => {
         document.querySelector('[data-profile-bio]').textContent = data.bio || 'Adicione uma bio ao seu perfil.';
         document.querySelector('[data-profile-wins]').textContent = data.vitorias || 0;
         document.querySelector('[data-profile-ranking]').textContent = data.pontuacao_ranking || 0;
         const avatar = document.querySelector('[data-profile-avatar]');
-        avatar.src = /^https?:\/\//i.test(data.avatar_url || '') ? data.avatar_url : 'imagens/logo-menu.png';
+        avatar.onerror = () => { avatar.onerror = null; avatar.src = 'imagens/avatar-padrao.svg'; };
+        avatar.src = /^https?:\/\//i.test(data.avatar_url || '') ? data.avatar_url : 'imagens/avatar-padrao.svg';
+        const banner = document.querySelector('[data-profile-banner]');
+        if (banner) {
+          const cover = banner.closest('.profile-cover');
+          const hint = document.getElementById('profile-banner-hint');
+          const defaultHint = 'Use um link direto para a imagem. Deixe vazio para usar o fundo roxo da arena.';
+          banner.hidden = true;
+          cover.classList.remove('has-custom-banner');
+          if (hint) hint.textContent = defaultHint;
+          banner.onload = () => {
+            banner.hidden = false;
+            cover.classList.add('has-custom-banner');
+          };
+          banner.onerror = () => {
+            banner.hidden = true;
+            cover.classList.remove('has-custom-banner');
+            if (hint) hint.textContent = 'Não foi possível carregar esta imagem. Confira o link do banner; o fundo roxo foi mantido.';
+          };
+          if (/^https?:\/\//i.test(data.banner_url || '')) banner.src = data.banner_url;
+          else banner.removeAttribute('src');
+        }
       };
       renderDetails(profile);
       form.renderDetails = renderDetails;
@@ -190,7 +212,8 @@
           nome: form.nome.value.trim(),
           username: form.username.value.trim(),
           bio: form.bio.value.trim(),
-          avatar_url: form.avatar_url.value.trim()
+          avatar_url: form.avatar_url.value.trim(),
+          banner_url: form.banner_url.value.trim()
         });
       } catch (error) { showMessage(error.message); return; }
       finally { setLoading(form, false); }
