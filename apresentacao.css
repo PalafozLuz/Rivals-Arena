@@ -44,3 +44,13 @@ html:has(body.landing){scroll-behavior:smooth}
 @media(max-width:720px){
   .landing .landing-footer-top{flex-direction:column;gap:16px;text-align:center;font-size:12px;line-height:1.8}
 }
+
+.landing .landing-try-game{display:flex;align-items:center;justify-content:space-between;gap:30px;margin-bottom:64px;padding:32px 38px;border:1px solid #a35479;border-radius:14px;background:linear-gradient(110deg,#352039,#281a2f 65%,#40213a)}
+.landing .landing-try-game .landing-eyebrow{margin-bottom:10px}
+.landing .landing-try-game h2{margin-bottom:8px}
+.landing .landing-try-game>div>p:last-child{margin:0;color:var(--landing-muted);font-size:14px}
+.landing .landing-try-game .landing-button{flex-shrink:0;gap:10px}
+@media(max-width:720px){
+  .landing .landing-try-game{align-items:flex-start;flex-direction:column;gap:22px;margin-bottom:35px;padding:26px 22px}
+  .landing .landing-try-game h2{font-size:26px}
+}
